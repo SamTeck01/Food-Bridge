@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import MobileNav from '../components/MobileNav';
 import FoodCard from '../components/FoodCard';
 import {
   SlidersHorizontal, ChevronDown, Search, MapPin,
@@ -60,7 +61,7 @@ const ListingsPage = () => {
     });
 
   return (
-    <div className="min-h-screen flex flex-col bg-bg">
+    <div className="min-h-screen flex flex-col bg-bg pb-24 md:pb-0">
       <Navbar />
 
       <main className="flex-1 py-10 px-6">
@@ -263,6 +264,7 @@ const ListingsPage = () => {
       </main>
 
       <Footer />
+      <MobileNav />
     </div>
   );
 };

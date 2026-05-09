@@ -1,107 +1,120 @@
+import { Suspense, lazy } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import ProtectedRoute from './components/ProtectedRoute';
 
 // Pages
-import HomePage from './pages/HomePage';
-import NotFoundPage from './pages/NotFoundPage';
+const HomePage = lazy(() => import('./pages/HomePage'));
+const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
+const ImpactPage = lazy(() => import('./pages/ImpactPage'));
+const ProfilePage = lazy(() => import('./pages/ProfilePage'));
 
 // Auth
-import GetStartedPage from './pages/GetStartedPage';
-import LoginPage from './pages/LoginPage';
-import ForgotPasswordPage from './pages/ForgotPasswordPage';
-import VerifyEmailPage from './pages/VerifyEmailPage';
-import ResetPasswordPage from './pages/ResetPasswordPage';
+const GetStartedPage = lazy(() => import('./pages/GetStartedPage'));
+const LoginPage = lazy(() => import('./pages/LoginPage'));
+const ForgotPasswordPage = lazy(() => import('./pages/ForgotPasswordPage'));
+const VerifyEmailPage = lazy(() => import('./pages/VerifyEmailPage'));
+const ResetPasswordPage = lazy(() => import('./pages/ResetPasswordPage'));
 
 // Listings (public)
-import ListingsPage from './pages/ListingsPage';
-import ListingDetailPage from './pages/ListingDetailPage';
+const ListingsPage = lazy(() => import('./pages/ListingsPage'));
+const ListingDetailPage = lazy(() => import('./pages/ListingDetailPage'));
 
 // Buyer (protected + buyer-only)
-import OrdersPage from './pages/OrdersPage';
-import CartPage from './pages/CartPage';
+const OrdersPage = lazy(() => import('./pages/OrdersPage'));
+const CartPage = lazy(() => import('./pages/CartPage'));
 
 // Vendor (protected + vendor-only)
-import PostListingPage from './pages/PostListingPage';
-import VendorDashboardPage from './pages/VendorDashboardPage';
-import VerifyBusinessPage from './pages/VerifyBusinessPage';
+const PostListingPage = lazy(() => import('./pages/PostListingPage'));
+const VendorDashboardPage = lazy(() => import('./pages/VendorDashboardPage'));
+const VerifyBusinessPage = lazy(() => import('./pages/VerifyBusinessPage'));
+
+const PageLoader = () => (
+  <div className="min-h-screen flex items-center justify-center bg-bg">
+    <div className="w-8 h-8 border-4 border-border border-t-brand-primary rounded-full animate-spin"></div>
+  </div>
+);
 
 function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        {/* ── Public ─────────────────────────────────────────── */}
-        <Route path="/" element={<HomePage />} />
-        <Route path="/listings" element={<ListingsPage />} />
-        <Route path="/listing/:id" element={<ListingDetailPage />} />
+      <Suspense fallback={<PageLoader />}>
+        <Routes>
+          {/* ── Public ─────────────────────────────────────────── */}
+          <Route path="/" element={<HomePage />} />
+          <Route path="/listings" element={<ListingsPage />} />
+          <Route path="/listing/:id" element={<ListingDetailPage />} />
+          <Route path="/impact" element={<ImpactPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
 
-        {/* ── Auth (guest-only: redirect home if logged in) ──── */}
-        <Route
-          path="/get-started"
-          element={
-            <ProtectedRoute guestOnly>
-              <GetStartedPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/login"
-          element={
-            <ProtectedRoute guestOnly>
-              <LoginPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-        <Route path="/verify-email" element={<VerifyEmailPage />} />
-        <Route path="/reset-password" element={<ResetPasswordPage />} />
+          {/* ── Auth (guest-only: redirect home if logged in) ──── */}
+          <Route
+            path="/get-started"
+            element={
+              <ProtectedRoute guestOnly>
+                <GetStartedPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/login"
+            element={
+              <ProtectedRoute guestOnly>
+                <LoginPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="/verify-email" element={<VerifyEmailPage />} />
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
 
-        {/* ── Buyer-only ───────────────────────────────────────── */}
-        <Route
-          path="/orders"
-          element={
-            <ProtectedRoute requiredRole="buyer">
-              <OrdersPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/cart"
-          element={
-            <ProtectedRoute requiredRole="buyer">
-              <CartPage />
-            </ProtectedRoute>
-          }
-        />
+          {/* ── Buyer-only ───────────────────────────────────────── */}
+          <Route
+            path="/orders"
+            element={
+              <ProtectedRoute requiredRole="buyer">
+                <OrdersPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/cart"
+            element={
+              <ProtectedRoute requiredRole="buyer">
+                <CartPage />
+              </ProtectedRoute>
+            }
+          />
 
-        {/* ── Vendor-only ──────────────────────────────────────── */}
-        <Route
-          path="/post-listing"
-          element={
-            <ProtectedRoute requiredRole="vendor">
-              <PostListingPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute requiredRole="vendor">
-              <VendorDashboardPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/verify-business"
-          element={
-            <ProtectedRoute requiredRole="vendor">
-              <VerifyBusinessPage />
-            </ProtectedRoute>
-          }
-        />
+          {/* ── Vendor-only ──────────────────────────────────────── */}
+          <Route
+            path="/post-listing"
+            element={
+              <ProtectedRoute requiredRole="vendor">
+                <PostListingPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute requiredRole="vendor">
+                <VendorDashboardPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/verify-business"
+            element={
+              <ProtectedRoute requiredRole="vendor">
+                <VerifyBusinessPage />
+              </ProtectedRoute>
+            }
+          />
 
-        {/* ── 404 ────────────────────────────────────────────── */}
-        <Route path="*" element={<NotFoundPage />} />
-      </Routes>
+          {/* ── 404 ────────────────────────────────────────────── */}
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+      </Suspense>
     </BrowserRouter>
   );
 }

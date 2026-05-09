@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import MobileNav from '../components/MobileNav';
 import FoodCard from '../components/FoodCard';
 import { Link } from 'react-router-dom';
 import { ChevronRight, Utensils, ShieldCheck, Clock, Leaf, TrendingDown, Zap } from 'lucide-react';
@@ -52,7 +53,7 @@ const HomePage = () => {
   const heroListing = listings[0] ?? null;
 
   return (
-    <div className="min-h-screen flex flex-col bg-bg">
+    <div className="min-h-screen flex flex-col bg-bg pb-24 md:pb-0">
       <Navbar />
 
       {/* ── Hero ─────────────────────────────────────────────── */}
@@ -292,6 +293,7 @@ const HomePage = () => {
       </section>
 
       <Footer />
+      <MobileNav />
     </div>
   );
 };

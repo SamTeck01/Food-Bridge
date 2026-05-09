@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import MobileNav from '../components/MobileNav';
 import { useApp } from '../context/AppContext';
 import { getListingById } from '../services/listings.service';
 import type { Listing } from '../services/listings.service';
@@ -445,6 +446,7 @@ const ListingDetailPage = () => {
       </main>
 
       <Footer />
+      <MobileNav />
     </div>
   );
 };

@@ -1,483 +1,405 @@
 import { useState, useRef } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import { ChevronLeft, Upload, Plus, Minus, X, AlertCircle } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import MobileNav from '../components/MobileNav';
+import { Upload, X, Plus, Minus, AlertCircle, Clock, CheckSquare } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { createListing } from '../services/listings.service';
 
-type Step = 1 | 2;
+const CATEGORIES = ['Rice Dishes', 'Stew & Soups', 'Snacks', 'Pastries', 'Beverages', 'Swallow', 'Other'];
+const ALLERGENS  = ['Gluten', 'Dairy', 'Nuts', 'Shellfish', 'Eggs', 'Soy', 'Fish'];
 
 interface FormState {
-  // Step 1 - Meal Info
-  mealName: string;
-  description: string;
-  category: string;
-  allergens: string[];
-  portionSize: string;
-  expiresAt: string;
-  imageFiles: File[];       // actual File objects for upload
-  imagePreviews: string[]; // object URLs for preview
-
-  // Step 2 - Pricing & Pickup
-  originalPrice: string;
-  discountedPrice: string;
-  quantity: number;
-  pickupStart: string;
-  pickupEnd: string;
-  pickupAddress: string;
-  instructions: string;
+  mealName:       string;
+  description:    string;
+  category:       string;
+  allergens:      string[];
+  quantity:       number;
+  originalPrice:  string;
+  discountedPrice:string;
+  isFree:         boolean;
+  pickupTime:     string;
+  expiresAt:      string;
+  imageFiles:     File[];
+  imagePreviews:  string[];
 }
-
-const CATEGORIES = ['Rice Dishes', 'Stew & Soups', 'Snacks', 'Pastries', 'Beverages', 'Swallow', 'Other'];
-const ALLERGEN_LIST = ['Gluten', 'Dairy', 'Nuts', 'Shellfish', 'Eggs', 'Soy', 'Fish'];
-
-const STEP_LABELS = ['Meal Details', 'Pricing & Pickup'];
 
 const PostListingPage = () => {
   const navigate = useNavigate();
-  const { user } = useApp();
-  const [step, setStep] = useState<Step>(1);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const { user }  = useApp();
+  const [loading, setLoading]   = useState(false);
+  const [error,   setError]     = useState('');
   const imageInputRef = useRef<HTMLInputElement>(null);
 
   const [form, setForm] = useState<FormState>({
-    mealName: '',
-    description: '',
-    category: '',
-    allergens: [],
-    portionSize: '',
-    expiresAt: '',
-    imageFiles: [],
-    imagePreviews: [],
-    originalPrice: '',
+    mealName:        '',
+    description:     '',
+    category:        '',
+    allergens:       [],
+    quantity:        1,
+    originalPrice:   '',
     discountedPrice: '',
-    quantity: 1,
-    pickupStart: '',
-    pickupEnd: '',
-    pickupAddress: '',
-    instructions: '',
+    isFree:          false,
+    pickupTime:      '',
+    expiresAt:       '',
+    imageFiles:      [],
+    imagePreviews:   [],
   });
 
   const set = <K extends keyof FormState>(key: K, value: FormState[K]) =>
     setForm((prev) => ({ ...prev, [key]: value }));
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (!files) return;
-    const newFiles = Array.from(files);
-    const newPreviews = newFiles.map((f) => URL.createObjectURL(f));
+  const handleImages = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files ?? []);
+    const previews = files.map((f) => URL.createObjectURL(f));
     setForm((prev) => ({
       ...prev,
-      imageFiles: [...prev.imageFiles, ...newFiles].slice(0, 4),
-      imagePreviews: [...prev.imagePreviews, ...newPreviews].slice(0, 4),
+      imageFiles:    [...prev.imageFiles,   ...files   ].slice(0, 4),
+      imagePreviews: [...prev.imagePreviews, ...previews].slice(0, 4),
     }));
   };
 
-  const removeImage = (idx: number) =>
+  const removeImage = (i: number) =>
     setForm((prev) => ({
       ...prev,
-      imageFiles: prev.imageFiles.filter((_, i) => i !== idx),
-      imagePreviews: prev.imagePreviews.filter((_, i) => i !== idx),
+      imageFiles:    prev.imageFiles.filter((_, j) => j !== i),
+      imagePreviews: prev.imagePreviews.filter((_, j) => j !== i),
     }));
 
   const toggleAllergen = (a: string) =>
-    set(
-      'allergens',
-      form.allergens.includes(a)
-        ? form.allergens.filter((x) => x !== a)
-        : [...form.allergens, a]
-    );
+    set('allergens', form.allergens.includes(a)
+      ? form.allergens.filter((x) => x !== a)
+      : [...form.allergens, a]);
 
-  const discount =
-    form.originalPrice && form.discountedPrice
+  const discountPct =
+    form.originalPrice && form.discountedPrice && !form.isFree
       ? Math.round(
-          ((Number(form.originalPrice) - Number(form.discountedPrice)) /
-            Number(form.originalPrice)) *
-            100
+          ((Number(form.originalPrice) - Number(form.discountedPrice)) / Number(form.originalPrice)) * 100
         )
       : 0;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (step === 1) {
-      setStep(2);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      return;
-    }
-
-    // Step 2 — submit to Appwrite
     setLoading(true);
     setError('');
     try {
       await createListing({
-        vendorId: user?.id ?? 'unknown',
-        vendorName: user?.name ?? 'Unknown Vendor',
-        name: form.mealName,
-        description: form.description,
-        originalPrice: Number(form.originalPrice),
-        discountedPrice: Number(form.discountedPrice),
-        quantity: form.quantity,
-        pickupTime: `${form.pickupStart} – ${form.pickupEnd}`,
-        expiresAt: form.expiresAt,
-        allergens: form.allergens,
-        imageFile: form.imageFiles[0], // upload first image
+        vendorId:       user?.id ?? 'unknown',
+        vendorName:     user?.name ?? 'Unknown Vendor',
+        name:           form.mealName,
+        description:    form.description,
+        originalPrice:  Number(form.originalPrice),
+        discountedPrice:form.isFree ? 0 : Number(form.discountedPrice),
+        quantity:       form.quantity,
+        pickupTime:     form.pickupTime,
+        expiresAt:      form.expiresAt,
+        allergens:      form.allergens,
+        imageFile:      form.imageFiles[0],
       });
       navigate('/dashboard');
     } catch (err) {
-      setError((err as Error).message || 'Failed to post listing. Please try again.');
+      setError((err as Error).message || 'Failed to post listing. Try again.');
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-bg">
+    <div className="min-h-screen flex flex-col bg-bg pb-24 md:pb-0">
       <Navbar />
 
-      <main className="flex-1 py-10 px-6">
-        <div className="max-w-[800px] mx-auto flex flex-col gap-8">
+      <main className="flex-1 py-8 px-4 md:px-6">
+        <div className="max-w-[1040px] mx-auto">
 
-          {/* Header */}
-          <div className="flex items-center gap-4">
-            <button
-              onClick={() => (step === 2 ? setStep(1) : navigate(-1))}
-              className="w-10 h-10 flex items-center justify-center rounded-full border border-border hover:border-brand-primary transition-all"
-            >
-              <ChevronLeft size={20} className="text-text-secondary" />
-            </button>
-            <div>
-              <h1 className="font-questrial text-2xl text-text-primary">Post a Listing</h1>
-              <p className="font-questrial text-sm text-text-secondary">
-                Step {step} of {STEP_LABELS.length} — {STEP_LABELS[step - 1]}
-              </p>
+          {/* ── Page header ────────────────────────────────────── */}
+          <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center gap-4">
+              <Link to="/dashboard"
+                className="w-10 h-10 flex items-center justify-center rounded-full border border-border hover:border-brand-primary transition-all">
+                ←
+              </Link>
+              <div>
+                <h1 className="font-questrial text-2xl text-text-primary">Post Listing</h1>
+                <p className="font-questrial text-sm text-text-muted">Share surplus food with your community</p>
+              </div>
             </div>
+            <Link to="/dashboard"
+              className="hidden sm:flex items-center gap-1.5 h-10 px-5 rounded-full border border-border font-questrial text-sm text-text-primary hover:border-[#EF4444] hover:text-[#EF4444] transition-all">
+              Cancel <X size={14} />
+            </Link>
           </div>
 
-          {/* Progress bar */}
-          <div className="w-full h-1.5 bg-bg-overlay rounded-full overflow-hidden">
-            <div
-              className="h-full bg-brand-primary rounded-full transition-all duration-500"
-              style={{ width: step === 1 ? '50%' : '100%' }}
-            />
-          </div>
+          <form onSubmit={handleSubmit}>
+            <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-6">
 
-          <form onSubmit={handleSubmit} className="flex flex-col gap-8">
+              {/* ── Left column ─────────────────────────────────── */}
+              <div className="flex flex-col gap-5">
 
-            {step === 1 && (
-              <>
-                {/* Images */}
-                <div className="section-card flex flex-col gap-5">
-                  <h2 className="font-questrial text-xl text-text-primary">Food Photos</h2>
-                  <p className="font-questrial text-sm text-text-secondary -mt-3">
-                    Upload up to 4 clear photos of the food. First photo will be the cover.
-                  </p>
+                {/* Photo upload */}
+                <div className="bg-white rounded-2xl border border-border p-6"
+                  style={{ boxShadow: '0 1px 3px rgba(10,38,35,0.06)' }}>
+                  <h2 className="font-questrial text-base text-text-primary mb-1">Upload Photo</h2>
+                  <p className="font-questrial text-xs text-text-muted mb-4">We accept PNG &amp; JPG files, up to 5MB</p>
 
-                  <div className="flex flex-wrap gap-4">
+                  <div className="flex flex-wrap gap-3">
                     {form.imagePreviews.map((src, i) => (
-                      <div key={i} className="relative w-[150px] h-[100px] rounded-[10px] overflow-hidden border border-border">
+                      <div key={i} className="relative w-[120px] h-[90px] rounded-xl overflow-hidden border border-border">
                         <img src={src} alt="" className="w-full h-full object-cover" />
-                        <button
-                          type="button"
-                          onClick={() => removeImage(i)}
-                          className="absolute top-1.5 right-1.5 w-6 h-6 rounded-full bg-black/50 flex items-center justify-center"
-                        >
-                          <X size={12} className="text-white" />
-                        </button>
                         {i === 0 && (
-                          <span className="absolute bottom-1.5 left-1.5 bg-brand-primary text-white text-[10px] px-2 py-0.5 rounded-full font-questrial">
+                          <span className="absolute bottom-1 left-1 bg-brand-primary text-white text-[9px] px-1.5 py-0.5 rounded-full font-questrial">
                             Cover
                           </span>
                         )}
+                        <button type="button" onClick={() => removeImage(i)}
+                          className="absolute top-1 right-1 w-5 h-5 rounded-full bg-black/50 flex items-center justify-center">
+                          <X size={10} className="text-white" />
+                        </button>
                       </div>
                     ))}
+
                     {form.imagePreviews.length < 4 && (
-                      <button
-                        type="button"
-                        onClick={() => imageInputRef.current?.click()}
-                        className="w-[150px] h-[100px] rounded-[10px] border-2 border-dashed border-border hover:border-brand-primary flex flex-col items-center justify-center gap-2 transition-colors group"
-                      >
-                        <Upload size={20} className="text-text-muted group-hover:text-brand-primary transition-colors" />
-                        <span className="font-questrial text-xs text-text-muted group-hover:text-brand-primary transition-colors">Add Photo</span>
-                      </button>
+                      <>
+                        <button type="button" onClick={() => imageInputRef.current?.click()}
+                          className="w-[120px] h-[90px] rounded-xl border-2 border-dashed border-border hover:border-brand-primary flex flex-col items-center justify-center gap-2 transition-colors group">
+                          <Upload size={18} className="text-text-muted group-hover:text-brand-primary transition-colors" />
+                          <span className="font-questrial text-xs text-text-muted group-hover:text-brand-primary transition-colors">
+                            Browse Files
+                          </span>
+                        </button>
+                        <input ref={imageInputRef} type="file" accept="image/*" multiple className="hidden" onChange={handleImages} />
+                      </>
                     )}
-                    <input
-                      ref={imageInputRef}
-                      type="file"
-                      accept="image/*"
-                      multiple
-                      className="hidden"
-                      onChange={handleImageUpload}
-                    />
                   </div>
                 </div>
 
-                {/* Meal Info */}
-                <div className="section-card flex flex-col gap-5">
-                  <h2 className="font-questrial text-xl text-text-primary">Meal Information</h2>
+                {/* Food info */}
+                <div className="bg-white rounded-2xl border border-border p-6 flex flex-col gap-4"
+                  style={{ boxShadow: '0 1px 3px rgba(10,38,35,0.06)' }}>
+                  <h2 className="font-questrial text-base text-text-primary">Food Details</h2>
 
+                  {/* Name */}
                   <div className="input-group">
-                    <label className="input-label">Meal Name <span className="text-state-error">*</span></label>
+                    <label className="input-label">Food Name <span className="text-state-error">*</span></label>
                     <input
-                      type="text"
-                      required
+                      type="text" required
                       className="input-field"
-                      placeholder="e.g. Jollof Rice + Chicken"
+                      placeholder="Your food name"
                       value={form.mealName}
                       onChange={(e) => set('mealName', e.target.value)}
                     />
                   </div>
 
-                  <div className="input-group">
-                    <label className="input-label">Description</label>
-                    <textarea
-                      rows={3}
-                      className="input-field resize-none"
-                      placeholder="Describe the meal — ingredients, taste, quantity included…"
-                      value={form.description}
-                      onChange={(e) => set('description', e.target.value)}
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  {/* Category + Quantity */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="input-group">
                       <label className="input-label">Category <span className="text-state-error">*</span></label>
-                      <select
-                        required
-                        className="input-field bg-bg"
-                        value={form.category}
-                        onChange={(e) => set('category', e.target.value)}
-                      >
+                      <select required className="input-field bg-white" value={form.category} onChange={(e) => set('category', e.target.value)}>
                         <option value="" disabled>Select category</option>
                         {CATEGORIES.map((c) => <option key={c}>{c}</option>)}
                       </select>
                     </div>
                     <div className="input-group">
-                      <label className="input-label">Portion Size</label>
-                      <input
-                        type="text"
-                        className="input-field"
-                        placeholder="e.g. 1 plate, 500g"
-                        value={form.portionSize}
-                        onChange={(e) => set('portionSize', e.target.value)}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="input-group">
-                    <label className="input-label">Food Expiry Date/Time <span className="text-state-error">*</span></label>
-                    <input
-                      type="datetime-local"
-                      required
-                      className="input-field"
-                      value={form.expiresAt}
-                      onChange={(e) => set('expiresAt', e.target.value)}
-                    />
-                  </div>
-                </div>
-
-                {/* Allergens */}
-                <div className="section-card flex flex-col gap-4">
-                  <div>
-                    <h2 className="font-questrial text-xl text-text-primary">Allergen Information</h2>
-                    <p className="font-questrial text-sm text-text-secondary mt-1">Select all that apply</p>
-                  </div>
-                  <div className="flex flex-wrap gap-3">
-                    {ALLERGEN_LIST.map((a) => (
-                      <button
-                        key={a}
-                        type="button"
-                        onClick={() => toggleAllergen(a)}
-                        className={`px-4 py-2 rounded-full border font-questrial text-sm transition-all ${
-                          form.allergens.includes(a)
-                            ? 'bg-brand-secondary text-white border-brand-secondary'
-                            : 'bg-bg border-border text-text-secondary hover:border-brand-primary'
-                        }`}
-                      >
-                        {a}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              </>
-            )}
-
-            {step === 2 && (
-              <>
-                {/* Pricing */}
-                <div className="section-card flex flex-col gap-5">
-                  <h2 className="font-questrial text-xl text-text-primary">Pricing</h2>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                    <div className="input-group">
-                      <label className="input-label">Original Price (₦) <span className="text-state-error">*</span></label>
-                      <input
-                        type="number"
-                        required
-                        min={0}
-                        className="input-field"
-                        placeholder="e.g. 2000"
-                        value={form.originalPrice}
-                        onChange={(e) => set('originalPrice', e.target.value)}
-                      />
-                    </div>
-                    <div className="input-group">
-                      <label className="input-label">Discounted Price (₦) <span className="text-state-error">*</span></label>
-                      <input
-                        type="number"
-                        required
-                        min={0}
-                        className="input-field"
-                        placeholder="e.g. 500"
-                        value={form.discountedPrice}
-                        onChange={(e) => set('discountedPrice', e.target.value)}
-                      />
-                    </div>
-                  </div>
-
-                  {discount > 0 && (
-                    <div className="flex items-center gap-3 p-3 rounded-[10px] bg-[#7AD37115] border border-brand-primary">
-                      <span className="font-questrial text-sm text-brand-secondary">
-                        🎉 You're offering a <span className="font-bold text-brand-primary">{discount}% discount</span> — great for reducing waste!
-                      </span>
-                    </div>
-                  )}
-
-                  {/* Quantity Selector */}
-                  <div className="input-group">
-                    <label className="input-label">Number of Portions Available <span className="text-state-error">*</span></label>
-                    <div className="flex items-center gap-4 mt-1">
-                      <button
-                        type="button"
-                        onClick={() => set('quantity', Math.max(1, form.quantity - 1))}
-                        className="w-9 h-9 rounded-full border border-border flex items-center justify-center hover:border-brand-primary transition-all"
-                      >
-                        <Minus size={16} className="text-text-secondary" />
-                      </button>
-                      <span className="font-questrial text-xl text-text-primary w-10 text-center">{form.quantity}</span>
-                      <button
-                        type="button"
-                        onClick={() => set('quantity', form.quantity + 1)}
-                        className="w-9 h-9 rounded-full border border-border flex items-center justify-center hover:border-brand-primary transition-all"
-                      >
-                        <Plus size={16} className="text-text-secondary" />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Pickup */}
-                <div className="section-card flex flex-col gap-5">
-                  <h2 className="font-questrial text-xl text-text-primary">Pickup Details</h2>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                    <div className="input-group">
-                      <label className="input-label">Pickup Window Start <span className="text-state-error">*</span></label>
-                      <input
-                        type="time"
-                        required
-                        className="input-field"
-                        value={form.pickupStart}
-                        onChange={(e) => set('pickupStart', e.target.value)}
-                      />
-                    </div>
-                    <div className="input-group">
-                      <label className="input-label">Pickup Window End <span className="text-state-error">*</span></label>
-                      <input
-                        type="time"
-                        required
-                        className="input-field"
-                        value={form.pickupEnd}
-                        onChange={(e) => set('pickupEnd', e.target.value)}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="input-group">
-                    <label className="input-label">Pickup Address <span className="text-state-error">*</span></label>
-                    <input
-                      type="text"
-                      required
-                      className="input-field"
-                      placeholder="Enter full pickup address"
-                      value={form.pickupAddress}
-                      onChange={(e) => set('pickupAddress', e.target.value)}
-                    />
-                  </div>
-
-                  <div className="input-group">
-                    <label className="input-label">Special Instructions</label>
-                    <textarea
-                      rows={3}
-                      className="input-field resize-none"
-                      placeholder="e.g. Collect from the back gate, ask for Emeka"
-                      value={form.instructions}
-                      onChange={(e) => set('instructions', e.target.value)}
-                    />
-                  </div>
-                </div>
-
-                {/* Preview Summary */}
-                {(form.mealName || form.discountedPrice) && (
-                  <div className="section-card flex flex-col gap-4 border-brand-primary/40">
-                    <h2 className="font-questrial text-xl text-text-primary">Listing Preview</h2>
-                    <div className="flex items-center gap-4">
-                      {form.imagePreviews[0] ? (
-                        <img src={form.imagePreviews[0]} alt="" className="w-20 h-20 rounded-[10px] object-cover flex-shrink-0" />
-                      ) : (
-                        <div className="w-20 h-20 rounded-[10px] bg-bg-overlay border border-border flex-shrink-0" />
-                      )}
-                      <div className="flex flex-col gap-1">
-                        <p className="font-questrial text-lg text-text-primary">{form.mealName || 'Your meal name'}</p>
-                        <div className="flex items-center gap-3">
-                          {form.originalPrice && (
-                            <span className="font-questrial text-sm text-text-secondary line-through">₦{Number(form.originalPrice).toLocaleString()}</span>
-                          )}
-                          {form.discountedPrice && (
-                            <span className="font-questrial text-base text-text-primary">₦{Number(form.discountedPrice).toLocaleString()}</span>
-                          )}
-                        </div>
-                        {form.category && (
-                          <span className="text-xs text-text-muted font-questrial">{form.category}</span>
-                        )}
+                      <label className="input-label">Quantity <span className="text-state-error">*</span></label>
+                      <div className="flex items-center gap-3 h-11">
+                        <button type="button" onClick={() => set('quantity', Math.max(1, form.quantity - 1))}
+                          className="w-10 h-10 rounded-full border border-border flex items-center justify-center hover:border-brand-primary transition-all bg-white flex-shrink-0">
+                          <Minus size={15} />
+                        </button>
+                        <input
+                          type="number" min={1} required
+                          className="input-field text-center w-20"
+                          value={form.quantity}
+                          onChange={(e) => set('quantity', Math.max(1, Number(e.target.value)))}
+                        />
+                        <button type="button" onClick={() => set('quantity', form.quantity + 1)}
+                          className="w-10 h-10 rounded-full border border-border flex items-center justify-center hover:border-brand-primary transition-all bg-white flex-shrink-0">
+                          <Plus size={15} />
+                        </button>
                       </div>
                     </div>
                   </div>
-                )}
-              </>
-            )}
 
-            {/* Error banner */}
-            {error && step === 2 && (
-              <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-[#EF444415] border border-[#EF444430]">
-                <AlertCircle size={18} className="text-state-error flex-shrink-0" />
-                <p className="font-questrial text-sm text-state-error">{error}</p>
+                  {/* Description */}
+                  <div className="input-group">
+                    <label className="input-label">Description (Optional)</label>
+                    <textarea
+                      rows={3}
+                      className="input-field resize-none"
+                      placeholder="Enter food description — ingredients, taste, portion size…"
+                      value={form.description}
+                      onChange={(e) => set('description', e.target.value)}
+                    />
+                  </div>
+
+                  {/* Allergens */}
+                  <div>
+                    <label className="input-label mb-2">Allergens</label>
+                    <div className="flex flex-wrap gap-2">
+                      {ALLERGENS.map((a) => (
+                        <button key={a} type="button" onClick={() => toggleAllergen(a)}
+                          className={`px-3 py-1.5 rounded-full border font-questrial text-sm transition-all ${
+                            form.allergens.includes(a)
+                              ? 'bg-brand-secondary text-white border-brand-secondary'
+                              : 'bg-bg border-border text-text-secondary hover:border-brand-primary'
+                          }`}>
+                          {a}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Pricing */}
+                <div className="bg-white rounded-2xl border border-border p-6 flex flex-col gap-4"
+                  style={{ boxShadow: '0 1px 3px rgba(10,38,35,0.06)' }}>
+                  <h2 className="font-questrial text-base text-text-primary">Pricing</h2>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="input-group">
+                      <label className="input-label">Original Price (₦) <span className="text-state-error">*</span></label>
+                      <input type="number" required min={0} className="input-field" placeholder="0.00"
+                        value={form.originalPrice} onChange={(e) => set('originalPrice', e.target.value)} />
+                    </div>
+                    <div className="input-group">
+                      <label className="input-label">Discounted Price (₦) <span className="text-state-error">*</span></label>
+                      <input type="number" required={!form.isFree} min={0} disabled={form.isFree}
+                        className="input-field disabled:opacity-50 disabled:cursor-not-allowed" placeholder="0.00"
+                        value={form.isFree ? '0' : form.discountedPrice}
+                        onChange={(e) => set('discountedPrice', e.target.value)} />
+                    </div>
+                  </div>
+
+                  {/* Mark as free */}
+                  <button type="button" onClick={() => set('isFree', !form.isFree)}
+                    className="flex items-center gap-2.5 w-fit">
+                    <div className={`w-5 h-5 rounded flex items-center justify-center border transition-all ${
+                      form.isFree ? 'bg-brand-secondary border-brand-secondary' : 'border-border'
+                    }`}>
+                      {form.isFree && <CheckSquare size={12} className="text-white" />}
+                    </div>
+                    <span className="font-questrial text-sm text-text-primary">Mark as FREE</span>
+                  </button>
+
+                  {discountPct > 0 && (
+                    <div className="flex items-center gap-3 p-3 rounded-xl bg-[#7AD37115] border border-brand-primary/30">
+                      <span className="font-questrial text-sm text-brand-secondary">
+                        🎉 You're offering a <strong className="text-brand-primary">{discountPct}% discount</strong> — great for reducing waste!
+                      </span>
+                    </div>
+                  )}
+                </div>
+
+                {/* Pickup */}
+                <div className="bg-white rounded-2xl border border-border p-6 flex flex-col gap-4"
+                  style={{ boxShadow: '0 1px 3px rgba(10,38,35,0.06)' }}>
+                  <h2 className="font-questrial text-base text-text-primary">Pickup Details</h2>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="input-group">
+                      <label className="input-label">Pickup Time <span className="text-state-error">*</span></label>
+                      <div className="relative">
+                        <input type="time" required className="input-field pr-10"
+                          value={form.pickupTime} onChange={(e) => set('pickupTime', e.target.value)} />
+                        <Clock size={15} className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none" />
+                      </div>
+                    </div>
+                    <div className="input-group">
+                      <label className="input-label">Expires At <span className="text-state-error">*</span></label>
+                      <div className="relative">
+                        <input type="datetime-local" required className="input-field pr-10"
+                          value={form.expiresAt} onChange={(e) => set('expiresAt', e.target.value)} />
+                        <Clock size={15} className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
-            )}
 
-            {/* Navigation Buttons */}
-            <div className="flex gap-4 pb-6">
-              {step === 2 && (
+              {/* ── Right column: preview ────────────────────────── */}
+              <div className="lg:sticky lg:top-24 flex flex-col gap-5 h-fit">
+                <div className="bg-white rounded-2xl border border-border p-6"
+                  style={{ boxShadow: '0 1px 3px rgba(10,38,35,0.06)' }}>
+                  <h2 className="font-questrial text-base text-text-primary mb-4">Preview Post</h2>
+
+                  {/* Mini food card */}
+                  <div className="rounded-2xl border border-border overflow-hidden">
+                    {/* Image */}
+                    <div className="w-full h-[140px] bg-[#F0F4F1] flex items-center justify-center">
+                      {form.imagePreviews[0]
+                        ? <img src={form.imagePreviews[0]} alt="" className="w-full h-full object-cover" />
+                        : <span className="text-4xl">🍽️</span>
+                      }
+                    </div>
+                    {/* Info */}
+                    <div className="p-4 flex flex-col gap-2">
+                      <div className="flex items-start justify-between gap-2">
+                        <p className="font-questrial text-sm text-text-primary">{form.mealName || 'Your meal name'}</p>
+                        {form.category && (
+                          <span className="px-2 py-0.5 rounded-full bg-[#F0F4F1] font-questrial text-[10px] text-text-muted flex-shrink-0">
+                            {form.category}
+                          </span>
+                        )}
+                      </div>
+                      <div className="flex items-center gap-2">
+                        {form.originalPrice && !form.isFree && (
+                          <span className="font-questrial text-xs text-text-muted line-through">
+                            ₦{Number(form.originalPrice).toLocaleString()}
+                          </span>
+                        )}
+                        <span className="font-questrial text-lg text-text-primary">
+                          {form.isFree ? 'FREE' : form.discountedPrice
+                            ? `₦${Number(form.discountedPrice).toLocaleString()}`
+                            : '₦0'}
+                        </span>
+                        {discountPct > 0 && (
+                          <span className="px-1.5 py-0.5 rounded-full bg-[#7AD37120] text-[#0F3934] font-questrial text-[10px]">
+                            -{discountPct}%
+                          </span>
+                        )}
+                      </div>
+                      <div className="flex items-center gap-3 pt-2 border-t border-border">
+                        {form.pickupTime && (
+                          <span className="flex items-center gap-1 font-questrial text-xs text-text-muted">
+                            <Clock size={10} /> {form.pickupTime}
+                          </span>
+                        )}
+                        <span className="flex items-center gap-1 font-questrial text-xs text-text-muted">
+                          🔥 0/{form.quantity} claims
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Error */}
+                {error && (
+                  <div className="flex items-start gap-3 p-4 rounded-xl bg-[#EF444415] border border-[#EF444430]">
+                    <AlertCircle size={16} className="text-state-error flex-shrink-0 mt-0.5" />
+                    <p className="font-questrial text-sm text-state-error">{error}</p>
+                  </div>
+                )}
+
+                {/* Submit */}
                 <button
-                  type="button"
-                  onClick={() => { setStep(1); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-                  className="btn-outline flex-1"
+                  type="submit"
                   disabled={loading}
+                  className="btn-primary w-full !h-12 !text-base flex items-center justify-center gap-2 disabled:opacity-70"
                 >
-                  Back
+                  {loading && <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />}
+                  {loading ? 'Posting…' : 'Post Listing'}
                 </button>
-              )}
-              <button type="submit" disabled={loading}
-                className="btn-primary flex-1 flex items-center justify-center gap-2 disabled:opacity-70">
-                {loading && <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />}
-                {loading ? 'Posting…' : step === 1 ? 'Continue to Pricing' : 'Post Listing'}
-              </button>
+
+                <p className="font-questrial text-xs text-text-muted text-center">
+                  Your listing will be visible to buyers in your area immediately.
+                </p>
+              </div>
             </div>
           </form>
         </div>
       </main>
 
       <Footer />
+      <MobileNav />
     </div>
   );
 };

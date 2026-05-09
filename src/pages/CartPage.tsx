@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import MobileNav from '../components/MobileNav';
 import { useApp } from '../context/AppContext';
 import { ArrowLeft, Minus, Plus, Trash2, MapPin, Clock, CheckCircle2, Tag, Leaf } from 'lucide-react';
 
@@ -64,6 +65,7 @@ const CartPage = () => {
           </div>
         </main>
         <Footer />
+        <MobileNav />
       </div>
     );
   }
@@ -268,6 +270,7 @@ const CartPage = () => {
       </main>
 
       <Footer />
+      <MobileNav />
     </div>
   );
 };
