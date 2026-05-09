@@ -1,0 +1,158 @@
+@import url('https://fonts.googleapis.com/css2?family=Questrial&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --brand-primary: #7AD371;
+  --brand-secondary: #0F3934;
+  --text-primary: #0A2623;
+  --text-secondary: #4A6361;
+  --text-muted: #8FA3A1;
+  --bg: #F9F9F9;
+  --bg-section: #EFF4F0;
+  --bg-overlay: #F0F4F1;
+  --border: #D8E6D8;
+  --state-success: #22C55E;
+  --state-error: #EF4444;
+  --state-warning: #F59E0B;
+  --shadow-sm: 0 1px 3px rgba(10, 38, 35, 0.06), 0 1px 2px rgba(10, 38, 35, 0.04);
+  --shadow-md: 0 4px 16px rgba(10, 38, 35, 0.1), 0 2px 6px rgba(10, 38, 35, 0.06);
+  --shadow-lg: 0 8px 32px rgba(10, 38, 35, 0.12), 0 4px 12px rgba(10, 38, 35, 0.08);
+  --shadow-xl: 0 20px 60px rgba(10, 38, 35, 0.15);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Questrial', -apple-system, Roboto, Helvetica, sans-serif;
+  background-color: #F9F9F9;
+  color: #0A2623;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #D8E6D8; border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: #7AD371; }
+
+/* Selection */
+::selection { background: #7AD37130; color: #0A2623; }
+
+@layer components {
+  /* ─── Buttons ─────────────────────────────────────────── */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 h-11 px-7 rounded-full bg-[#0F3934] text-white font-questrial text-base transition-all duration-200 hover:bg-[#1A4A3F] hover:shadow-lg active:scale-[0.97] select-none;
+  }
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 h-11 px-7 rounded-full border border-[#D8E6D8] bg-white text-[#0A2623] font-questrial text-base transition-all duration-200 hover:border-[#7AD371] hover:shadow-sm active:scale-[0.97] select-none;
+  }
+  .btn-green {
+    @apply inline-flex items-center justify-center gap-2 h-11 px-7 rounded-full bg-[#7AD371] border border-[#D8E6D8] text-[#0A2623] font-questrial text-base transition-all duration-200 hover:bg-[#69C161] hover:shadow-md active:scale-[0.97] select-none;
+  }
+  .btn-outline {
+    @apply inline-flex items-center justify-center gap-2 h-11 px-7 rounded-full border border-[#0F3934] text-[#0F3934] font-questrial text-base transition-all duration-200 hover:bg-[#0F3934] hover:text-white active:scale-[0.97] select-none;
+  }
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 h-11 px-7 rounded-full text-[#0A2623] font-questrial text-base transition-all duration-200 hover:bg-[#F0F4F1] active:scale-[0.97] select-none;
+  }
+  .btn-danger {
+    @apply inline-flex items-center justify-center gap-2 h-11 px-7 rounded-full bg-[#EF4444] text-white font-questrial text-base transition-all duration-200 hover:bg-[#DC2626] hover:shadow-md active:scale-[0.97] select-none;
+  }
+
+  /* ─── Inputs ──────────────────────────────────────────── */
+  .input-field {
+    @apply flex h-11 px-4 items-center w-full rounded-xl bg-white border border-[#D8E6D8] font-questrial text-base text-[#0A2623] placeholder:text-[#8FA3A1] focus:outline-none focus:border-[#7AD371] focus:ring-2 focus:ring-[#7AD37130] transition-all duration-200;
+  }
+  .input-group {
+    @apply flex flex-col gap-1.5;
+  }
+  .input-label {
+    @apply font-questrial text-sm text-[#4A6361];
+  }
+
+  /* ─── Cards ───────────────────────────────────────────── */
+  .card {
+    @apply bg-white rounded-2xl border border-[#D8E6D8] overflow-hidden transition-all duration-300;
+    box-shadow: var(--shadow-sm);
+  }
+  .card:hover {
+    box-shadow: var(--shadow-md);
+  }
+  .section-card {
+    @apply bg-white rounded-2xl border border-[#D8E6D8] p-6;
+    box-shadow: var(--shadow-sm);
+  }
+
+  /* ─── Status badges ───────────────────────────────────── */
+  .badge-success {
+    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-questrial text-[#22C55E] bg-[#22C55E15];
+  }
+  .badge-warning {
+    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-questrial text-[#F59E0B] bg-[#F59E0B15];
+  }
+  .badge-error {
+    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-questrial text-[#EF4444] bg-[#EF444415];
+  }
+  .badge-neutral {
+    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-questrial text-[#4A6361] bg-[#F0F4F1];
+  }
+
+  /* ─── Discount badge ──────────────────────────────────── */
+  .discount-badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-questrial bg-[#7AD37125] text-[#0F3934];
+  }
+}
+
+/* ─── Animations ─────────────────────────────────────────── */
+@keyframes slide-in {
+  from { transform: translateX(100%); opacity: 0; }
+  to   { transform: translateX(0);    opacity: 1; }
+}
+@keyframes slide-up {
+  from { transform: translateY(16px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes scale-in {
+  from { transform: scale(0.95); opacity: 0; }
+  to   { transform: scale(1);    opacity: 1; }
+}
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-8px); }
+}
+@keyframes pulse-ring {
+  0%   { transform: scale(0.8); opacity: 1; }
+  100% { transform: scale(2.0); opacity: 0; }
+}
+
+.animate-slide-in  { animation: slide-in  0.3s cubic-bezier(0.32, 0.72, 0, 1) forwards; }
+.animate-slide-up  { animation: slide-up  0.3s ease-out forwards; }
+.animate-fade-in   { animation: fade-in   0.25s ease-out forwards; }
+.animate-scale-in  { animation: scale-in  0.2s ease-out forwards; }
+.animate-float     { animation: float     3s ease-in-out infinite; }
+.animate-pulse-ring { animation: pulse-ring 1.5s ease-out infinite; }
+
+.skeleton {
+  background: linear-gradient(90deg, #F0F4F1 25%, #E8EFE8 50%, #F0F4F1 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
