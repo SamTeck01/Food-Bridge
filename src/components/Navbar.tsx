@@ -15,12 +15,12 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className="fixed top-6 left-0 right-0 z-50 md:px-[5rem] px-6">
+      <nav className="top-6 left-0 right-0 z-50 md:px-[5rem] px-6 mt-[2rem]">
         {/* Main Navbar Container */}
         <motion.div 
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          className="max-w-[77.5rem] mx-auto bg-[#FFFFFF] backdrop-blur-md border border-[#0000001A] h-[65px] rounded-full px-[2rem] flex items-center justify-between shadow-sm"
+          className="max-w-[77.5rem] mx-auto bg-[#FFFFFF] backdrop-blur-md border border-[#0000001A] h-[65px] rounded-full px-[2rem] flex items-center justify-between shadow-sm "
         >
           {/* Logo */}
           <Link to="/">

@@ -4,6 +4,7 @@ import FoodCard from '../components/FoodCard';
 import Footer from '../components/Footer';
 import Features from '../components/homepage/Features';
 import Hero from '../components/homepage/Hero';
+import Mission from '../components/homepage/Mission';
 import Navbar from '../components/Navbar';
 import type { Listing } from '../services/listings.service';
 import { getListings } from '../services/listings.service';
@@ -13,17 +14,25 @@ const HomePage = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getListings(3) // Fetching top 3 for the preview
-      .then(setListings)
-      .finally(() => setLoading(false));
+    getListings(3).then(setListings).finally(() => setLoading(false));
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#FDFDFD]">
+    <div className="min-h-screen bg-[#FFFDF2] font-[Questrial]">
+    <div 
+      className="relative flex flex-col bg-bottom bg-no-repeat bg-contain lg:bg-cover"
+      style={{ 
+        backgroundImage: 'url("/images/homepage/hero-main.svg")',
+        minHeight: '80vh'
+      }}
+    >
       <Navbar />
+      <div className="h-12 lg:h-[4.9rem]" /> 
+      <Hero />
+    </div>
       
       <main>
-        <Hero />
+        <Mission />
         
         {/* Available Listings Section */}
         <section className="py-24 px-6">
@@ -38,28 +47,27 @@ const HomePage = () => {
               </Link>
             </div>
 
-           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-  {loading ? (
-    <p>Loading fresh meals...</p>
-  ) : (
-    listings.map((listing) => (
-      <FoodCard 
-        key={listing.$id}
-        id={listing.$id}
-        name={listing.name}
-        originalPrice={listing.originalPrice}
-        discountedPrice={listing.discountedPrice}
-        vendorName={listing.vendorName}
-        imageUrl={listing.imageUrl}
-        distance={listing.distance ?? ''}
-        claimsUsed={listing.claimsUsed}
-        // Map the specific names expected by FoodCard:
-        timeLeft={listing.pickupTime} 
-        claimsTotal={listing.quantity + listing.claimsUsed}
-      />
-    ))
-  )}
-</div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {loading ? (
+                <p>Loading fresh meals...</p>
+              ) : (
+                listings.map((listing) => (
+                  <FoodCard 
+                    key={listing.$id}
+                    id={listing.$id}
+                    name={listing.name}
+                    originalPrice={listing.originalPrice}
+                    discountedPrice={listing.discountedPrice}
+                    vendorName={listing.vendorName}
+                    imageUrl={listing.imageUrl}
+                    distance={listing.distance ?? ''}
+                    claimsUsed={listing.claimsUsed}
+                    timeLeft={listing.pickupTime} 
+                    claimsTotal={listing.quantity + listing.claimsUsed}
+                  />
+                ))
+              )}
+            </div>
           </div>
         </section>
 
