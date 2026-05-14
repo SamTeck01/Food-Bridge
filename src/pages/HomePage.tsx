@@ -2,8 +2,10 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import FoodCard from '../components/FoodCard';
 import Footer from '../components/Footer';
+import AudienceSection from '../components/homepage/AudienceSection';
 import Features from '../components/homepage/Features';
 import Hero from '../components/homepage/Hero';
+import HowItWorks from '../components/homepage/HowItWorks';
 import Mission from '../components/homepage/Mission';
 import Navbar from '../components/Navbar';
 import type { Listing } from '../services/listings.service';
@@ -19,21 +21,23 @@ const HomePage = () => {
 
   return (
     <div className="min-h-screen bg-[#FFFDF2] font-[Questrial]">
-    <div 
-      className="relative flex flex-col bg-bottom bg-no-repeat bg-contain lg:bg-cover"
-      style={{ 
-        backgroundImage: 'url("/images/homepage/hero-main.svg")',
-        minHeight: '80vh'
-      }}
-    >
-      <Navbar />
-      <div className="h-12 lg:h-[4.9rem]" /> 
-      <Hero />
-    </div>
+      <div 
+        className="relative flex flex-col bg-bottom bg-no-repeat bg-contain lg:bg-cover"
+        style={{ 
+          backgroundImage: 'url("/images/homepage/hero-main.svg")',
+          minHeight: '80vh'
+        }}
+      >
+        <Navbar />
+        <div className="h-12 lg:h-[4.9rem]" /> 
+        <Hero />
+      </div>
       
       <main>
         <Mission />
-        
+        <AudienceSection />
+        <HowItWorks />
+
         {/* Available Listings Section */}
         <section className="py-24 px-6">
           <div className="max-w-[77.5rem] mx-auto">

@@ -3,9 +3,9 @@ import { motion } from 'framer-motion';
 const Mission = () => {
   return (
     <section 
-      className="relative py-32 px-6 overflow-hidden bg-[#FFFDF2] flex flex-col items-center justify-center text-center"
+      className="relative py-32 px-6 overflow-hidden bg-[#FFFDF2] flex flex-col items-center justify-center text-center md:max-h-[90vh] max-h-[60vh]"
       style={{ 
-        backgroundImage: 'url("/images/homepage/grain-pattern.svg")', // Your textured pattern
+        backgroundImage: 'url("/images/homepage/grain-pattern.svg")',
         backgroundSize: 'cover'
       }}
     >
@@ -25,24 +25,23 @@ const Mission = () => {
             className="w-full h-auto max-h-[500px] object-contain opacity-90"
           />
         </div>
+        <motion.p 
+          initial={{ opacity: 0, y: 10, rotate: 2 }} 
+          whileInView={{ opacity: 1, y: 0, rotate: 2 }} 
+          transition={{ delay: 0.5 }}         
+          className="flex flex-col md:gap-5 gap-4 md:text-[1.5rem] text-[1rem] text-[#FFFFFF] max-w-[30rem] text-start leading-normal relative z-10 p-[2rem] md:mt-[2rem] mt-[1rem] -rotate-2"
+        >
+          <span>Every day...</span>
 
-        {/* The Actual Text (Overlapping the center of the image) */}
-        <div className="relative z-10 py-20">
-          <h2 className="text-[3rem] md:text-[4.5rem] lg:text-[5.5rem] leading-[1] text-[#0A2623] font-normal tracking-tight">
-            Feed families, <br />
-            <span className="italic font-light opacity-80">not</span> landfills.
-          </h2>
-          
-          <motion.p 
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-            className="mt-8 text-[1.25rem] text-[#0A2623B2] max-w-[30rem] mx-auto leading-relaxed"
-          >
-            Turning surplus into impact. Join the mission to bridge the gap between 
-            perfectly good food and the people who need it.
-          </motion.p>
-        </div>
+          <span>
+            Restaurants throw away good food. <br className="md:hidden" /> 
+            Families struggle to afford meals.
+          </span>
+
+          <span className="font-medium">
+            FoodBridge connects both worlds.
+          </span>
+        </motion.p>
       </motion.div>
     </section>
   );

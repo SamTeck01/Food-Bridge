@@ -82,52 +82,52 @@ const Navbar = () => {
             />
 
             {/* Sidebar Drawer */}
-<motion.div
-  initial={{ x: '-100%' }}
-  animate={{ x: 0 }}
-  exit={{ x: '-100%' }}
-  transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-  className="fixed top-0 left-0 h-[92dvh] w-[80%] max-w-[300px] bg-white z-[70] shadow-2xl md:hidden flex flex-col p-8 overflow-y-auto"
->
-  <div className="flex items-center justify-between mb-12 flex-shrink-0">
-    <img src="/images/homepage/logo.svg" alt="Logo" className="h-8 w-auto" />
-    <button onClick={() => setIsOpen(false)} className="text-[#0F3934]">
-      <X size={24} />
-    </button>
-  </div>
+            <motion.div
+              initial={{ x: '-100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '-100%' }}
+              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+              className="fixed top-0 left-0 h-[100vh] w-[80%] max-w-[300px] bg-white z-[70] shadow-2xl md:hidden flex flex-col p-8 overflow-y-auto"
+            >
+              <div className="flex items-center justify-between mb-12 flex-shrink-0">
+                <img src="/images/homepage/logo.svg" alt="Logo" className="h-8 w-auto" />
+                <button onClick={() => setIsOpen(false)} className="text-[#0F3934]">
+                  <X size={24} />
+                </button>
+              </div>
 
-  <div className="flex flex-col gap-8 flex-grow">
-    {navLinks.map((link) => (
-      <Link
-        key={link.name}
-        to={link.path}
-        onClick={() => setIsOpen(false)}
-        className="text-[16px] font-normal text-[#0A2623] relative group"
-      >
-        {link.name}
-        <span className="absolute -bottom-2 left-0 h-[1px] bg-[#0000001A] w-full" />
-      </Link>
-    ))}
-  </div>
+              <div className="flex flex-col gap-8 flex-grow">
+                {navLinks.map((link) => (
+                  <Link
+                    key={link.name}
+                    to={link.path}
+                    onClick={() => setIsOpen(false)}
+                    className="text-[16px] font-normal text-[#0A2623] relative group"
+                  >
+                    {link.name}
+                    <span className="absolute -bottom-2 left-0 h-[1px] bg-[#0000001A] w-full" />
+                  </Link>
+                ))}
+              </div>
 
-  {/* Mobile Auth Actions*/}
-  <div className="mt-auto flex flex-col gap-4 pt-8 pb-4 flex-shrink-0">
-    <Link 
-      to="/login" 
-      onClick={() => setIsOpen(false)}
-      className="w-full text-center py-3 rounded-full border border-[#0000001A] text-[16px] font-normal text-[#0A2623B2]"
-    >
-      Store login
-    </Link>
-    <Link 
-      to="/get-started" 
-      onClick={() => setIsOpen(false)}
-      className="w-full text-center py-3 rounded-full bg-[#0F3934] text-white text-[16px] font-normal shadow-lg shadow-[#0F3934]/20"
-    >
-      Login
-    </Link>
-  </div>
-</motion.div>
+              {/* Mobile Auth Actions*/}
+              <div className="mt-auto flex flex-col gap-4 pt-8 pb-4 flex-shrink-0">
+                <Link 
+                  to="/login" 
+                  onClick={() => setIsOpen(false)}
+                  className="w-full text-center py-3 rounded-full border border-[#0000001A] text-[16px] font-normal text-[#0A2623B2]"
+                >
+                  Store login
+                </Link>
+                <Link 
+                  to="/get-started" 
+                  onClick={() => setIsOpen(false)}
+                  className="w-full text-center py-3 rounded-full bg-[#0F3934] text-white text-[16px] font-normal shadow-lg shadow-[#0F3934]/20"
+                >
+                  Login
+                </Link>
+              </div>
+            </motion.div>
           </>
         )}
       </AnimatePresence>

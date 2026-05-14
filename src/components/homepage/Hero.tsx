@@ -13,7 +13,7 @@ const Hero = () => {
           className="flex flex-col items-center"
         >
           {/* Main Heading */}
-          <h1 className="text-[3.5rem] lg:text-[5.5rem] leading-[1.05] font-normal text-[#0A2623] mb-4">
+          <h1 className="text-[3rem] lg:text-[5.5rem] leading-[1.05] font-normal text-[#0A2623] mb-4">
             Good Food <br />
             Shouldn’t Go <br />
             to Waste.
@@ -23,27 +23,27 @@ const Hero = () => {
           </p>
           
           {/* Action Buttons */}
-<div className="flex flex-col sm:flex-row gap-4 justify-center items-center mt-8">
-  <Link 
-    to="/get-started" 
-    className="px-8 py-4 bg-[#0F3934] text-white rounded-full text-lg font-light hover:bg-[#1A4A3F] hover:scale-105 transition-all duration-300 flex items-center gap-3 group"
-  >
-    List surplus food
-    <MoveRight size={20} className="group-hover:translate-x-1 transition-transform" />
-  </Link>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center md:mt-8 mt-4">
+            <Link 
+              to="/get-started" 
+              className="px-5 py-4 bg-[#0F3934] text-white rounded-full text-[1rem] font-light hover:bg-[#1A4A3F] hover:scale-105 transition-all duration-300 flex items-center gap-3 group"
+            >
+              List surplus food
+              <MoveRight size={16} className="group-hover:translate-x-1 transition-transform" />
+            </Link>
 
-  <Link 
-    to="/listings" 
-    className="px-8 py-4 border border-[#0F393440] bg-white/50 backdrop-blur-sm text-[#0A2623] rounded-full text-lg font-light hover:bg-white hover:scale-105 transition-all duration-300 flex items-center gap-3"
-  >
-    <MapPin size={20} className="text-[#0F3934]" />
-    Find food near you
-  </Link>
-</div>
+            <Link 
+              to="/listings" 
+              className="px-5 py-4 border border-[#0F393440] bg-white/50 backdrop-blur-sm text-[#0A2623] rounded-full text-[1rem] font-light hover:bg-white hover:scale-105 transition-all duration-300 flex items-center gap-3"
+            >
+              <MapPin size={16} className="text-[#0F3934]" />
+              Find food near you
+            </Link>
+          </div>
         </motion.div>
         
       </div>
-          <img src="/images/homepage/hero-bottom.svg" alt="" />
+      <img src="/images/homepage/hero-bottom.svg" alt="" />
     </section>
   );
 };
