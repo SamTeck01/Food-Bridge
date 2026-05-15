@@ -4,6 +4,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 
 // Pages
 const HomePage = lazy(() => import('./pages/HomePage'));
+const AboutPage = lazy(() => import('./pages/AboutPage'));
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
 const ImpactPage = lazy(() => import('./pages/ImpactPage'));
 const ProfilePage = lazy(() => import('./pages/ProfilePage'));
@@ -41,6 +42,7 @@ function App() {
         <Routes>
           {/* ── Public ─────────────────────────────────────────── */}
           <Route path="/" element={<HomePage />} />
+          <Route path="/about" element={<AboutPage />} />
           <Route path="/listings" element={<ListingsPage />} />
           <Route path="/listing/:id" element={<ListingDetailPage />} />
           <Route path="/impact" element={<ImpactPage />} />
