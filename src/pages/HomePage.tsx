@@ -1,5 +1,3 @@
-import { useEffect, useState } from 'react';
-
 import Footer from '../components/Footer';
 import AudienceSection from '../components/homepage/AudienceSection';
 import CTASection from '../components/homepage/CTASection';
@@ -10,17 +8,7 @@ import ImpactSection from '../components/homepage/ImpactSection';
 import Mission from '../components/homepage/Mission';
 import Navbar from '../components/Navbar';
 
-
-import type { Listing } from '../services/listings.service';
-import { getListings } from '../services/listings.service';
-
 const HomePage = () => {
-  const [listings, setListings] = useState<Listing[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    getListings(3).then(setListings).finally(() => setLoading(false));
-  }, []);
 
   return (
     <div className="min-h-screen bg-[#FFFDF2] font-[Questrial]">
