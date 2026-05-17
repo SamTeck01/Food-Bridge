@@ -1,109 +1,138 @@
-import { Link } from 'react-router-dom';
-import Logo from './Logo';
-import { ArrowRight, Leaf } from 'lucide-react';
+import { motion, type Variants } from 'framer-motion';
+import { useState } from 'react';
+import { toast, Toaster } from 'react-hot-toast';
 
 const Footer = () => {
-  const year = new Date().getFullYear();
+  const [email, setEmail] = useState('');
+
+  const handleSubscribe = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email) return;
+    toast.success('Thanks for subscribing to our newsletter!', {
+      style: { background: '#0F3934', color: '#7AD371', borderRadius: '12px' },
+    });
+    setEmail('');
+  };
+
+  const starVariants: Variants = {
+    initial: { rotate: 0, scale: 1 },
+    animate: { 
+      rotate: 360, 
+      transition: { duration: 8, repeat: Infinity, ease: "linear" } 
+    },
+    hover: { scale: 1.2, filter: "brightness(1.5)" }
+  };
 
   return (
-    <footer className="w-full bg-[#0A2623] text-white">
-
-      {/* Newsletter strip */}
-      <div className="border-b border-white/10 px-6 md:px-16">
-        <div className="max-w-[1280px] mx-auto flex flex-col sm:flex-row items-center gap-6 py-10">
-          <div className="flex-shrink-0 text-center sm:text-left">
-            <p className="font-questrial text-xs text-white/40 uppercase tracking-wider mb-1">Stay updated</p>
-            <h3 className="font-questrial text-2xl text-white">Subscribe to Our Newsletter</h3>
-          </div>
-
-          <div className="hidden sm:block w-px h-16 bg-white/15 flex-shrink-0 mx-6" />
-
-          <form
-            onSubmit={(e) => e.preventDefault()}
-            className="flex flex-1 items-center gap-3 min-w-0 max-w-xl"
+    <footer className="bg-[#0F0F0F] text-white border border-[#FFFFFF4D]">
+      <Toaster position="top-right" />
+      
+      {/*Newsletter Section */}
+      <div className="max-w-[1440px] mx-auto grid grid-cols-1 md:grid-cols-4 border-b border-[#FFFFFF4D]">
+        <div className="p-6 my-auto pl-[8rem] flex text-right items-end">
+          <h2 className="text-[1.6rem] font-normal leading-tight">Subscribe to<br />Our Newsletter</h2>
+        </div>
+        <div className="col-span-1 md:col-span-2 p-8 md:p-12 border-x border-[#FFFFFF4D] flex items-center">
+          <input 
+            type="email" 
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Enter your email address"
+            className="w-full bg-transparent border-none text-xl text-white placeholder:text-[#FFFFFF4D] focus:outline-none focus:ring-0 autofill:bg-transparent"
+            style={{
+              WebkitBoxShadow: '0 0 0px 1000px #0F0F0F inset',
+              WebkitTextFillColor: '#FFFFFF',
+            }}
+          />
+        </div>
+        <div className="p-8 md:p-12 flex items-center justify-center">
+          <button 
+            onClick={handleSubscribe}
+            className="px-10 py-4 bg-[#7AD371] text-[#0A2623] hover:text-white rounded-full text-[1rem] font-light hover:bg-[#1A4A3F] hover:scale-105 transition-all duration-300 flex items-center gap-3 group"
           >
-            <input
-              type="email"
-              placeholder="Enter your email address"
-              className="flex-1 bg-transparent font-questrial text-base text-white placeholder:text-white/30 outline-none border-b border-white/20 pb-1 focus:border-brand-primary transition-colors min-w-0"
+            Subscribe 
+            <span className="group-hover:translate-x-1 transition-transform">→</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Star Row */}
+      <div className="max-w-[1440px] mx-auto grid grid-cols-3 md:grid-cols-6 border-b border-[#FFFFFF4D] overflow-hidden">
+        {[...Array(6)].map((_, i) => (
+          <div key={i} className="flex justify-center py-[1.5rem]">
+            <motion.img 
+              src="/images/star-icon.svg" 
+              variants={starVariants}
+              initial="initial"
+              animate="animate"
+              whileHover="hover"
+              className="size-[2.5rem]"
             />
-            <button
-              type="submit"
-              className="flex-shrink-0 flex items-center gap-2 h-10 px-5 rounded-full bg-brand-primary text-[#0A2623] font-questrial text-sm hover:bg-[#69C161] hover:shadow-lg transition-all active:scale-[0.97]"
-            >
-              Subscribe <ArrowRight size={15} />
-            </button>
-          </form>
-        </div>
+          </div>
+        ))}
       </div>
 
-      {/* Main footer content */}
-      <div className="px-6 md:px-16 py-16 border-b border-white/10">
-        <div className="max-w-[1280px] mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12">
-
-          {/* Brand */}
-          <div className="flex flex-col gap-5 lg:col-span-1">
-            <Logo className="brightness-0 invert opacity-90" />
-            <p className="font-questrial text-sm text-white/60 leading-relaxed">
-              FoodBridge connects verified food businesses with communities to rescue surplus meals, cut waste, and make quality food accessible to all.
-            </p>
-            <div className="flex items-center gap-2 text-brand-primary">
-              <Leaf size={14} />
-              <span className="font-questrial text-xs text-brand-primary/80">Fighting food waste since 2024</span>
-            </div>
-          </div>
-
-          {/* Social */}
-          <div className="flex flex-col gap-4">
-            <span className="font-questrial text-xs text-white/40 uppercase tracking-wider">Social</span>
-            {['Twitter / X', 'Facebook', 'Instagram', 'LinkedIn', 'TikTok'].map((item) => (
-              <a key={item} href="#" className="font-questrial text-sm text-white/70 hover:text-brand-primary transition-colors">
-                {item}
-              </a>
-            ))}
-          </div>
-
-          {/* Company */}
-          <div className="flex flex-col gap-4">
-            <span className="font-questrial text-xs text-white/40 uppercase tracking-wider">Company</span>
-            {[
-              { label: 'For Individuals', to: '/listings' },
-              { label: 'For Businesses', to: '/get-started' },
-              { label: 'About Us', to: '#' },
-              { label: 'FAQs', to: '#' },
-              { label: 'Contact', to: '#' },
-            ].map((item) => (
-              <Link key={item.label} to={item.to} className="font-questrial text-sm text-white/70 hover:text-brand-primary transition-colors">
-                {item.label}
-              </Link>
-            ))}
-          </div>
-
-          {/* Legal */}
-          <div className="flex flex-col gap-4">
-            <span className="font-questrial text-xs text-white/40 uppercase tracking-wider">Legal</span>
-            {['Cookie Policy', 'Privacy Policy', 'Terms of Service', 'DSA Disclosure'].map((item) => (
-              <a key={item} href="#" className="font-questrial text-sm text-white/70 hover:text-brand-primary transition-colors">
-                {item}
-              </a>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Bottom bar */}
-      <div className="px-6 md:px-16 py-5">
-        <div className="max-w-[1280px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p className="font-questrial text-xs text-white/30">
-            © {year} FoodBridge. All rights reserved.
+      {/*Main Footer Content */}
+      <div className="max-w-[1440px] mx-auto grid grid-cols-1 md:grid-cols-4">
+        {/* Brand Column */}
+        <div className="p-6 md:p-8 border-r border-[#FFFFFF4D] border-b md:border-b-0">
+          <img src="/images/white_logo.svg" alt="FoodBridge" className="h-10 mb-[1.44rem]" />
+          <p className="text-[#FFFFFFB2] text-base leading-relaxed mb-[1.44rem]">
+            FoodBridge connects verified food businesses with communities to rescue surplus meals, cut waste, and make quality food accessible.
           </p>
-          <p className="font-questrial text-xs text-white/20">
-            Made with 💚 in Nigeria
-          </p>
+          <p className="text-[#FFFFFF4D]">Copyright © 2026 FoodBridge. All rights reserved.</p>
         </div>
+
+        {/* Links Columns */}
+        <FooterColumn title="Social" links={[
+          { label: 'Twitter', icon: '/images/icons/twitter.svg', href: '#' },
+          { label: 'Facebook', icon: '/images/icons/facebook.svg', href: '#' },
+          { label: 'Instagram', icon: '/images/icons/instagram.svg', href: '#' },
+          { label: 'LinkedIn', icon: '/images/icons/linkedin.svg', href: '#' },
+        ]} showIcons border />
+        
+        <FooterColumn title="Company" links={[
+          { label: 'Home', href: '/' },
+          { label: 'Vendors', href: '/vendors' },
+          { label: 'Individuals', href: '/individuals' },
+          { label: 'About', href: '/about' },
+        ]} border />
+
+        <FooterColumn title="Support" links={[
+          { label: 'FAQs', href: '/faqs' },
+          { label: 'Contact', href: '/contact' },
+          { label: 'Cookie policy', href: '/cookies' },
+          { label: 'Privacy Policy', href: '/privacy' },
+        ]} />
       </div>
     </footer>
   );
 };
+
+const FooterColumn = ({ title, links, showIcons, border }: any) => (
+  <div className={`p-8 md:p-12 ${border ? 'border-r border-[#FFFFFF4D] border-b md:border-b-0' : ''}`}>
+    <h3 className="text-[#FFFFFF] mb-8 font-medium">{title}</h3>
+    <ul className="space-y-4">
+      {links.map((link: any) => (
+        <li key={link.label}>
+          <motion.a 
+            href={link.href}
+            className="text-white text-base flex items-center gap-2 group relative w-fit hover:text-[#7AD371]"
+          >
+            {showIcons && <img src={link.icon} className="size-[1.125rem]" alt={title} />}
+            {link.label}
+            {/* Shooting Star Underline */}
+            <motion.span 
+              initial={{ scaleX: 0, x: -10 }}
+              whileHover={{ scaleX: 1, x: 0 }}
+              className="absolute -bottom-1 left-0 w-full h-[2px] bg-[#7AD371] origin-left"
+              transition={{ type: "spring", stiffness: 300, damping: 20 }}
+            />
+          </motion.a>
+        </li>
+      ))}
+    </ul>
+  </div>
+);
 
 export default Footer;
