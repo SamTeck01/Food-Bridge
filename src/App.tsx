@@ -8,6 +8,8 @@ const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
 const ImpactPage = lazy(() => import('./pages/ImpactPage'));
 const ProfilePage = lazy(() => import('./pages/ProfilePage'));
 
+//Abdul samad is a very good boy
+
 // Auth
 const GetStartedPage = lazy(() => import('./pages/GetStartedPage'));
 const LoginPage = lazy(() => import('./pages/LoginPage'));
