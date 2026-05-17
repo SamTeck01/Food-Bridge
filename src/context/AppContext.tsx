@@ -42,7 +42,7 @@ interface AppState {
 }
 
 interface AppActions {
-  login: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<User>;
   register: (email: string, password: string, name: string, role: 'buyer' | 'vendor') => Promise<void>;
   logout: () => Promise<void>;
   addToCart: (item: Omit<CartItem, 'quantity'>) => void;
@@ -85,10 +85,12 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
 
   // ── Auth Actions ─────────────────────────────────────────────────────────────
 
-  const login = useCallback(async (email: string, password: string) => {
+  const login = useCallback(async (email: string, password: string): Promise<User> => {
     try {
       const appwriteUser = await signIn(email, password);
-      setUser(mapAppwriteUser(appwriteUser));
+      const mappedUser = mapAppwriteUser(appwriteUser);
+      setUser(mappedUser);
+      return mappedUser;
     } catch (err) {
       throw new Error(getAuthErrorMessage(err));
     }

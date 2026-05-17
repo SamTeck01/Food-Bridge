@@ -26,9 +26,12 @@ const ProtectedRoute = ({ children, guestOnly = false, requiredRole }: Protected
     );
   }
 
-  // Guest-only: redirect logged-in users home
+  // Guest-only: redirect logged-in users to their dashboard/listings
   if (guestOnly && isLoggedIn) {
-    return <Navigate to="/" replace />;
+    if (user?.role === 'vendor') {
+      return <Navigate to="/dashboard" replace />;
+    }
+    return <Navigate to="/listings" replace />;
   }
 
   // Require auth

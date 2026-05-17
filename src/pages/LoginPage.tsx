@@ -20,8 +20,16 @@ const LoginPage = () => {
     setError('');
     setLoading(true);
     try {
-      await login(form.email, form.password);
-      navigate(from, { replace: true });
+      const loggedInUser = await login(form.email, form.password);
+      if (from === '/') {
+        if (loggedInUser.role === 'vendor') {
+          navigate('/dashboard', { replace: true });
+        } else {
+          navigate('/listings', { replace: true });
+        }
+      } else {
+        navigate(from, { replace: true });
+      }
     } catch (err) {
       setError((err as Error).message);
     } finally {
