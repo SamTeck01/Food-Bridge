@@ -1,15 +1,15 @@
 import { Suspense, lazy } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import ProtectedRoute from './components/ProtectedRoute';
 
 // Pages
 const HomePage = lazy(() => import('./pages/HomePage'));
 const AboutPage = lazy(() => import('./pages/AboutPage'));
+const ContactPage = lazy(() => import('./pages/Contact'));
+const IndividulasPage = lazy(() => import('./pages/Individuals'));
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
 const ImpactPage = lazy(() => import('./pages/ImpactPage'));
 const ProfilePage = lazy(() => import('./pages/ProfilePage'));
-
-//Abdul samad is a very good boy
 
 // Auth
 const GetStartedPage = lazy(() => import('./pages/GetStartedPage'));
@@ -45,6 +45,9 @@ function App() {
           {/* ── Public ─────────────────────────────────────────── */}
           <Route path="/" element={<HomePage />} />
           <Route path="/about" element={<AboutPage />} />
+          <Route path="/contact" element={<ContactPage />} />
+          <Route path="/individuals" element={<IndividulasPage />} />
+
           <Route path="/listings" element={<ListingsPage />} />
           <Route path="/listing/:id" element={<ListingDetailPage />} />
           <Route path="/impact" element={<ImpactPage />} />

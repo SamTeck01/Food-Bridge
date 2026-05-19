@@ -55,6 +55,14 @@ export default {
         'fade-in': 'fade-in 0.25s ease-out forwards',
         'scale-in': 'scale-in 0.2s ease-out forwards',
         'float': 'float 3s ease-in-out infinite',
+        scroll: 'scroll 20s linear infinite',
+      },
+      keyframes: {
+        scroll: {
+          '0%': { transform: 'translateX(0)' },
+          // Adjust the percentage based on how wide your single set of items is
+          '100%': { transform: 'translateX(-33.33%)' }, 
+        }
       },
     },
   },
