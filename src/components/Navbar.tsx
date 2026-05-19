@@ -8,9 +8,11 @@ const Navbar = () => {
   const { pathname } = useLocation();
 
   const navLinks = [
+    { name: 'Home', path: '/' },
     { name: 'About', path: '/about' },
-    { name: 'Individuals', path: '/listings' },
     { name: 'Vendors', path: '/vendors' },
+    { name: 'Individuals', path: '/listings' },
+    { name: 'Contact Us', path: '/contact' },
   ];
 
   return (
@@ -28,18 +30,37 @@ const Navbar = () => {
           </Link>
 
           {/* Desktop Links */}
-          <div className="hidden md:flex items-center gap-[1.5rem]">
-            {navLinks.map((link) => (
-              <Link
-                key={link.name}
-                to={link.path}
-                className={`text-[16px] font-normal transition-colors ${
-                  pathname === link.path ? 'text-[#0A2623]' : 'text-[#0A2623] hover:text-[#7AD371]'
-                }`}
-              >
-                {link.name}
-              </Link>
-            ))}
+          <div className="hidden md:flex items-center gap-[2rem]">
+            {navLinks.map((link) => {
+              const isActive = pathname === link.path;
+              return (
+                <Link
+                  key={link.name}
+                  to={link.path}
+                  className={`text-[16px] font-normal transition-colors relative py-2 block ${
+                    isActive ? 'text-[#7AD371]' : 'text-[#0A2623] hover:text-[#7AD371]'
+                  }`}
+                >
+                  {link.name}
+                  {/* Desktop Scribble Underline (Shows on Active or Hover) */}
+                  <div 
+                    className={`absolute bottom-[-4px] left-1/2 -translate-x-1/2 w-[110%] h-[10px] bg-[#7AD371] transition-all duration-300 origin-center pointer-events-none ${
+                      isActive ? 'opacity-100 scale-100' : 'opacity-0 scale-75 group-hover:opacity-100 group-hover:scale-100'
+                    }`}
+                    style={{
+                      WebkitMaskImage: 'url("/images/scribble-underline.svg")',
+                      WebkitMaskSize: 'contain',
+                      WebkitMaskRepeat: 'no-repeat',
+                      WebkitMaskPosition: 'center',
+                      maskImage: 'url("/images/scribble-underline.svg")',
+                      maskSize: 'contain',
+                      maskRepeat: 'no-repeat',
+                      maskPosition: 'center',
+                    }}
+                  />
+                </Link>
+              );
+            })}
           </div>
 
           {/* Desktop Actions */}
@@ -68,67 +89,84 @@ const Navbar = () => {
         </motion.div>
       </nav>
 
-      {/* Mobile Sidebar Menu */}
+      {/* Mobile Full Screen Menu Context */}
       <AnimatePresence>
         {isOpen && (
-          <>
-            {/* Overlay */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setIsOpen(false)}
-              className="fixed inset-0 bg-black/20 backdrop-blur-sm z-[60] md:hidden"
-            />
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-[#FFFDF2] z-[100] md:hidden flex flex-col p-5 overflow-hidden"
+          >
+            <div className="w-full bg-white border border-[#0000001A] h-[65px] rounded-full px-6 flex items-center justify-between shadow-sm">
+              <img src="/images/homepage/logo.svg" alt="FoodBridge Logo" className="h-8 w-auto" />
+              <button onClick={() => setIsOpen(false)} className="text-[#0A2623] p-1">
+                <X size={24} />
+              </button>
+            </div>
 
-            {/* Sidebar Drawer */}
-            <motion.div
-              initial={{ x: '-100%' }}
-              animate={{ x: 0 }}
-              exit={{ x: '-100%' }}
-              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="fixed top-0 left-0 h-[100vh] w-[80%] max-w-[300px] bg-white z-[70] shadow-2xl md:hidden flex flex-col p-8 overflow-y-auto"
-            >
-              <div className="flex items-center justify-between mb-12 flex-shrink-0">
-                <img src="/images/homepage/logo.svg" alt="Logo" className="h-8 w-auto" />
-                <button onClick={() => setIsOpen(false)} className="text-[#0F3934]">
-                  <X size={24} />
-                </button>
-              </div>
-
-              <div className="flex flex-col gap-8 flex-grow">
-                {navLinks.map((link) => (
+            {/* Vertically and Horizontally Centered Links */}
+            <div className="flex flex-col items-center justify-center gap-6 my-[2rem]">
+              {navLinks.map((link) => {
+                const isActive = pathname === link.path;
+                return (
                   <Link
                     key={link.name}
                     to={link.path}
                     onClick={() => setIsOpen(false)}
-                    className="text-[16px] font-normal text-[#0A2623] relative group"
+                    className={`text-[1rem] font-normal tracking-wide relative block ${
+                      isActive ? 'text-brand-primary' : 'text-brand-secondary'
+                    }`}
                   >
                     {link.name}
-                    <span className="absolute -bottom-2 left-0 h-[1px] bg-[#0000001A] w-full" />
+                    {/* Mobile Scribble Underline */}
+                    <div 
+                      className={`absolute bottom-[-6px] left-1/2 -translate-x-1/2 w-[120%] h-[12px] bg-[#7AD371] transition-transform duration-200 ${
+                        isActive ? 'scale-100 opacity-100' : 'scale-0 opacity-0'
+                      }`}
+                      style={{
+                        WebkitMaskImage: 'url("/images/scribble-underline.svg")',
+                        WebkitMaskSize: 'contain',
+                        WebkitMaskRepeat: 'no-repeat',
+                        WebkitMaskPosition: 'center',
+                        maskImage: 'url("/images/scribble-underline.svg")',
+                        maskSize: 'contain',
+                        maskRepeat: 'no-repeat',
+                        maskPosition: 'center',
+                      }}
+                    />
                   </Link>
-                ))}
-              </div>
+                );
+              })}
+            </div>
 
-              {/* Mobile Auth Actions*/}
-              <div className="mt-auto flex flex-col gap-4 pt-8 pb-4 flex-shrink-0">
-                <Link 
-                  to="/login" 
-                  onClick={() => setIsOpen(false)}
-                  className="w-full text-center py-3 rounded-full border border-[#0000001A] text-[16px] font-normal text-[#0A2623B2]"
-                >
-                  Store login
-                </Link>
-                <Link 
-                  to="/get-started" 
-                  onClick={() => setIsOpen(false)}
-                  className="w-full text-center py-3 rounded-full bg-[#0F3934] text-white text-[16px] font-normal shadow-lg shadow-[#0F3934]/20"
-                >
-                  Login
-                </Link>
-              </div>
-            </motion.div>
-          </>
+            {/* CTA Buttons*/}
+            <div className="flex flex-col gap-4 w-full max-w-[320px] mx-auto mb-6 z-10">
+              <Link 
+                to="/login" 
+                onClick={() => setIsOpen(false)}
+                className="w-full text-center py-3.5 rounded-full border border-[#0A262333] text-[16px] font-normal text-[#0A2623] bg-white hover:bg-neutral-50 transition-colors"
+              >
+                Vendor Login
+              </Link>
+              <Link 
+                to="/get-started" 
+                onClick={() => setIsOpen(false)}
+                className="w-full text-center py-3.5 rounded-full bg-[#0A2623] text-white text-[16px] font-normal transition-opacity active:opacity-90"
+              >
+                Get Started
+              </Link>
+            </div>
+
+            {/* Bottom Bridge Illustration Graphic */}
+            <div className="absolute bottom-0 left-0 right-0 w-full pointer-events-none flex justify-center z-0">
+              <img 
+                src="/images/homepage/hero-bottom.svg" 
+                alt="Bridge Landscape graphic" 
+                className="w-full object-cover native-bottom max-h-[180px]"
+              />
+            </div>
+          </motion.div>
         )}
       </AnimatePresence>
     </>
