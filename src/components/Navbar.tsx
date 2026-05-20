@@ -8,10 +8,9 @@ const Navbar = () => {
   const { pathname } = useLocation();
 
   const navLinks = [
-    { name: 'Home', path: '/' },
     { name: 'About', path: '/about' },
     { name: 'Vendors', path: '/vendors' },
-    { name: 'Individuals', path: '/listings' },
+    { name: 'Individuals', path: '/individuals' },
     { name: 'Contact Us', path: '/contact' },
   ];
 
@@ -69,13 +68,13 @@ const Navbar = () => {
               to="/login" 
               className="text-[16px] font-normal text-[#0A2623B2] px-[1.5rem] py-[0.59rem] hover:bg-[#0F3934] hover:text-white rounded-full transition-all border border-[#0000001A]"
             >
-              Store login
+              Vendor Login
             </Link>
             <Link 
               to="/get-started" 
               className="bg-[#0F3934] text-white px-[1.5rem] py-[0.59rem] rounded-full text-[15px] font-medium border border-[#0000001A] hover:bg-transparent hover:text-[#0A2623B2] transition-all"
             >
-              Login
+              Get Started
             </Link>
           </div>
 
@@ -145,14 +144,14 @@ const Navbar = () => {
               <Link 
                 to="/login" 
                 onClick={() => setIsOpen(false)}
-                className="w-full text-center py-3.5 rounded-full border border-[#0A262333] text-[16px] font-normal text-[#0A2623] bg-white hover:bg-neutral-50 transition-colors"
+                className="w-full text-center py-3.5 rounded-full border border-[#0A262333] text-[16px] font-normal text-[#0A2623] bg-transparent hover:bg-neutral-50 transition-colors"
               >
                 Vendor Login
               </Link>
               <Link 
                 to="/get-started" 
                 onClick={() => setIsOpen(false)}
-                className="w-full text-center py-3.5 rounded-full bg-[#0A2623] text-white text-[16px] font-normal transition-opacity active:opacity-90"
+                className="w-full text-center py-3.5 rounded-full bg-brand-secondary text-white text-[16px] font-normal transition-opacity active:opacity-90"
               >
                 Get Started
               </Link>
