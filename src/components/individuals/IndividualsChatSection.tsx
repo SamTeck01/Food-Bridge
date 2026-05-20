@@ -11,7 +11,7 @@ const features = [
 
 const IndividualsChatSection = () => {
   return (
-    <section className="w-full">
+    <section className="w-full relative z-30">
       {/* Main Dark Green Container */}
       <div className="w-full bg-brand-secondary rounded-t-[50px] md:rounded-t-[80px] pt-16 md:pt-24 pb-12 md:pb-16 px-6 md:px-16 overflow-hidden relative shadow-[var(--shadow-xl)]">
         

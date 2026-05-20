@@ -7,6 +7,7 @@ import FAQSection from '../components/homepage/FAQSection';
 import IndividualsChatSection from '../components/individuals/IndividualsChatSection';
 import IndividualsMission from '../components/individuals/IndividualsMission';
 import IndividualWorks from '../components/individuals/individualworks';
+import IndividualHero from '../components/individuals/IndividualHero';
 
 const AboutPage: React.FC = () => {
   return (
@@ -17,7 +18,8 @@ const AboutPage: React.FC = () => {
             minHeight: '80vh'
             }}
         >
-            <Navbar />               
+            <Navbar />  
+            <IndividualHero />             
         </div>
         <IndividualsChatSection />
         <IndividualWorks />
