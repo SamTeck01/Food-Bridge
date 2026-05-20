@@ -61,12 +61,12 @@ const AboutTeam: React.FC = () => {
             {/* Content Container */}
             <div className="p-5 flex items-center justify-between h-[150px] ">
               <div>
-                <h3 className="font-normal text-[24px] text-gray-900 w-[323.33px]">{member.name}</h3>
-                <span className="text-[#3CB371] text-xs font-normal bg-green-50 px-2 py-[10px] rounded-md mt-1 inline-block">
+                <h3 className="font-normal text-[24px]  w-[323.33px]">{member.name}</h3>
+                <span className="text-[#7AD371] text-[14px] font-normal bg-[#7AD3711A] px-2 py-[10px] rounded-md mt-1 inline-block">
                   {member.role}
                 </span>
               </div>
-              <div className="flex gap-3 text-gray-400 w-[20px]">
+              <div className="flex gap-3 text-gray-400 w-[96px] h-[40px]">
                 <a href={member.xLink} className="hover:text-gray-900 transition-colors">
                   <XIcon />
                 </a>

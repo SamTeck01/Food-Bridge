@@ -5,6 +5,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 // Pages
 const HomePage = lazy(() => import('./pages/HomePage'));
 const AboutPage = lazy(() => import('./pages/AboutPage'));
+const VendorPage = lazy(() => import('./pages/VendorPage'));
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
 const ImpactPage = lazy(() => import('./pages/ImpactPage'));
 const ProfilePage = lazy(() => import('./pages/ProfilePage'));
@@ -49,7 +50,7 @@ function App() {
           <Route path="/listing/:id" element={<ListingDetailPage />} />
           <Route path="/impact" element={<ImpactPage />} />
           <Route path="/profile" element={<ProfilePage />} />
-
+          <Route path="/vendors" element={<VendorPage />} />
           {/* ── Auth (guest-only: redirect home if logged in) ──── */}
           <Route
             path="/get-started"
