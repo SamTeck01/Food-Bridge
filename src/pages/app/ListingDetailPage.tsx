@@ -1,16 +1,23 @@
-import { useState, useEffect } from 'react';
-import { Link, useParams, useNavigate } from 'react-router-dom';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
-import MobileNav from '../components/MobileNav';
-import { useApp } from '../context/AppContext';
-import { getListingById } from '../services/listings.service';
-import type { Listing } from '../services/listings.service';
 import {
-  ArrowLeft, MapPin, Clock, Flame, Star,
-  Heart, CheckCircle2, ShieldCheck, Leaf,
-  ChevronRight, Share2
+  ArrowLeft,
+  CheckCircle2,
+  ChevronRight,
+  Clock, Flame,
+  Heart,
+  Leaf,
+  MapPin,
+  Share2,
+  ShieldCheck,
+  Star
 } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import Footer from '../../components/Footer';
+import MobileNav from '../../components/MobileNav';
+import Navbar from '../../components/Navbar';
+import { useApp } from '../../context/AppContext';
+import type { Listing } from '../../services/listings.service';
+import { getListingById } from '../../services/listings.service';
 
 /* Figma diagonal arrow icon (directions) */
 const DirectionsArrow = () => (

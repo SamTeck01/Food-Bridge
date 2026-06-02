@@ -1,12 +1,10 @@
-import Footer from '../components/Footer';
-import AudienceSection from '../components/homepage/AudienceSection';
-import CTASection from '../components/homepage/CTASection';
-import FAQSection from '../components/homepage/FAQSection';
-import Hero from '../components/homepage/Hero';
-import HowItWorks from '../components/homepage/HowItWorks';
-import ImpactSection from '../components/homepage/ImpactSection';
-import Mission from '../components/homepage/Mission';
-import Navbar from '../components/Navbar';
+import AudienceSection from '../../components/homepage/AudienceSection';
+import CTASection from '../../components/homepage/CTASection';
+import FAQSection from '../../components/homepage/FAQSection';
+import Hero from '../../components/homepage/Hero';
+import HowItWorks from '../../components/homepage/HowItWorks';
+import ImpactSection from '../../components/homepage/ImpactSection';
+import Mission from '../../components/homepage/Mission';
 
 const HomePage = () => {
 
@@ -19,7 +17,6 @@ const HomePage = () => {
           minHeight: '80vh'
         }}
       >
-        <Navbar />
         <div className="h-12 lg:h-[4.9rem]" /> 
         <Hero />
       </div>
@@ -32,7 +29,6 @@ const HomePage = () => {
         <FAQSection />
         <CTASection />
       </main>
-      <Footer />
     </div>
   );
 };

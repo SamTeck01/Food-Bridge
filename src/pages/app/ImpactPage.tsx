@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
-import MobileNav from '../components/MobileNav';
-import { getListings } from '../services/listings.service';
-import type { Listing } from '../services/listings.service';
+import { useEffect, useState } from 'react';
+import Footer from '../../components/Footer';
+import MobileNav from '../../components/MobileNav';
+import Navbar from '../../components/Navbar';
+import type { Listing } from '../../services/listings.service';
+import { getListings } from '../../services/listings.service';
 
 /* ── Radial progress ring ─────────────────────────────────────────── */
 const Ring = ({ pct, color, size = 80 }: { pct: number; color: string; size?: number }) => {

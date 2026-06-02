@@ -1,5 +1,5 @@
-import React from 'react';
 import { motion } from 'framer-motion';
+import React from 'react';
 
 // Replace these with actual lucide-react icons if you prefer, or use your custom SVGs
 const XIcon = () => <span className="font-bold text-lg">𝕏</span>;
@@ -28,7 +28,7 @@ const AboutTeam: React.FC = () => {
     <section className="py-20 px-6 max-w-7xl mx-auto text-[#0A2521]">
       <div className="text-center max-w-2xl mx-auto mb-16">
         <h2 className="text-3xl md:text-[60px] font-normal mb-4">Meet the Builders</h2>
-        <p className="text-[#0A2623] text-sm md:text-base w-[465px] mx-auto">
+        <p className="text-[#0A2623] text-sm md:text-base max-w-[465px] mx-auto">
           We are designers, developers, and problem-solvers passionate about using technology for impact.
         </p>
       </div>

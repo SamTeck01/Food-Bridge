@@ -1,8 +1,8 @@
+import { AlertCircle, Eye, EyeOff } from 'lucide-react';
 import { useState } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
-import Logo from '../components/Logo';
-import { useApp } from '../context/AppContext';
-import { Eye, EyeOff, AlertCircle } from 'lucide-react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import Logo from '../../components/Logo';
+import { useApp } from '../../context/AppContext';
 
 const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);

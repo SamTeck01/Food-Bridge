@@ -1,9 +1,9 @@
-import React from 'react';
 import { motion } from 'framer-motion';
+import React from 'react';
 
 const AboutHero: React.FC = () => {
   return (
-    <section className="flex flex-col items-center justify-center pt-24 pb-16 px-4 text-center">
+    <section className="flex flex-col items-center justify-center pt-24 px-4 text-center">
       {/* Label: "About FoodBridge" */}
       <motion.span
         initial={{ opacity: 0, y: 10 }}

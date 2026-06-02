@@ -1,8 +1,8 @@
+import { AlertCircle, CheckCircle2, Mail } from 'lucide-react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import Logo from '../components/Logo';
-import { sendEmailVerification } from '../services/auth.service';
-import { CheckCircle2, Mail, AlertCircle } from 'lucide-react';
+import Logo from '../../components/Logo';
+import { sendEmailVerification } from '../../services/auth.service';
 
 /**
  * Email Verification page.

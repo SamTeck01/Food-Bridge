@@ -1,13 +1,11 @@
 import React from 'react';
 
-import Footer from '../components/Footer';
-import Navbar from '../components/Navbar';
-import CTASection from '../components/homepage/CTASection';
-import FAQSection from '../components/homepage/FAQSection';
-import IndividualsChatSection from '../components/individuals/IndividualsChatSection';
-import IndividualsMission from '../components/individuals/IndividualsMission';
-import IndividualWorks from '../components/individuals/individualworks';
-import IndividualHero from '../components/individuals/IndividualHero';
+import CTASection from '../../components/homepage/CTASection';
+import FAQSection from '../../components/homepage/FAQSection';
+import IndividualHero from '../../components/individuals/IndividualHero';
+import IndividualsChatSection from '../../components/individuals/IndividualsChatSection';
+import IndividualsMission from '../../components/individuals/IndividualsMission';
+import IndividualWorks from '../../components/individuals/individualworks';
 
 const AboutPage: React.FC = () => {
   return (
@@ -18,7 +16,6 @@ const AboutPage: React.FC = () => {
             minHeight: '80vh'
             }}
         >
-            <Navbar />  
             <IndividualHero />             
         </div>
         <IndividualsChatSection />
@@ -28,7 +25,6 @@ const AboutPage: React.FC = () => {
             <FAQSection />
         </div>
         <CTASection />
-      <Footer />
     </div>
   );
 };

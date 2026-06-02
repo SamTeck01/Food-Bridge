@@ -1,14 +1,26 @@
+import {
+  Bell,
+  ChevronRight,
+  Heart,
+  HelpCircle,
+  LayoutDashboard,
+  LogOut,
+  Mail,
+  MapPin,
+  Package,
+  Phone,
+  PlusSquare,
+  Settings,
+  ShieldCheck,
+  Star,
+  User,
+} from 'lucide-react';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
-import MobileNav from '../components/MobileNav';
-import { useApp } from '../context/AppContext';
-import {
-  User, Mail, Phone, MapPin, ShieldCheck, LogOut,
-  ChevronRight, Package, LayoutDashboard, PlusSquare,
-  Bell, Heart, Settings, HelpCircle, Star,
-} from 'lucide-react';
+import Footer from '../../components/Footer';
+import MobileNav from '../../components/MobileNav';
+import Navbar from '../../components/Navbar';
+import { useApp } from '../../context/AppContext';
 
 const ProfilePage = () => {
   const { isLoggedIn, user, logout } = useApp();

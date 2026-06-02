@@ -1,8 +1,8 @@
-import { useState, useRef } from 'react';
+import { CheckCircle2, ChevronLeft, Shield, Upload, X } from 'lucide-react';
+import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
-import { ChevronLeft, Upload, CheckCircle2, X, Shield } from 'lucide-react';
+import Footer from '../../components/Footer';
+import Navbar from '../../components/Navbar';
 
 type DocField = 'businessReg' | 'cacDocument' | 'proofOfAddress' | 'ownerID';
 

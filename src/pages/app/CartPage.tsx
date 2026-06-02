@@ -1,10 +1,10 @@
+import { ArrowLeft, CheckCircle2, Clock, Leaf, MapPin, Minus, Plus, Tag, Trash2 } from 'lucide-react';
 import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
-import MobileNav from '../components/MobileNav';
-import { useApp } from '../context/AppContext';
-import { ArrowLeft, Minus, Plus, Trash2, MapPin, Clock, CheckCircle2, Tag, Leaf } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import Footer from '../../components/Footer';
+import MobileNav from '../../components/MobileNav';
+import Navbar from '../../components/Navbar';
+import { useApp } from '../../context/AppContext';
 
 const CartPage = () => {
   const navigate = useNavigate();

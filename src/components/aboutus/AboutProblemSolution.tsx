@@ -1,6 +1,6 @@
-import React from 'react';
 import { motion } from 'framer-motion';
-import { Star, Sparkles, Leaf, ShieldCheck, Clock } from 'lucide-react';
+import { Clock, Leaf, ShieldCheck, Sparkles, Star } from 'lucide-react';
+import React from 'react';
 
 const AboutProblemSolution: React.FC = () => {
   // Array for the scrolling marquee at the bottom
@@ -15,7 +15,7 @@ const AboutProblemSolution: React.FC = () => {
 
   return (
     // The dark green wrapper with the huge rounded top corners
-    <section className="bg-[#0A2521] rounded-t-[3rem] md:rounded-t-[4rem] pt-20 pb-6 overflow-hidden mt-12">
+    <section className="bg-[#0A2521] rounded-t-[3rem] md:rounded-t-[4rem] pb-6 overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 mb-20">
         
         {/* The 2x2 Grid */}

@@ -1,18 +1,28 @@
-import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
-import MobileNav from '../components/MobileNav';
-import { useApp } from '../context/AppContext';
 import {
-  TrendingUp, ShoppingBag, Plus, MoreVertical,
-  CheckCircle2, Clock, XCircle, Edit2, Trash2, BarChart2,
-  BadgeCheck, Package, AlertCircle, Eye
+  AlertCircle,
+  BadgeCheck,
+  BarChart2,
+  CheckCircle2, Clock,
+  Edit2,
+  Eye,
+  MoreVertical,
+  Package,
+  Plus,
+  ShoppingBag,
+  Trash2,
+  TrendingUp,
+  XCircle
 } from 'lucide-react';
-import { getVendorListings, deleteListing } from '../services/listings.service';
-import { getVendorOrders } from '../services/orders.service';
-import type { Listing } from '../services/listings.service';
-import type { Order } from '../services/orders.service';
+import { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import Footer from '../../components/Footer';
+import MobileNav from '../../components/MobileNav';
+import Navbar from '../../components/Navbar';
+import { useApp } from '../../context/AppContext';
+import type { Listing } from '../../services/listings.service';
+import { deleteListing, getVendorListings } from '../../services/listings.service';
+import type { Order } from '../../services/orders.service';
+import { getVendorOrders } from '../../services/orders.service';
 
 const STATUS_CONFIG: Record<string, { label: string; icon: React.ReactNode; textColor: string; bg: string }> = {
   active:   { label: 'Active',   icon: <CheckCircle2 size={12} />, textColor: 'text-[#22C55E]', bg: 'bg-[#22C55E12]' },

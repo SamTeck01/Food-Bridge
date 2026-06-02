@@ -1,15 +1,20 @@
-import { useState, useEffect, useCallback } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
-import MobileNav from '../components/MobileNav';
-import FoodCard from '../components/FoodCard';
 import {
-  SlidersHorizontal, ChevronDown, Search, MapPin,
-  X, RefreshCw, Utensils
+  ChevronDown,
+  MapPin,
+  RefreshCw,
+  Search,
+  SlidersHorizontal,
+  Utensils,
+  X
 } from 'lucide-react';
-import { getListings } from '../services/listings.service';
-import type { Listing } from '../services/listings.service';
+import { useCallback, useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import FoodCard from '../../components/FoodCard';
+import Footer from '../../components/Footer';
+import MobileNav from '../../components/MobileNav';
+import Navbar from '../../components/Navbar';
+import type { Listing } from '../../services/listings.service';
+import { getListings } from '../../services/listings.service';
 
 const CATEGORIES = ['All', 'Rice Dishes', 'Soups & Stews', 'Snacks', 'Pastries', 'Drinks', 'Protein', 'Other'];
 const SORT_OPTIONS = [

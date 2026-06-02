@@ -1,8 +1,8 @@
+import { AlertCircle, ArrowLeft, CheckCircle2 } from 'lucide-react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import Logo from '../components/Logo';
-import { sendPasswordRecovery } from '../services/auth.service';
-import { ArrowLeft, AlertCircle, CheckCircle2 } from 'lucide-react';
+import Logo from '../../components/Logo';
+import { sendPasswordRecovery } from '../../services/auth.service';
 
 const ForgotPasswordPage = () => {
   const [email, setEmail] = useState('');

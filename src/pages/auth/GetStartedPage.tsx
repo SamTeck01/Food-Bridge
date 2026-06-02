@@ -1,8 +1,8 @@
+import { AlertCircle, ChevronDown, Eye, EyeOff } from 'lucide-react';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import Logo from '../components/Logo';
-import { useApp } from '../context/AppContext';
-import { Eye, EyeOff, ChevronDown, AlertCircle } from 'lucide-react';
+import Logo from '../../components/Logo';
+import { useApp } from '../../context/AppContext';
 
 const GetStartedPage = () => {
   const [showPassword, setShowPassword] = useState(false);
