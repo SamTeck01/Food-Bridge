@@ -8,9 +8,11 @@ interface ProtectedRouteProps {
   guestOnly?: boolean;
   /** If set, only users with this role may access the route. Others are redirected to /. */
   requiredRole?: 'buyer' | 'vendor';
+  /** If true, email verification is required. Unverified users are redirected to /verify-email */
+  requireVerification?: boolean;
 }
 
-const ProtectedRoute = ({ children, guestOnly = false, requiredRole }: ProtectedRouteProps) => {
+const ProtectedRoute = ({ children, guestOnly = false, requiredRole, requireVerification = true }: ProtectedRouteProps) => {
   const { isLoggedIn, user, authLoading } = useApp();
   const location = useLocation();
 
@@ -37,6 +39,11 @@ const ProtectedRoute = ({ children, guestOnly = false, requiredRole }: Protected
   // Require auth
   if (!guestOnly && !isLoggedIn) {
     return <Navigate to="/login" state={{ from: location }} replace />;
+  }
+
+  // Require email verification (only if user is logged in)
+  if (requireVerification && isLoggedIn && !user?.emailVerified) {
+    return <Navigate to="/verify-email" replace />;
   }
 
   // Require specific role

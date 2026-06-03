@@ -1,8 +1,9 @@
 import { AlertCircle, CheckCircle2, Mail } from 'lucide-react';
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Link, useSearchParams, useNavigate } from 'react-router-dom';
 import Logo from '../../components/Logo';
-import { sendEmailVerification } from '../../services/auth.service';
+import { sendEmailVerification, confirmEmailVerification } from '../../services/auth.service';
+import { useApp } from '../../context/AppContext';
 
 /**
  * Email Verification page.
@@ -14,9 +15,50 @@ import { sendEmailVerification } from '../../services/auth.service';
  * re-send the verification email.
  */
 const VerifyEmailPage = () => {
+  const { user } = useApp();
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const [resending, setResending] = useState(false);
   const [resent, setResent] = useState(false);
   const [error, setError] = useState('');
+  const [verifying, setVerifying] = useState(false);
+  const [verified, setVerified] = useState(false);
+
+  const userId = searchParams.get('userId') || '';
+  const secret = searchParams.get('secret') || '';
+
+  useEffect(() => {
+    // If magic link params are present, verify the email
+    if (userId && secret && !verifying && !verified) {
+      setVerifying(true);
+      confirmEmailVerification(userId, secret)
+        .then(() => {
+          setVerified(true);
+          // After verification, redirect to appropriate page
+          setTimeout(() => {
+            if (user?.role === 'vendor') {
+              navigate('/dashboard', { replace: true });
+            } else {
+              navigate('/listings', { replace: true });
+            }
+          }, 1500);
+        })
+        .catch(() => {
+          setError('Invalid or expired verification link. Please request a new one.');
+          setVerifying(false);
+        });
+      return;
+    }
+
+    // Only redirect if verified AND not coming from registration (no magic link params)
+    if (user?.emailVerified && !userId && !secret) {
+      if (user.role === 'vendor') {
+        navigate('/dashboard', { replace: true });
+      } else {
+        navigate('/listings', { replace: true });
+      }
+    }
+  }, [user, userId, secret, verifying, verified, navigate]);
 
   const handleResend = async () => {
     setResending(true);

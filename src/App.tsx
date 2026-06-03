@@ -16,10 +16,12 @@ const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
 const LoginPage = lazy(() => import('./pages/auth/LoginPage'));
 const GetStartedPage = lazy(() => import('./pages/auth/GetStartedPage'));
 const ForgotPasswordPage = lazy(() => import('./pages/auth/ForgotPasswordPage'));
+const VerifyEmailPage = lazy(() => import('./pages/auth/VerifyEmailPage'));
 
 // App/Dashboard Pages
 const VendorDashboardPage = lazy(() => import('./pages/app/VendorDashboardPage'));
 const PostListingPage = lazy(() => import('./pages/app/PostListingPage'));
+const ListingsPage = lazy(() => import('./pages/app/ListingsPage'));
 const OrdersPage = lazy(() => import('./pages/app/OrdersPage'));
 const ImpactPage = lazy(() => import('./pages/app/ImpactPage'));
 
@@ -42,10 +44,12 @@ function App() {
           <Route path="/login" element={<ProtectedRoute guestOnly><LoginPage /></ProtectedRoute>} />
           <Route path="/get-started" element={<ProtectedRoute guestOnly><GetStartedPage /></ProtectedRoute>} />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="/verify-email" element={<ProtectedRoute requireVerification={false}><VerifyEmailPage /></ProtectedRoute>} />
 
           {/* App/Dashboard (No Nav/Footer) */}
           <Route element={<DashboardLayout />}>
             <Route path="/dashboard" element={<ProtectedRoute requiredRole="vendor"><VendorDashboardPage /></ProtectedRoute>} />
+            <Route path="/listings" element={<ProtectedRoute requiredRole="buyer"><ListingsPage /></ProtectedRoute>} />
             <Route path="/post-listing" element={<ProtectedRoute requiredRole="vendor"><PostListingPage /></ProtectedRoute>} />
             <Route path="/orders" element={<ProtectedRoute requiredRole="buyer"><OrdersPage /></ProtectedRoute>} />
           </Route>
