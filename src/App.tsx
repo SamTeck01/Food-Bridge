@@ -1,8 +1,8 @@
 import { Suspense, lazy } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import ProtectedRoute from './components/ProtectedRoute';
-import DashboardLayout from './components/layouts/DashboardLayout';
 import PublicLayout from './components/layouts/PublicLayout';
+import VendorLayout from './components/layouts/VendorLayout';
 
 // Marketing Pages
 const HomePage = lazy(() => import('./pages/marketing/HomePage'));
@@ -19,7 +19,7 @@ const ForgotPasswordPage = lazy(() => import('./pages/auth/ForgotPasswordPage'))
 const VerifyEmailPage = lazy(() => import('./pages/auth/VerifyEmailPage'));
 
 // App/Dashboard Pages
-const VendorDashboardPage = lazy(() => import('./pages/app/VendorDashboardPage'));
+const VendorDashboardPage = lazy(() => import('./pages/app/vendor/VendorDashboardPage'));
 const PostListingPage = lazy(() => import('./pages/app/PostListingPage'));
 const ListingsPage = lazy(() => import('./pages/app/ListingsPage'));
 const OrdersPage = lazy(() => import('./pages/app/OrdersPage'));
@@ -46,12 +46,13 @@ function App() {
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           <Route path="/verify-email" element={<ProtectedRoute requireVerification={false}><VerifyEmailPage /></ProtectedRoute>} />
 
-          {/* App/Dashboard (No Nav/Footer) */}
-          <Route element={<DashboardLayout />}>
-            <Route path="/dashboard" element={<ProtectedRoute requiredRole="vendor"><VendorDashboardPage /></ProtectedRoute>} />
-            <Route path="/listings" element={<ProtectedRoute requiredRole="buyer"><ListingsPage /></ProtectedRoute>} />
-            <Route path="/post-listing" element={<ProtectedRoute requiredRole="vendor"><PostListingPage /></ProtectedRoute>} />
-            <Route path="/orders" element={<ProtectedRoute requiredRole="buyer"><OrdersPage /></ProtectedRoute>} />
+          {/* App/Dashboard (Wrapped in VendorLayout) */}
+          <Route element={<VendorLayout />}>
+            <Route path="/vendor/dashboard" element={<ProtectedRoute requiredRole="vendor"><VendorDashboardPage /></ProtectedRoute>} />
+            <Route path="/vendor/listings" element={<ProtectedRoute requiredRole="vendor"><ListingsPage /></ProtectedRoute>} />
+            <Route path="/vendor/post-listing" element={<ProtectedRoute requiredRole="vendor"><PostListingPage /></ProtectedRoute>} />
+            <Route path="/vendor/impact" element={<ProtectedRoute requiredRole="vendor"><ImpactPage /></ProtectedRoute>} />
+            {/* <Route path="/vendor/profile" element={<ProtectedRoute requiredRole="vendor"><ProfilePage /></ProtectedRoute>} /> */}
           </Route>
 
           {/* Catch-all */}

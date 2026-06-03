@@ -15,14 +15,12 @@ import {
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import Footer from '../../components/Footer';
-import MobileNav from '../../components/MobileNav';
-import Navbar from '../../components/Navbar';
-import { useApp } from '../../context/AppContext';
-import type { Listing } from '../../services/listings.service';
-import { deleteListing, getVendorListings } from '../../services/listings.service';
-import type { Order } from '../../services/orders.service';
-import { getVendorOrders } from '../../services/orders.service';
+import MobileNav from '../../../components/MobileNav';
+import { useApp } from '../../../context/AppContext';
+import type { Listing } from '../../../services/listings.service';
+import { deleteListing, getVendorListings } from '../../../services/listings.service';
+import type { Order } from '../../../services/orders.service';
+import { getVendorOrders } from '../../../services/orders.service';
 
 const STATUS_CONFIG: Record<string, { label: string; icon: React.ReactNode; textColor: string; bg: string }> = {
   active:   { label: 'Active',   icon: <CheckCircle2 size={12} />, textColor: 'text-[#22C55E]', bg: 'bg-[#22C55E12]' },
@@ -86,7 +84,6 @@ const VendorDashboardPage = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-bg pb-24 md:pb-0">
-      <Navbar />
 
       <main className="flex-1 py-10 px-6">
         <div className="max-w-[1280px] mx-auto flex flex-col gap-10">
@@ -397,8 +394,6 @@ const VendorDashboardPage = () => {
       {openMenuId && (
         <div className="fixed inset-0 z-10" onClick={() => setOpenMenuId(null)} />
       )}
-
-      <Footer />
       <MobileNav />
     </div>
   );

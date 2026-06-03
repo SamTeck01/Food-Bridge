@@ -16,7 +16,7 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className="top-6 left-0 right-0 z-50 md:px-[5rem] px-6 mt-[2rem]">
+      <nav className="top-6 left-0 right-0 z-50 md:px-[5rem] px-6 pt-[2rem] bg-[#FFFDF2]">
         {/* Main Navbar Container */}
         <motion.div 
           initial={{ y: -20, opacity: 0 }}
