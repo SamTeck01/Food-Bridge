@@ -1,14 +1,12 @@
 import { ArrowLeft, CheckCircle2, Clock, Leaf, MapPin, Minus, Plus, Tag, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import Footer from '../../components/Footer';
-import MobileNav from '../../components/MobileNav';
-import Navbar from '../../components/Navbar';
 import { useApp } from '../../context/AppContext';
+import { createOrder } from '../../services/orders.service';
 
 const CartPage = () => {
   const navigate = useNavigate();
-  const { cart, updateQty, removeFromCart, clearCart } = useApp();
+  const { user, cart, updateQty, removeFromCart, clearCart } = useApp();
   const [promoCode, setPromoCode]     = useState('');
   const [promoApplied, setPromoApplied] = useState(false);
   const [promoError, setPromoError]   = useState('');
@@ -31,16 +29,47 @@ const CartPage = () => {
     }
   };
 
-  const handlePlaceOrder = () => {
-    setPlaced(true);
-    clearCart();
+  const [placing, setPlacing]           = useState(false);
+  const [placeError, setPlaceError]     = useState('');
+
+  const handlePlaceOrder = async () => {
+    if (!user) return;
+    setPlacing(true);
+    setPlaceError('');
+    try {
+      // Create one Appwrite order per cart item
+      await Promise.all(
+        cart.map((item) =>
+          createOrder({
+            listingId:       item.id,
+            listingName:     item.name,
+            listingImageUrl: item.imageUrl,
+            buyerId:         user.id,
+            vendorId:        item.vendorId,
+            vendorName:      item.vendorName,
+            totalPaid:       item.discountedPrice * item.quantity,
+            originalTotal:   item.originalPrice  * item.quantity,
+            pickupTime:      item.pickupTime,
+            distance:        item.distance,
+            buyerName:       user.name || 'Anonymous Buyer',
+            quantity:        item.quantity,
+          })
+        )
+      );
+      clearCart();
+      setPlaced(true);
+    } catch (err) {
+      console.error('Order creation failed:', err);
+      setPlaceError('Failed to place order. Please try again.');
+    } finally {
+      setPlacing(false);
+    }
   };
 
   /* ── Success state ── */
   if (placed) {
     return (
       <div className="min-h-screen flex flex-col bg-bg">
-        <Navbar />
         <main className="flex-1 flex items-center justify-center px-6 py-20">
           <div className="max-w-[440px] w-full flex flex-col items-center gap-7 text-center animate-scale-in">
             <div className="w-24 h-24 rounded-full bg-[#7AD37120] border border-brand-primary/20 flex items-center justify-center">
@@ -64,16 +93,12 @@ const CartPage = () => {
             </div>
           </div>
         </main>
-        <Footer />
-        <MobileNav />
       </div>
     );
   }
 
   return (
     <div className="min-h-screen flex flex-col bg-bg">
-      <Navbar />
-
       <main className="flex-1 py-10 px-6">
         <div className="max-w-[1100px] mx-auto flex flex-col gap-8">
 
@@ -113,9 +138,9 @@ const CartPage = () => {
               {/* ── Cart Items ─────────────────────────────────── */}
               <div className="flex-1 flex flex-col gap-4">
                 {cart.map((item) => (
-                  <div key={item.id} className="section-card flex flex-col sm:flex-row gap-4">
+                  <div key={item.id} className="section-card flex flex-row gap-4 p-3 sm:p-5">
                     {/* Image */}
-                    <div className="w-full sm:w-[110px] h-[80px] rounded-xl overflow-hidden flex-shrink-0 bg-[#F0F4F1]">
+                    <div className="w-[80px] sm:w-[110px] h-[80px] rounded-xl overflow-hidden flex-shrink-0 bg-[#F0F4F1]">
                       {item.imageUrl
                         ? <img src={item.imageUrl} alt={item.name} className="w-full h-full object-cover" />
                         : <div className="w-full h-full flex items-center justify-center text-2xl">🍽️</div>
@@ -123,11 +148,11 @@ const CartPage = () => {
                     </div>
 
                     {/* Info */}
-                    <div className="flex-1 flex flex-col gap-2">
+                    <div className="flex-1 flex flex-col gap-1.5 min-w-0">
                       <div className="flex items-start justify-between gap-2">
-                        <div>
-                          <p className="font-questrial text-sm text-text-primary">{item.name}</p>
-                          <p className="font-questrial text-xs text-text-muted">{item.vendorName}</p>
+                        <div className="min-w-0 flex-1">
+                          <p className="font-questrial text-sm text-text-primary truncate" title={item.name}>{item.name}</p>
+                          <p className="font-questrial text-xs text-text-muted truncate">{item.vendorName}</p>
                         </div>
                         <button
                           onClick={() => removeFromCart(item.id)}
@@ -138,18 +163,20 @@ const CartPage = () => {
                       </div>
 
                       {/* Pickup meta */}
-                      <div className="flex items-center gap-4 flex-wrap">
-                        <span className="flex items-center gap-1 font-questrial text-xs text-text-muted">
-                          <MapPin size={11} /> {item.distance}
+                      <div className="flex items-center gap-3 flex-wrap">
+                        <span className="flex items-center gap-1 font-questrial text-[11px] text-[#4A6361]">
+                          <MapPin size={10} className="text-[#EF4444] flex-shrink-0" />
+                          <span className="truncate max-w-[70px]">{item.distance}</span>
                         </span>
-                        <span className="flex items-center gap-1 font-questrial text-xs text-text-muted">
-                          <Clock size={11} /> {item.pickupTime}
+                        <span className="flex items-center gap-1 font-questrial text-[11px] text-[#4A6361]">
+                          <Clock size={10} className="text-[#0A2623]/70 flex-shrink-0" />
+                          <span className="truncate max-w-[100px]">{item.pickupTime}</span>
                         </span>
                       </div>
 
                       {/* Price + qty */}
-                      <div className="flex items-center justify-between mt-1">
-                        <div className="flex items-baseline gap-2">
+                      <div className="flex items-center justify-between mt-1 flex-wrap gap-2">
+                        <div className="flex items-baseline gap-1.5 flex-wrap">
                           <span className="font-questrial text-base text-text-primary">
                             ₦{(item.discountedPrice * item.quantity).toLocaleString()}
                           </span>
@@ -241,8 +268,23 @@ const CartPage = () => {
                     {promoApplied && <p className="font-questrial text-xs text-[#22C55E]">✓ Promo applied — 10% off!</p>}
                   </div>
 
-                  <button onClick={handlePlaceOrder} className="btn-primary w-full !h-12 !text-base">
-                    Confirm & Claim All
+                  {placeError && (
+                    <p className="font-questrial text-xs text-[#EF4444] text-center">{placeError}</p>
+                  )}
+
+                  <button
+                    onClick={handlePlaceOrder}
+                    disabled={placing}
+                    className="btn-primary w-full !h-12 !text-base flex items-center justify-center gap-2 disabled:opacity-60"
+                  >
+                    {placing ? (
+                      <>
+                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                        <span>Placing Order...</span>
+                      </>
+                    ) : (
+                      'Confirm & Claim All'
+                    )}
                   </button>
 
                   <p className="font-questrial text-xs text-text-muted text-center">
@@ -269,8 +311,6 @@ const CartPage = () => {
         </div>
       </main>
 
-      <Footer />
-      <MobileNav />
     </div>
   );
 };

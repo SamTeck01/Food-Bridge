@@ -1,0 +1,23 @@
+# Task Checklist - Vendor UI/UX Redesign
+
+- [x] Redesign Vendor Navigation Layout
+  - [x] Style `VendorSidebar.tsx` to match the white spacing and active page indicators
+  - [x] Streamline `VendorTopBar.tsx` to align the location select, scan, and bell elements
+- [x] Redesign Vendor Dashboard Page (`VendorDashboardPage.tsx`)
+  - [x] Implement stats cards: Meal saved, Earnings, and Ratings with green badges/icons
+  - [x] Restyle the Active Listings title with count indicator and listings horizontal slider
+- [x] Redesign Vendor Listings Page (`VendorListingsPage.tsx`)
+  - [x] Implement filter tabs (Active, Completed, Expired) with green count badges
+  - [x] Restyle card footer status tags ("Awaiting pickup", "Expired", etc.)
+- [x] Redesign Vendor Listing Detail Page (`VendorListingDetailPage.tsx`)
+  - [x] Implement cover header badge and circular actions/back buttons
+  - [x] Format views, claims, and revenue performance cards
+  - [x] Style the reviews listing with Alh. Ikunisoro review design and pickup confirm states
+- [x] Redesign Post Listing Form & Success Flow (`PostListingPage.tsx`)
+  - [x] Align form inputs to match food name, quantity, prices, free check, and pickup start/end times
+  - [x] Build the dashed border file upload selector and real-time card preview
+  - [x] Implement Step 2 success view ("Your listing is LIVE!") with share and view details links
+- [x] Redesign Verify Business Page (`VerifyBusinessPage.tsx`)
+  - [x] Align form inputs to registration type, registration number, and CAC upload box
+- [/] Verification & Build Checks
+  - [/] Run `npm run build` to verify there are no compilation errors

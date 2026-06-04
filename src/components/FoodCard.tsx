@@ -1,6 +1,6 @@
-import { Link, useNavigate } from 'react-router-dom';
-import { MapPin, Clock, Flame, ShieldCheck } from 'lucide-react';
-import { useApp } from '../context/AppContext';
+import { Link } from 'react-router-dom';
+import { MapPin, Clock, Flame, Heart } from 'lucide-react';
+import { getListingImage } from '../services/listings.service';
 
 interface FoodCardProps {
   id?: string;
@@ -14,8 +14,8 @@ interface FoodCardProps {
   vendorName: string;
   imageUrl?: string;
   isFeatured?: boolean;
-  pickupTime?: string;
-  vendorVerified?: boolean;
+  isSaved?: boolean;
+  onSave?: (e: React.MouseEvent) => void;
 }
 
 const FoodCard = ({
@@ -29,139 +29,108 @@ const FoodCard = ({
   distance,
   vendorName,
   imageUrl,
-  isFeatured = false,
-  pickupTime = 'Before 8:00 PM',
-  vendorVerified = false,
+  isSaved = false,
+  onSave,
 }: FoodCardProps) => {
-  const { addToCart, isLoggedIn } = useApp();
-  const navigate = useNavigate();
   const soldOut = claimsUsed >= claimsTotal;
   const discountPercent = Math.round((1 - discountedPrice / originalPrice) * 100);
-  const claimsLeft = claimsTotal - claimsUsed;
-  const urgent = claimsLeft <= 2 && !soldOut;
-
-  const handleClaim = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (!isLoggedIn) { navigate('/login'); return; }
-    if (soldOut) return;
-    addToCart({ id, name, vendorName, vendorId: '', originalPrice, discountedPrice, imageUrl: imageUrl || '', pickupTime, distance });
-    navigate('/cart');
-  };
 
   return (
     <Link
-      to={`/listing/${id}`}
-      className={`group flex flex-col bg-white rounded-2xl border border-border overflow-hidden transition-all duration-300 hover:-translate-y-1 cursor-pointer ${
-        isFeatured ? 'col-span-2 row-span-2' : ''
-      }`}
-      style={{ boxShadow: '0 1px 3px rgba(10,38,35,0.06), 0 1px 2px rgba(10,38,35,0.04)' }}
+      to={`/listings/${id}`}
+      className="group flex flex-col bg-white rounded-[20px] p-[5px] border border-black/10 overflow-hidden hover:-translate-y-1 transition-all duration-300 cursor-pointer w-full"
+      style={{ boxShadow: '0 1px 3px rgba(10,38,35,0.06)' }}
     >
-      {/* Image */}
-      <div className={`relative w-full overflow-hidden bg-[#F0F4F1] ${isFeatured ? 'h-56' : 'h-44'}`}>
-        {imageUrl ? (
-          <img
-            src={imageUrl}
-            alt={name}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-          />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center">
-            <span className="text-4xl">🍽️</span>
-          </div>
-        )}
+      {/* Image Container */}
+      <div className="relative h-[120px] w-full rounded-[16px] overflow-hidden bg-[#F9F9F9]">
+        <img
+          src={getListingImage(name, imageUrl)}
+          alt={name}
+          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+        />
 
-        {/* Discount badge — top left */}
+        {/* Discount Badge */}
         {discountPercent > 0 && (
-          <div className="absolute top-3 left-3 flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#0F3934] text-white text-xs font-questrial">
+          <div className="absolute top-3 left-3 px-2.5 py-1 rounded-full bg-[#0F3934] text-white text-[11px] font-questrial font-medium">
             {discountPercent}% OFF
           </div>
         )}
 
-        {/* Urgent / sold out overlay */}
-        {soldOut ? (
+        {/* Sold Out Overlay */}
+        {soldOut && (
           <div className="absolute inset-0 bg-[#0A2623]/60 flex items-center justify-center">
-            <span className="font-questrial text-white text-sm bg-[#0A2623]/80 px-4 py-1.5 rounded-full">
+            <span className="font-questrial text-white text-xs bg-[#0A2623]/80 px-3.5 py-1.5 rounded-full font-medium">
               Sold Out
             </span>
           </div>
-        ) : urgent && (
-          <div className="absolute bottom-3 right-3 flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#EF4444] text-white text-xs font-questrial">
-            <Flame size={11} />
-            {claimsLeft} left!
-          </div>
+        )}
+
+        {/* Save / Heart button */}
+        {onSave && (
+          <button
+            onClick={(e) => { e.preventDefault(); e.stopPropagation(); onSave(e); }}
+            className="absolute top-2.5 right-2.5 w-8 h-8 flex items-center justify-center rounded-full bg-white/80 backdrop-blur-sm hover:bg-white transition-all shadow-sm"
+          >
+            <Heart
+              size={15}
+              className={isSaved ? 'text-red-500' : 'text-[#0A2623]/50'}
+              fill={isSaved ? '#EF4444' : 'none'}
+            />
+          </button>
         )}
       </div>
 
-      {/* Body */}
-      <div className="flex flex-col gap-3 p-4 flex-1">
-        {/* Vendor */}
-        <div className="flex items-center gap-1.5">
-          <span className="font-questrial text-xs text-text-secondary truncate">{vendorName}</span>
-          {vendorVerified && (
-            <ShieldCheck size={12} className="text-brand-primary flex-shrink-0" />
-          )}
-        </div>
-
-        {/* Name */}
-        <h3 className="font-questrial text-base text-text-primary leading-snug line-clamp-2 -mt-1">
-          {name}
-        </h3>
-
-        {/* Pricing */}
-        <div className="flex items-baseline gap-2">
-          <span className="font-questrial text-xl text-text-primary">
+      {/* Details Container */}
+      <div className="flex flex-col p-[20px] gap-[15px] self-stretch">
+        {/* Name & Pricing row */}
+        <div className="flex justify-between items-start gap-[15px] self-stretch">
+          <div className="flex flex-col items-start gap-[4px] flex-1 min-w-0">
+            <h3 className="text-[#0A2623] font-questrial text-[16px] font-normal leading-[130%] truncate w-full" title={name}>
+              {name}
+            </h3>
+            {vendorName && (
+              <span className="text-[#0A2623]/40 font-questrial text-[12px] leading-[130%] truncate w-full">{vendorName}</span>
+            )}
+            <span className="text-[#0A2623]/30 font-questrial text-[14px] font-normal leading-[130%] line-through">
+              ₦{originalPrice.toLocaleString()}
+            </span>
+          </div>
+          <span className="text-[#0A2623] font-questrial text-[24px] font-normal leading-[130%] whitespace-nowrap">
             ₦{discountedPrice.toLocaleString()}
           </span>
-          <span className="font-questrial text-sm text-text-muted line-through">
-            ₦{originalPrice.toLocaleString()}
-          </span>
         </div>
 
-        {/* Meta row */}
-        <div className="flex items-center gap-3 flex-wrap">
-          <span className="flex items-center gap-1 font-questrial text-xs text-text-secondary">
-            <Clock size={12} className="text-text-muted" />
-            {timeLeft}
-          </span>
-          <span className="flex items-center gap-1 font-questrial text-xs text-text-secondary">
-            <MapPin size={12} className="text-text-muted" />
-            {distance}
-          </span>
-        </div>
+        {/* Divider line */}
+        <div className="h-[1px] bg-black/10 self-stretch"></div>
 
-        {/* Progress bar */}
-        <div className="flex flex-col gap-1">
-          <div className="flex items-center justify-between">
-            <span className="font-questrial text-xs text-text-muted">
-              {claimsUsed}/{claimsTotal} claimed
+        {/* Meta Widgets row */}
+        <div className="flex items-center gap-[12px] self-stretch">
+          {/* Time widget */}
+          <div className="flex items-center gap-[10px] flex-1 min-w-0 text-[#0A2623]/70">
+            <Clock size={20} strokeWidth={1.25} className="text-[#0A2623]/70 flex-shrink-0" />
+            <span className="font-questrial text-[14px] leading-[130%] whitespace-nowrap text-[#0A2623]/70 truncate">
+              {timeLeft}
             </span>
-            {!soldOut && (
-              <span className={`font-questrial text-xs ${urgent ? 'text-[#EF4444]' : 'text-text-muted'}`}>
-                {claimsLeft} left
-              </span>
-            )}
           </div>
-          <div className="w-full h-1 bg-[#F0F4F1] rounded-full overflow-hidden">
-            <div
-              className={`h-full rounded-full transition-all ${soldOut ? 'bg-text-muted' : urgent ? 'bg-[#EF4444]' : 'bg-brand-primary'}`}
-              style={{ width: claimsTotal > 0 ? `${Math.min(100, (claimsUsed / claimsTotal) * 100)}%` : '0%' }}
-            />
-          </div>
-        </div>
 
-        {/* CTA */}
-        <button
-          className={`mt-auto w-full h-10 rounded-full font-questrial text-sm transition-all duration-200 ${
-            soldOut
-              ? 'bg-[#F0F4F1] text-text-muted border border-border cursor-not-allowed'
-              : 'bg-[#0F3934] text-white hover:bg-[#1A4A3F] hover:shadow-md active:scale-[0.97]'
-          }`}
-          onClick={handleClaim}
-          disabled={soldOut}
-        >
-          {soldOut ? 'Sold Out' : 'Claim Now'}
-        </button>
+          {/* Claims widget */}
+          <div className="flex items-center gap-[8px] flex-shrink-0 text-[#0A2623]/70">
+            <Flame size={20} strokeWidth={1.25} className="text-[#0A2623]/70 flex-shrink-0" />
+            <span className="font-questrial text-[16px] leading-[130%] text-[#0A2623]/70 whitespace-nowrap">
+              {claimsUsed}/{claimsTotal} claims
+            </span>
+          </div>
+
+          {/* Distance widget (if available) */}
+          {distance && (
+            <div className="flex items-center gap-[8px] flex-shrink-0 text-[#0A2623]/70">
+              <MapPin size={20} strokeWidth={1.25} className="text-[#0A2623]/70 flex-shrink-0" />
+              <span className="font-questrial text-[14px] leading-[130%] text-[#0A2623]/70 whitespace-nowrap">
+                {distance}
+              </span>
+            </div>
+          )}
+        </div>
       </div>
     </Link>
   );

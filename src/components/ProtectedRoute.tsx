@@ -31,7 +31,7 @@ const ProtectedRoute = ({ children, guestOnly = false, requiredRole, requireVeri
   // Guest-only: redirect logged-in users to their dashboard/listings
   if (guestOnly && isLoggedIn) {
     if (user?.role === 'vendor') {
-      return <Navigate to="/dashboard" replace />;
+      return <Navigate to="/vendor/dashboard" replace />;
     }
     return <Navigate to="/listings" replace />;
   }

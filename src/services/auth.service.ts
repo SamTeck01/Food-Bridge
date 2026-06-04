@@ -59,7 +59,8 @@ export const signUp = async (
   // Save role in prefs
   await account.updatePrefs({ role });
   // Send verification email
-  const verifyUrl = `${window.location.origin}/verify-email`;
+  const origin = import.meta.env.VITE_APP_URL || window.location.origin;
+  const verifyUrl = `${origin}/verify-email`;
   await account.createVerification(verifyUrl);
   return await account.get() as unknown as AppwriteUser;
 };
@@ -86,7 +87,8 @@ export const confirmPasswordReset = async (
 
 /** Re-send email verification */
 export const sendEmailVerification = async (): Promise<void> => {
-  const verifyUrl = `${window.location.origin}/verify-email`;
+  const origin = import.meta.env.VITE_APP_URL || window.location.origin;
+  const verifyUrl = `${origin}/verify-email`;
   await account.createVerification(verifyUrl);
 };
 

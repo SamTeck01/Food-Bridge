@@ -1,9 +1,7 @@
 import { useEffect, useState } from 'react';
-import Footer from '../../components/Footer';
-import MobileNav from '../../components/MobileNav';
-import Navbar from '../../components/Navbar';
-import type { Listing } from '../../services/listings.service';
-import { getListings } from '../../services/listings.service';
+import { useApp } from '../../context/AppContext';
+import { getUserOrders, getVendorOrders } from '../../services/orders.service';
+import type { Order } from '../../services/orders.service';
 
 /* ── Radial progress ring ─────────────────────────────────────────── */
 const Ring = ({ pct, color, size = 80 }: { pct: number; color: string; size?: number }) => {
@@ -29,16 +27,22 @@ const Ring = ({ pct, color, size = 80 }: { pct: number; color: string; size?: nu
 const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
 const ImpactPage = () => {
-  const [listings, setListings] = useState<Listing[]>([]);
+  const { user } = useApp();
+  const isVendor = user?.role === 'vendor';
+  const [orders, setOrders] = useState<Order[]>([]);
 
   useEffect(() => {
-    getListings(50).then(setListings).catch(() => setListings([]));
-  }, []);
+    if (!user) return;
+    const fetcher = isVendor ? getVendorOrders : getUserOrders;
+    fetcher(user.id).then(setOrders).catch(() => setOrders([]));
+  }, [user, isVendor]);
 
-  const totalMeals    = listings.reduce((s, l) => s + l.claimsUsed, 0) + 128;
-  const kgSaved       = Math.round(totalMeals * 0.14 * 10) / 10;
-  const co2Saved      = Math.round(kgSaved * 2.5 * 10) / 10;
-  const moneySaved    = totalMeals * 1500;
+  // Compute personal stats from user's own orders
+  const completedOrders  = orders.filter((o) => o.status === 'completed' || o.totalPaid > 0);
+  const totalMeals       = completedOrders.length;
+  const moneySaved       = orders.reduce((s, o) => s + Math.max(0, (o.originalTotal ?? 0) - (o.totalPaid ?? 0)), 0);
+  const kgSaved          = Math.round(totalMeals * 0.14 * 10) / 10;
+  const co2Saved         = Math.round(kgSaved * 2.5 * 10) / 10;
 
   const weekData = [32, 18, 45, 26, 52, 40, 28];
   const maxWeek  = Math.max(...weekData);
@@ -47,20 +51,20 @@ const ImpactPage = () => {
     {
       label: 'Meals Rescued',
       value: `${totalMeals}`,
-      sub: '+12 today',
+      sub: isVendor ? 'total claims' : 'by you',
       icon: '🍽️',
       color: '#7AD371',
       bg: 'bg-[#7AD37115]',
-      pct: Math.min((totalMeals / 500) * 100, 100),
+      pct: Math.min((totalMeals / 50) * 100, 100),
     },
     {
       label: 'Food Waste Prevented',
       value: `${kgSaved}kg`,
-      sub: 'this month',
+      sub: 'estimated',
       icon: '♻️',
       color: '#0F3934',
       bg: 'bg-[#0F393415]',
-      pct: Math.min((kgSaved / 100) * 100, 100),
+      pct: Math.min((kgSaved / 10) * 100, 100),
     },
     {
       label: 'CO₂ Prevented',
@@ -69,16 +73,16 @@ const ImpactPage = () => {
       icon: '🌱',
       color: '#22C55E',
       bg: 'bg-[#22C55E15]',
-      pct: Math.min((co2Saved / 250) * 100, 100),
+      pct: Math.min((co2Saved / 25) * 100, 100),
     },
     {
       label: 'Money Saved',
-      value: `₦${(moneySaved / 1000).toFixed(1)}K`,
-      sub: 'community total',
+      value: moneySaved >= 1000 ? `₦${(moneySaved / 1000).toFixed(1)}K` : `₦${moneySaved.toLocaleString()}`,
+      sub: 'you saved',
       icon: '💰',
       color: '#F59E0B',
       bg: 'bg-[#F59E0B15]',
-      pct: Math.min((moneySaved / 1000000) * 100, 100),
+      pct: Math.min((moneySaved / 50000) * 100, 100),
     },
   ];
 
@@ -91,8 +95,6 @@ const ImpactPage = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-bg pb-24 md:pb-0">
-      <Navbar />
-
       <main className="flex-1 py-10 px-4 md:px-6">
         <div className="max-w-[1280px] mx-auto flex flex-col gap-10">
 
@@ -240,9 +242,6 @@ const ImpactPage = () => {
 
         </div>
       </main>
-
-      <Footer />
-      <MobileNav />
     </div>
   );
 };

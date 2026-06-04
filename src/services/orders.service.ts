@@ -24,11 +24,15 @@ export interface Order {
   pickupTime: string;
   distance: string;
   claimedAt: string;
+  rating?: number;
+  remark?: string;
+  buyerName?: string;
+  quantity?: number;
 }
 
 // ─── Orders Service ───────────────────────────────────────────────────────────
 
-/** Create an order (claim) */
+/** Create an order (claim) — prevents duplicate active claims */
 export const createOrder = async (data: {
   listingId: string;
   listingName: string;
@@ -40,7 +44,29 @@ export const createOrder = async (data: {
   originalTotal: number;
   pickupTime: string;
   distance: string;
+  buyerName?: string;
+  quantity?: number;
 }): Promise<Order> => {
+  // ── Duplicate guard ──────────────────────────────────────────────────
+  // Check if this buyer already has an active/pending/confirmed order for this listing
+  try {
+    const existing = await databases.listDocuments(DB_ID, COLLECTIONS.ORDERS, [
+      Query.equal('buyerId', data.buyerId),
+      Query.equal('listingId', data.listingId),
+      Query.or([
+        Query.equal('status', 'confirmed'),
+        Query.equal('status', 'pending'),
+      ]),
+      Query.limit(1),
+    ]);
+    if (existing.total > 0) {
+      // Return the existing order instead of creating a duplicate
+      return existing.documents[0] as unknown as Order;
+    }
+  } catch {
+    // If the check fails, proceed with creation (fail open)
+  }
+
   const doc = await databases.createDocument(
     DB_ID,
     COLLECTIONS.ORDERS,
@@ -72,6 +98,15 @@ export const getVendorOrders = async (vendorId: string): Promise<Order[]> => {
   return response.documents as unknown as Order[];
 };
 
+/** Get all orders for a specific listing */
+export const getListingOrders = async (listingId: string): Promise<Order[]> => {
+  const response = await databases.listDocuments(DB_ID, COLLECTIONS.ORDERS, [
+    Query.equal('listingId', listingId),
+    Query.orderDesc('claimedAt'),
+  ]);
+  return response.documents as unknown as Order[];
+};
+
 /** Update an order's status */
 export const updateOrderStatus = async (
   id: string,
@@ -80,3 +115,23 @@ export const updateOrderStatus = async (
   const doc = await databases.updateDocument(DB_ID, COLLECTIONS.ORDERS, id, { status });
   return doc as unknown as Order;
 };
+
+/** Get a single order by ID */
+export const getOrderById = async (id: string): Promise<Order> => {
+  const doc = await databases.getDocument(DB_ID, COLLECTIONS.ORDERS, id);
+  return doc as unknown as Order;
+};
+
+/** Rate an order */
+export const rateOrder = async (
+  id: string,
+  rating: number,
+  remark: string
+): Promise<Order> => {
+  const doc = await databases.updateDocument(DB_ID, COLLECTIONS.ORDERS, id, {
+    rating,
+    remark,
+  });
+  return doc as unknown as Order;
+};
+

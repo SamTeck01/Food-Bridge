@@ -1,5 +1,21 @@
 import { Package } from 'lucide-react';
-const timeAgo = (dateStr: string) => { /* copy your helper function here */ };
+const timeAgo = (dateStr: string) => {
+  if (!dateStr) return 'just now';
+  try {
+    const past = new Date(dateStr);
+    const now = new Date();
+    const diffMs = now.getTime() - past.getTime();
+    const diffMins = Math.floor(diffMs / 60000);
+    if (diffMins < 1) return 'just now';
+    if (diffMins < 60) return `${diffMins}m ago`;
+    const diffHours = Math.floor(diffMins / 60);
+    if (diffHours < 24) return `${diffHours}h ago`;
+    const diffDays = Math.floor(diffHours / 24);
+    return `${diffDays}d ago`;
+  } catch (e) {
+    return 'recently';
+  }
+};
 
 export default function VendorRecentClaims({ orders, loading }: any) {
   if (loading) return <div className="section-card h-64 skeleton" />;

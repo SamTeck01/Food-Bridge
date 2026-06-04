@@ -1,23 +1,16 @@
 import { Outlet } from 'react-router-dom';
-import MobileNav from '../MobileNav'; // Your existing mobile navigation
-import Sidebar from './Sidebar';
+import VendorSidebar from '../VendorSidebar';
+import VendorTopBar from '../VendorTopBar';
 
 export default function VendorLayout() {
   return (
-    <div className="flex min-h-screen bg-bg">
-      {/* Desktop Sidebar */}
-      <Sidebar />
-      
-      {/* Main Content Area */}
-      <main className="flex-1 w-full overflow-y-auto">
-        <div className="md:p-8 p-4">
+    <div className="flex min-h-screen bg-[#F9F9F9]">
+      <VendorSidebar />
+      <div className="flex-1 ml-[250px] flex flex-col min-h-screen">
+        <VendorTopBar />
+        <main className="flex-1 overflow-y-auto">
           <Outlet />
-        </div>
-      </main>
-
-      {/* Mobile Navigation (Only visible on mobile) */}
-      <div className="md:hidden">
-        <MobileNav />
+        </main>
       </div>
     </div>
   );

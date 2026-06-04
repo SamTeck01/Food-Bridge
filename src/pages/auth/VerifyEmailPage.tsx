@@ -37,7 +37,7 @@ const VerifyEmailPage = () => {
           // After verification, redirect to appropriate page
           setTimeout(() => {
             if (user?.role === 'vendor') {
-              navigate('/dashboard', { replace: true });
+              navigate('/vendor/dashboard', { replace: true });
             } else {
               navigate('/listings', { replace: true });
             }
@@ -53,7 +53,7 @@ const VerifyEmailPage = () => {
     // Only redirect if verified AND not coming from registration (no magic link params)
     if (user?.emailVerified && !userId && !secret) {
       if (user.role === 'vendor') {
-        navigate('/dashboard', { replace: true });
+        navigate('/vendor/dashboard', { replace: true });
       } else {
         navigate('/listings', { replace: true });
       }
