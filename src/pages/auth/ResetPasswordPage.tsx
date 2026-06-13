@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import Logo from '../components/Logo';
-import { confirmPasswordReset } from '../services/auth.service';
+import Logo from '../../components/Logo';
+import { confirmPasswordReset } from '../../services/auth.service';
 import { Eye, EyeOff, Check, AlertCircle, CheckCircle2 } from 'lucide-react';
 
 const ResetPasswordPage = () => {

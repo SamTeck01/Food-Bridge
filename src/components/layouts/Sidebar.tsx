@@ -7,7 +7,7 @@ const NAV_ITEMS = [
   { name: 'Listings', icon: '/images/icons/listings.svg', path: '/vendor/listings' },
   { name: 'Impact', icon: '/images/icons/impact.svg', path: '/vendor/impact' },
   { name: 'Profile', icon: '/images/icons/profile.svg', path: '/vendor/profile' },
-  { name: 'Post', icon: 'images/icons/plus.svg', path: '/post-listing', isPost: true },
+  { name: 'Post', icon: '/images/icons/plus.svg', path: '/vendor/post-listing', isPost: true },
 ];
 
 export default function Sidebar() {

@@ -39,6 +39,7 @@ interface AppState {
   isLoggedIn: boolean;
   /** True while the initial session check is in flight (prevents redirect flicker) */
   authLoading: boolean;
+  savedIds: string[];
 }
 
 interface AppActions {
@@ -51,6 +52,8 @@ interface AppActions {
   clearCart: () => void;
   cartCount: number;
   cartTotal: number;
+  toggleSave: (listingId: string) => void;
+  isSaved: (listingId: string) => boolean;
 }
 
 type AppContextType = AppState & AppActions;
@@ -75,6 +78,14 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [authLoading, setAuthLoading] = useState(true);
+  const [savedIds, setSavedIds] = useState<string[]>(() => {
+    try {
+      const stored = localStorage.getItem('foodbridge_saved');
+      return stored ? JSON.parse(stored) : [];
+    } catch {
+      return [];
+    }
+  });
 
   // ── Restore session on mount ─────────────────────────────────────────────────
   useEffect(() => {
@@ -111,6 +122,8 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     await signOut();
     setUser(null);
     setCart([]);
+    setSavedIds([]);
+    localStorage.removeItem('foodbridge_saved');
   }, []);
 
   // ── Cart Actions ─────────────────────────────────────────────────────────────
@@ -144,6 +157,20 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   const cartCount = cart.reduce((acc, i) => acc + i.quantity, 0);
   const cartTotal = cart.reduce((acc, i) => acc + i.discountedPrice * i.quantity, 0);
 
+  // ── Saved / Favourites Actions ────────────────────────────────────────────
+
+  const toggleSave = useCallback((listingId: string) => {
+    setSavedIds((prev) => {
+      const next = prev.includes(listingId)
+        ? prev.filter((id) => id !== listingId)
+        : [...prev, listingId];
+      localStorage.setItem('foodbridge_saved', JSON.stringify(next));
+      return next;
+    });
+  }, []);
+
+  const isSaved = useCallback((listingId: string) => savedIds.includes(listingId), [savedIds]);
+
   return (
     <AppContext.Provider
       value={{
@@ -151,6 +178,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
         cart,
         isLoggedIn: !!user,
         authLoading,
+        savedIds,
         login,
         register,
         logout,
@@ -160,6 +188,8 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
         clearCart,
         cartCount,
         cartTotal,
+        toggleSave,
+        isSaved,
       }}
     >
       {children}

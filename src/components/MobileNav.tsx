@@ -40,30 +40,58 @@ const AddIcon = () => (
   </svg>
 );
 
+const OrdersIcon = ({ active }: { active: boolean }) => (
+  <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M3.667 3.667h14.666l-1.466 8.8H5.133L3.667 3.667Z"
+      stroke={active ? '#0A2623' : 'rgba(10,38,35,0.40)'} strokeWidth="1.5" strokeLinejoin="round" />
+    <circle cx="7.333" cy="18.333" r="1.1" fill={active ? '#0A2623' : 'rgba(10,38,35,0.40)'} />
+    <circle cx="15.583" cy="18.333" r="1.1" fill={active ? '#0A2623' : 'rgba(10,38,35,0.40)'} />
+  </svg>
+);
+
+const SavedIcon = ({ active }: { active: boolean }) => (
+  <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M11 18.333S2.75 13.75 2.75 8.25a4.583 4.583 0 0 1 8.25-2.75A4.583 4.583 0 0 1 19.25 8.25c0 5.5-8.25 10.083-8.25 10.083Z"
+      stroke={active ? '#0A2623' : 'rgba(10,38,35,0.40)'}
+      fill={active ? 'rgba(10,38,35,0.12)' : 'none'}
+      strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
+
+
 /* ── Component ─────────────────────────────────────────────────────── */
 const MobileNav = () => {
   const { pathname } = useLocation();
   const { isLoggedIn, user } = useApp();
 
   const isVendor = user?.role === 'vendor';
-  const postPath = isVendor ? '/post-listing' : '/get-started';
+  const middlePath = isLoggedIn ? (isVendor ? '/vendor/post-listing' : '/cart') : '/get-started';
+  const middleLabel = isVendor ? 'Post' : 'Cart';
 
-  const tabs = [
-    { path: '/',         label: 'Home',     Icon: HomeIcon },
-    { path: '/listings', label: 'Listings', Icon: ListingsIcon },
-    { path: '/impact',   label: 'Impact',   Icon: ImpactIcon },
-    { path: '/profile',  label: 'Profile',  Icon: ProfileIcon },
-  ];
+  const tabs = isVendor
+    ? [
+        { path: '/vendor/dashboard', label: 'Home',     Icon: HomeIcon },
+        { path: '/vendor/listings',  label: 'Listings', Icon: ListingsIcon },
+        { path: '/vendor/impact',    label: 'Impact',   Icon: ImpactIcon },
+        { path: '/vendor/profile',   label: 'Profile',  Icon: ProfileIcon },
+      ]
+    : [
+        { path: '/listings', label: 'Explore', Icon: ListingsIcon },
+        { path: '/orders',   label: 'Orders',  Icon: OrdersIcon },
+        { path: '/saved',    label: 'Saved',   Icon: SavedIcon },
+        { path: '/profile',  label: 'Profile', Icon: ProfileIcon },
+      ];
 
   return (
     <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#F9F9F9] border-t border-[rgba(0,0,0,0.10)]"
       style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}>
       <div className="flex items-center justify-around px-2 h-[70px]">
-        {tabs.map(({ path, label, Icon }) => {
+        {/* Render first 2 tabs */}
+        {tabs.slice(0, 2).map(({ path, label, Icon }) => {
           const active = pathname === path || (path !== '/' && pathname.startsWith(path));
           return (
             <Link
-              key={path}
+              key={label}
               to={path}
               className="flex flex-col items-center gap-1 flex-1 py-2 group"
             >
@@ -79,16 +107,45 @@ const MobileNav = () => {
           );
         })}
 
-        {/* Post button — circular pill */}
+        {/* Middle action button — circular pill (Post or Cart) */}
         <Link
-          to={isLoggedIn ? postPath : '/get-started'}
+          to={middlePath}
           className="flex flex-col items-center gap-1 flex-1 py-2"
         >
-          <div className="flex items-center justify-center w-10 h-10 rounded-full bg-[#0A2623] border border-[rgba(0,0,0,0.10)]">
-            <AddIcon />
+          <div className="flex items-center justify-center w-10 h-10 rounded-full bg-[#0A2623] border border-[rgba(0,0,0,0.10)] relative">
+            {isVendor ? (
+              <AddIcon />
+            ) : (
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M6 2L3 6V20C3 20.5304 3.21071 21.0391 3.58579 21.4142C3.96086 21.7893 4.46957 22 5 22H19C19.5304 22 20.0391 21.7893 20.4142 21.4142C20.7893 21.0391 21 20.5304 21 20V6L18 2H6Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M3 6H21" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M16 10C16 11.0609 15.5786 12.0783 14.8284 12.8284C14.0783 13.5786 13.0609 14 12 14C10.9391 14 9.92172 13.5786 9.17157 12.8284C8.42143 12.0783 8 11.0609 8 10" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            )}
           </div>
-          <span className="text-[11px] font-questrial text-[rgba(10,38,35,0.40)]">Post</span>
+          <span className="text-[11px] font-questrial text-[rgba(10,38,35,0.40)]">{middleLabel}</span>
         </Link>
+
+        {/* Render last 2 tabs */}
+        {tabs.slice(2, 4).map(({ path, label, Icon }) => {
+          const active = pathname === path || (path !== '/' && pathname.startsWith(path));
+          return (
+            <Link
+              key={label}
+              to={path}
+              className="flex flex-col items-center gap-1 flex-1 py-2 group"
+            >
+              <div className={`flex items-center justify-center w-10 h-10 rounded-[10px] transition-colors ${
+                active ? 'bg-white shadow-sm border border-[rgba(0,0,0,0.06)]' : ''
+              }`}>
+                <Icon active={active} />
+              </div>
+              <span className={`text-[11px] font-questrial transition-colors ${
+                active ? 'text-[#0A2623]' : 'text-[rgba(10,38,35,0.40)]'
+              }`}>{label}</span>
+            </Link>
+          );
+        })}
       </div>
     </nav>
   );

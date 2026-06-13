@@ -14,9 +14,12 @@ const PublicLayout = () => {
     );
   }
 
-  if (isLoggedIn && user?.emailVerified) {
+  if (isLoggedIn) {
+    if (!user?.emailVerified) {
+      return <Navigate to="/verify-email" replace />;
+    }
     if (user?.role === 'vendor') {
-      return <Navigate to="/dashboard" replace />;
+      return <Navigate to="/vendor/dashboard" replace />;
     }
     return <Navigate to="/listings" replace />;
   }

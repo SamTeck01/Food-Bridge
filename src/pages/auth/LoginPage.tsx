@@ -22,7 +22,7 @@ const LoginPage = () => {
     setLoading(true);
     try {
       const loggedInUser = await login(form.email, form.password);
-      navigate(from === '/' ? (loggedInUser.role === 'vendor' ? '/dashboard' : '/listings') : from, { replace: true });
+      navigate(from === '/' ? (loggedInUser.role === 'vendor' ? '/vendor/dashboard' : '/listings') : from, { replace: true });
     } catch (err) {
       setError((err as Error).message);
     } finally {
@@ -31,13 +31,7 @@ const LoginPage = () => {
   };
 
   return (
-    // h-dvh ensures it fits the viewport perfectly without scrolling
-    
-    <div className="h-dvh bg-red-950 flex flex-col overflow-hidden">
-      <div className="h-dvh bg-red-600"> {/* Change to red */}
-    <h1 className="text-9xl text-white">I AM THE CORRECT FILE</h1>
-    {/* ... rest of your code */}
-  </div>
+    <div className="h-dvh bg-bg flex flex-col overflow-hidden">
       {/* Header */}
       <header className="flex items-center justify-between px-8 md:px-[100px] py-8">
         <Link to="/"><Logo /></Link>

@@ -15,19 +15,40 @@ import {
   Star,
   User,
 } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import Footer from '../../components/Footer';
-import MobileNav from '../../components/MobileNav';
-import Navbar from '../../components/Navbar';
 import { useApp } from '../../context/AppContext';
+import { getUserOrders, getVendorOrders } from '../../services/orders.service';
 
 const ProfilePage = () => {
-  const { isLoggedIn, user, logout } = useApp();
+  const { isLoggedIn, user, logout, savedIds } = useApp();
   const navigate = useNavigate();
   const [logoutConfirm, setLogoutConfirm] = useState(false);
+  const [orderCount, setOrderCount] = useState<number | null>(null);
+  const [avgRating, setAvgRating] = useState<string | null>(null);
+  const [toast, setToast] = useState('');
 
   const isVendor = user?.role === 'vendor';
+
+  useEffect(() => {
+    if (!user) return;
+    const fetcher = isVendor ? getVendorOrders : getUserOrders;
+    fetcher(user.id)
+      .then((orders) => {
+        setOrderCount(orders.length);
+        const rated = orders.filter((o) => o.rating && o.rating > 0);
+        if (rated.length > 0) {
+          const avg = rated.reduce((s, o) => s + (o.rating ?? 0), 0) / rated.length;
+          setAvgRating(avg.toFixed(1) + '★');
+        } else {
+          setAvgRating('—');
+        }
+      })
+      .catch(() => {
+        setOrderCount(0);
+        setAvgRating('—');
+      });
+  }, [user, isVendor]);
 
   const handleLogout = () => {
     logout();
@@ -37,7 +58,6 @@ const ProfilePage = () => {
   if (!isLoggedIn) {
     return (
       <div className="min-h-screen flex flex-col bg-bg pb-24 md:pb-0">
-        <Navbar />
         <main className="flex-1 flex flex-col items-center justify-center gap-6 py-20 px-6 text-center">
           <div className="w-24 h-24 flex items-center justify-center rounded-full bg-[#EFF4F0] border border-border">
             <User size={40} className="text-[#0F3934]" />
@@ -53,8 +73,6 @@ const ProfilePage = () => {
             <Link to="/login" className="btn-secondary">Log In</Link>
           </div>
         </main>
-        <Footer />
-        <MobileNav />
       </div>
     );
   }
@@ -62,30 +80,23 @@ const ProfilePage = () => {
   const initial = user?.name?.charAt(0)?.toUpperCase() ?? '?';
 
   const vendorMenu = [
-    { icon: LayoutDashboard, label: 'Vendor Dashboard', path: '/dashboard' },
-    { icon: PlusSquare,      label: 'Post a Listing',  path: '/post-listing' },
-    { icon: Package,         label: 'Your Listings',   path: '/dashboard' },
-    { icon: ShieldCheck,     label: 'Verify Business', path: '/verify-business', badge: 'New' },
+    { icon: LayoutDashboard, label: 'Vendor Dashboard', path: '/vendor/dashboard' },
+    { icon: PlusSquare,      label: 'Post a Listing',  path: '/vendor/post-listing' },
+    { icon: Package,         label: 'Your Listings',   path: '/vendor/listings' },
+    { icon: ShieldCheck,     label: 'Verify Business', path: '/vendor/verify-business', badge: 'New' },
   ];
 
   const buyerMenu = [
     { icon: Package, label: 'My Orders', path: '/orders' },
-    { icon: Heart,   label: 'Saved',     path: '/listings' },
+    { icon: Heart,   label: 'Saved',     path: '/saved' },
   ];
 
-  const generalMenu = [
-    { icon: Bell,       label: 'Notifications',     path: '/profile' },
-    { icon: Settings,   label: 'Account Settings',  path: '/profile' },
-    { icon: HelpCircle, label: 'Help & Support',    path: '/profile' },
-    { icon: Star,       label: 'Rate the App',      path: '/profile' },
-  ];
+
 
   const primaryMenu = isVendor ? vendorMenu : buyerMenu;
 
   return (
     <div className="min-h-screen flex flex-col bg-bg pb-24 md:pb-0">
-      <Navbar />
-
       <main className="flex-1 py-10 px-4 md:px-6">
         <div className="max-w-[640px] mx-auto flex flex-col gap-6">
 
@@ -135,12 +146,18 @@ const ProfilePage = () => {
             </div>
           </div>
 
-          {/* ── Quick stats ──────────────────────────────────── */}
+          {/* ── Quick stats ───────────────────── */}
           <div className="grid grid-cols-3 gap-3">
             {[
-              { value: '0', label: isVendor ? 'Listings' : 'Orders' },
-              { value: '0', label: isVendor ? 'Claims'   : 'Saved'  },
-              { value: '4.9★', label: 'Rating' },
+              {
+                value: orderCount === null ? '…' : String(orderCount),
+                label: isVendor ? 'Claims Received' : 'Orders',
+              },
+              {
+                value: isVendor ? '—' : String(savedIds.length),
+                label: isVendor ? 'Listings' : 'Saved',
+              },
+              { value: avgRating ?? '…', label: 'Avg Rating' },
             ].map((stat) => (
               <div key={stat.label} className="bg-white rounded-2xl border border-[rgba(0,0,0,0.10)] p-4 text-center"
                 style={{ boxShadow: '0 1px 3px rgba(10,38,35,0.06)' }}>
@@ -176,24 +193,37 @@ const ProfilePage = () => {
             ))}
           </div>
 
-          {/* ── General menu ─────────────────────────────────── */}
+          {/* ── General menu ───────────────────── */}
+          {toast && (
+            <div className="fixed bottom-24 left-1/2 -translate-x-1/2 bg-[#0A2623] text-white font-questrial text-sm px-5 py-2.5 rounded-full shadow-lg z-50 animate-scale-in">
+              {toast}
+            </div>
+          )}
           <div className="bg-white rounded-2xl border border-[rgba(0,0,0,0.10)] overflow-hidden"
             style={{ boxShadow: '0 1px 3px rgba(10,38,35,0.06)' }}>
             <p className="font-questrial text-xs text-text-muted uppercase tracking-wide px-5 pt-4 pb-2">
               Settings
             </p>
-            {generalMenu.map(({ icon: Icon, label, path }) => (
-              <Link
+            {[
+              { icon: Bell,       label: 'Notifications'    },
+              { icon: Settings,   label: 'Account Settings' },
+              { icon: HelpCircle, label: 'Help & Support'   },
+              { icon: Star,       label: 'Rate the App'     },
+            ].map(({ icon: Icon, label }) => (
+              <button
                 key={label}
-                to={path}
-                className="flex items-center gap-4 px-5 py-3.5 border-t border-border hover:bg-bg transition-colors"
+                onClick={() => {
+                  setToast(`${label} — coming soon!`);
+                  setTimeout(() => setToast(''), 2000);
+                }}
+                className="flex items-center gap-4 px-5 py-3.5 border-t border-border hover:bg-bg transition-colors w-full text-left"
               >
                 <div className="w-9 h-9 flex items-center justify-center rounded-xl bg-[#F0F4F1]">
                   <Icon size={16} className="text-text-secondary" />
                 </div>
                 <span className="flex-1 font-questrial text-sm text-text-primary">{label}</span>
                 <ChevronRight size={15} className="text-text-muted" />
-              </Link>
+              </button>
             ))}
           </div>
 
@@ -238,8 +268,6 @@ const ProfilePage = () => {
         </div>
       </main>
 
-      <Footer />
-      <MobileNav />
     </div>
   );
 };
