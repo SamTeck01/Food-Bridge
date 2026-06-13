@@ -25,6 +25,8 @@ const ListingsPage = lazy(() => import('./pages/app/ListingsPage'));
 const OrdersPage = lazy(() => import('./pages/app/OrdersPage'));
 const ImpactPage = lazy(() => import('./pages/app/ImpactPage'));
 
+const IndividualDashboardPage = lazy(() => import('./pages/app/individuals/IndividualDashboardPage'));
+
 function App() {
   return (
     <BrowserRouter>
@@ -54,6 +56,13 @@ function App() {
             <Route path="/vendor/impact" element={<ProtectedRoute requiredRole="vendor"><ImpactPage /></ProtectedRoute>} />
             {/* <Route path="/vendor/profile" element={<ProtectedRoute requiredRole="vendor"><ProfilePage /></ProtectedRoute>} /> */}
           </Route>
+
+          {/* Individual App Pages (Temporarily without a specific layout) */}
+          <Route path="/individual/dashboard" element={
+            <ProtectedRoute requiredRole="buyer">
+              <IndividualDashboardPage />
+            </ProtectedRoute>
+          } />
 
           {/* Catch-all */}
           <Route path="*" element={<NotFoundPage />} />
