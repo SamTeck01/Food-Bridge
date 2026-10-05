@@ -23,10 +23,10 @@ const Hero = () => {
           </p>
           
           {/* Action Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center md:mt-8 mt-4">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-stretch sm:items-center md:mt-8 mt-4 w-full sm:w-auto">
             <Link 
               to="/get-started" 
-              className="px-5 py-4 bg-[#0F3934] text-white rounded-full text-[1rem] font-light hover:bg-[#1A4A3F] hover:scale-105 transition-all duration-300 flex items-center gap-3 group"
+              className="px-5 py-4 bg-[#0F3934] text-white rounded-full text-[1rem] font-light hover:bg-[#1A4A3F] hover:scale-105 transition-all duration-300 flex items-center justify-center gap-3 group"
             >
               List surplus food
               <MoveRight size={16} className="group-hover:translate-x-1 transition-transform" />
@@ -34,7 +34,7 @@ const Hero = () => {
 
             <Link 
               to="/listings" 
-              className="px-5 py-4 border border-[#0F393440] bg-white/50 backdrop-blur-sm text-[#0A2623] rounded-full text-[1rem] font-light hover:bg-white hover:scale-105 transition-all duration-300 flex items-center gap-3"
+              className="px-5 py-4 border border-[#0F393440] bg-white/50 backdrop-blur-sm text-[#0A2623] rounded-full text-[1rem] font-light hover:bg-white hover:scale-105 transition-all duration-300 flex items-center justify-center gap-3"
             >
               <MapPin size={16} className="text-[#0F3934]" />
               Find food near you
