@@ -194,7 +194,7 @@ const PostListingPage = () => {
         {/* Header */}
         <header className="flex justify-between items-center px-8 py-6 h-20 max-w-[1040px] mx-auto w-full">
           <div className="flex items-center gap-1.5">
-            <span className="font-questrial text-[20px] font-bold text-[#0F3934]">Food Bridge</span>
+            <img src="/images/homepage/logo.svg" alt="FoodBridge" className="h-10 w-auto" />
           </div>
           <button
             onClick={() => navigate('/vendor/dashboard')}
