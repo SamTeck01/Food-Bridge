@@ -41,7 +41,7 @@ const LoginPage = () => {
       </header>
 
       {/* Centered Main Content */}
-      <main className="flex-1 flex items-center justify-center px-6">
+      <main className="flex-1 flex justify-center px-6 pt-[3.25rem] overflow-y-auto">
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -65,14 +65,14 @@ const LoginPage = () => {
                 placeholder="Your email address"
                 value={form.email}
                 onChange={(e) => setForm({ ...form, email: e.target.value })}
-                className="h-12 px-4 rounded-xl border border-border focus:ring-2 focus:ring-brand-primary outline-none transition-all"
+                className="h-10 px-4 rounded-lg bg-white border border-[#0000000F] focus:ring-2 focus:ring-brand-primary outline-none transition-all"
                 required
               />
             </div>
 
             <div className="flex flex-col gap-2.5">
               <label className="font-questrial text-base text-text-primary">Password</label>
-              <div className="flex h-12 items-center gap-2 px-4 rounded-xl bg-white border border-border focus-within:ring-2 focus-within:ring-brand-primary transition-all">
+              <div className="flex h-10 items-center gap-2 px-4 rounded-lg bg-white border border-[#0000000F] focus-within:ring-2 focus-within:ring-brand-primary transition-all">
                 <input
                   type={showPassword ? 'text' : 'password'}
                   placeholder="Your password"
@@ -86,11 +86,11 @@ const LoginPage = () => {
                 </button>
               </div>
               <div className="text-right">
-                <Link to="/forgot-password" className="font-questrial text-sm text-brand-secondary hover:underline">Forgot Password?</Link>
+                <Link to="/forgot-password" className="font-questrial text-base text-brand-secondary hover:underline">Forgot Password?</Link>
               </div>
             </div>
 
-            <button type="submit" disabled={loading} className="btn-primary h-12 w-full flex items-center justify-center gap-2 rounded-xl">
+            <button type="submit" disabled={loading} className="btn-primary h-10 w-full flex items-center justify-center gap-2">
               {loading && <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />}
               {loading ? 'Logging in…' : 'Log in'}
             </button>

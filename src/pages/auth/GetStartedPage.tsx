@@ -52,7 +52,7 @@ const GetStartedPage = () => {
         </Link>
       </header>
 
-      <main className="flex-1 flex items-center justify-center py-10 px-6">
+      <main className="flex-1 flex justify-center px-6 pt-[3.25rem] pb-10">
         <div className="w-full max-w-[450px] flex flex-col gap-8">
           {/* User Type Toggle */}
           <div className="flex gap-4 p-1 bg-white rounded-pill border border-border">
@@ -105,7 +105,7 @@ const GetStartedPage = () => {
             {/* Phone */}
             <div className="flex flex-col gap-2.5">
               <label className="font-questrial text-base text-text-primary">Phone number</label>
-              <div className="flex h-10 items-center gap-2 px-4 rounded-[10px] bg-white border border-border focus-within:ring-2 focus-within:ring-brand-primary transition-all">
+              <div className="flex h-10 items-center gap-2 px-4 rounded-lg bg-white border border-[#0000000F] focus-within:ring-2 focus-within:ring-brand-primary transition-all">
                 <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M2 2.5C1.46957 2.5 0.960859 2.71071 0.585786 3.08579C0.210714 3.46086 0 3.96957 0 4.5L0 13.5C0 14.0304 0.210714 14.5391 0.585786 14.9142C0.960859 15.2893 1.46957 15.5 2 15.5H6V2.5H2Z" fill="#009A49"/>
                   <path d="M6 2.5H12V15.5H6V2.5Z" fill="#EEEEEE"/>
@@ -154,7 +154,7 @@ const GetStartedPage = () => {
             {/* Password */}
             <div className="flex flex-col gap-2.5">
               <label className="font-questrial text-base text-text-primary">Password</label>
-              <div className="flex h-10 items-center gap-2 px-4 rounded-[10px] bg-white border border-border focus-within:ring-2 focus-within:ring-brand-primary transition-all">
+              <div className="flex h-10 items-center gap-2 px-4 rounded-lg bg-white border border-[#0000000F] focus-within:ring-2 focus-within:ring-brand-primary transition-all">
                 <input
                   type={showPassword ? 'text' : 'password'}
                   placeholder="Min. 8 characters"

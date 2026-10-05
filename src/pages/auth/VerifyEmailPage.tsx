@@ -83,7 +83,7 @@ const VerifyEmailPage = () => {
         </Link>
       </header>
 
-      <main className="flex-1 flex items-center justify-center py-10 px-6">
+      <main className="flex-1 flex justify-center px-6 pt-[3.25rem] pb-10">
         <div className="w-full max-w-[450px] flex flex-col items-center gap-8">
           {/* Icon */}
           <div className="w-24 h-24 flex items-center justify-center rounded-full bg-brand-primary/10 border-2 border-brand-primary/20">

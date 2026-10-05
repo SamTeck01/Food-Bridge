@@ -34,7 +34,7 @@ const ForgotPasswordPage = () => {
         </Link>
       </header>
 
-      <main className="flex-1 flex items-center justify-center py-10 px-6">
+      <main className="flex-1 flex justify-center px-6 pt-[3.25rem] pb-10">
         <div className="w-full max-w-[450px] flex flex-col gap-8">
           <Link to="/login"
             className="flex items-center gap-2 text-text-secondary hover:text-text-primary transition-colors w-fit">
