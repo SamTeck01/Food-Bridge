@@ -1,73 +1,56 @@
-# React + TypeScript + Vite
+# Food Bridge
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**Feed families, not landfills.** Food Bridge is a web marketplace that connects food vendors who have surplus meals with nearby buyers, who can claim them at a discount and pick them up.
 
-Currently, two official plugins are available:
+## Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- React 19 + TypeScript + Vite
+- Tailwind CSS, Framer Motion
+- [Appwrite](https://appwrite.io) for auth, database and file storage
 
-## React Compiler
+## Getting started
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
+cp .env.example .env   # fill in your Appwrite project values
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Appwrite setup
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Create a project with:
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- **Database** with collections for `listings`, `orders` and `vendor_profiles`
+- **Storage buckets** for food images and business documents
+- Your app URL added as a Web platform (needed for email verification and password reset links)
+
+Put the IDs in `.env` (see `.env.example`).
+
+## Scripts
+
+| Command | What it does |
+|---|---|
+| `npm run dev` | Start the dev server |
+| `npm run build` | Type-check and build for production |
+| `npm run lint` | Run ESLint |
+| `npm run preview` | Preview the production build |
+
+## Project structure
+
 ```
+src/
+  pages/
+    marketing/   Public site (home, about, vendors, individuals, contact)
+    auth/        Login, sign-up, email verification, password reset
+    app/         Buyer app (listings, cart, orders, saved, profile)
+    app/vendor/  Vendor dashboard and listing management
+  components/    Shared UI, layouts and page sections
+  services/      Appwrite calls (auth, listings, orders)
+  context/       App-wide state (user, cart, saved items)
+  lib/appwrite.ts  Appwrite client and resource IDs
+```
+
+## Team
+
+- Sultanat Bashir, Akinnibi Adesewa (frontend)
+- Najib Sholadoye, Oyewole AbdulSamad (backend)

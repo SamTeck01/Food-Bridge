@@ -1,8 +1,10 @@
 import { Eye, Package, ShoppingBag, TrendingUp } from 'lucide-react';
+import type { Listing } from '../../services/listings.service';
+import type { Order } from '../../services/orders.service';
 
-export default function VendorStats({ listings, orders, loading }: any) {
-  const activeCount = listings.filter((l: any) => l.status === 'active').length;
-  const totalClaims = listings.reduce((s: number, l: any) => s + (l.claimsUsed ?? 0), 0);
+export default function VendorStats({ listings, orders, loading }: { listings: Listing[]; orders: Order[]; loading: boolean }) {
+  const activeCount = listings.filter((l) => l.status === 'active').length;
+  const totalClaims = listings.reduce((s: number, l) => s + (l.claimsUsed ?? 0), 0);
 
   const stats = [
     { label: 'Total Listings', value: listings.length, icon: ShoppingBag, color: 'text-brand-secondary', bg: 'bg-[#0F39340F]' },

@@ -84,7 +84,8 @@ export const createListing = async (data: CreateListingData): Promise<Listing> =
     }
   }
 
-  const { imageFile: _, ...listingData } = data;
+  const listingData = { ...data };
+  delete listingData.imageFile;
   const doc = await databases.createDocument(
     DB_ID,
     COLLECTIONS.LISTINGS,

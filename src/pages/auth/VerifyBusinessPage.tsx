@@ -1,6 +1,8 @@
 import { CheckCheck, Upload, X, ArrowLeft, Shield } from 'lucide-react';
 import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
+import { account, storage, BUCKETS, ID } from '../../lib/appwrite';
 
 const REGISTRATION_TYPES = [
   'Limited Liability Company (LTD)',
@@ -13,6 +15,7 @@ const REGISTRATION_TYPES = [
 interface UploadedFile {
   name: string;
   size: string;
+  file: File;
 }
 
 const VerifyBusinessPage = () => {
@@ -30,7 +33,7 @@ const VerifyBusinessPage = () => {
     const size = file.size < 1024 * 1024
       ? `${(file.size / 1024).toFixed(0)} KB`
       : `${(file.size / (1024 * 1024)).toFixed(1)} MB`;
-    setCacFile({ name: file.name, size });
+    setCacFile({ name: file.name, size, file });
   };
 
   const handleRemoveFile = () => {
@@ -38,15 +41,35 @@ const VerifyBusinessPage = () => {
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    // Simulate submission
-    setTimeout(() => {
-      setLoading(false);
+    try {
+      let documentId: string | null = null;
+      if (cacFile) {
+        const uploaded = await storage.createFile(BUCKETS.BUSINESS_DOCS, ID.unique(), cacFile.file);
+        documentId = uploaded.$id;
+      }
+      // Stored on the account prefs until a vendor-profiles review flow exists
+      const prefs = await account.getPrefs();
+      await account.updatePrefs({
+        ...prefs,
+        businessVerification: {
+          status: 'pending',
+          regType,
+          regNumber,
+          documentId,
+          submittedAt: new Date().toISOString(),
+        },
+      });
       setSubmitted(true);
       window.scrollTo({ top: 0, behavior: 'smooth' });
-    }, 1200);
+    } catch (err) {
+      console.error('Business verification submit failed:', err);
+      toast.error('Could not submit your documents. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (submitted) {

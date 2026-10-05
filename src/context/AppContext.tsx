@@ -103,7 +103,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
       setUser(mappedUser);
       return mappedUser;
     } catch (err) {
-      throw new Error(getAuthErrorMessage(err));
+      throw new Error(getAuthErrorMessage(err), { cause: err });
     }
   }, []);
 
@@ -114,7 +114,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
       const appwriteUser = await signUp(email, password, name, role);
       setUser(mapAppwriteUser(appwriteUser));
     } catch (err) {
-      throw new Error(getAuthErrorMessage(err));
+      throw new Error(getAuthErrorMessage(err), { cause: err });
     }
   }, []);
 

@@ -82,7 +82,7 @@ const ListingsPage = () => {
     try {
       const data = await getListings(50);
       setListings(data);
-    } catch (e) {
+    } catch {
       setError('Could not load listings. Please check your connection.');
     } finally {
       setLoading(false);

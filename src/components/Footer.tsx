@@ -1,6 +1,6 @@
 import { motion, type Variants } from 'framer-motion';
 import { useState } from 'react';
-import { toast, Toaster } from 'react-hot-toast';
+import { toast } from 'react-hot-toast';
 
 const Footer = () => {
   const [email, setEmail] = useState('');
@@ -25,7 +25,6 @@ const Footer = () => {
 
   return (
     <footer className="bg-[#0F0F0F] text-white border-t border-[#FFFFFF4D]">
-      <Toaster position="top-right" />
       
       {/* Newsletter Section */}
       <div className="max-w-[1440px] mx-auto grid grid-cols-1 md:grid-cols-4 border-b border-[#FFFFFF4D]">

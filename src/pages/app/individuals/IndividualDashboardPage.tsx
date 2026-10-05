@@ -157,7 +157,7 @@ const IndividualDashboardPage: React.FC = () => {
 /* Reusable Food Card Component 
   Moves to src/components/cards/FoodCard.tsx later 
 */
-const FoodCard = ({ item }: { item: any }) => {
+const FoodCard = ({ item }: { item: (typeof dummyListings)[number] }) => {
   return (
     <div className="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-md transition-shadow group cursor-pointer flex flex-col h-full">
       {/* Image Container */}

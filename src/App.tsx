@@ -21,6 +21,7 @@ const LoginPage = lazy(() => import('./pages/auth/LoginPage'));
 const GetStartedPage = lazy(() => import('./pages/auth/GetStartedPage'));
 const ForgotPasswordPage = lazy(() => import('./pages/auth/ForgotPasswordPage'));
 const VerifyEmailPage = lazy(() => import('./pages/auth/VerifyEmailPage'));
+const ResetPasswordPage = lazy(() => import('./pages/auth/ResetPasswordPage'));
 
 // App/Dashboard Pages
 const VendorDashboardPage = lazy(() => import('./pages/app/vendor/VendorDashboardPage'));
@@ -98,6 +99,7 @@ function App() {
           <Route path="/login" element={<ProtectedRoute guestOnly><LoginPage /></ProtectedRoute>} />
           <Route path="/get-started" element={<ProtectedRoute guestOnly><GetStartedPage /></ProtectedRoute>} />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
           <Route path="/verify-email" element={<ProtectedRoute requireVerification={false}><VerifyEmailPage /></ProtectedRoute>} />
 
           {/* App/Dashboard (Wrapped in BuyerLayout) */}
