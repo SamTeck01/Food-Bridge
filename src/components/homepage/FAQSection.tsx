@@ -77,7 +77,7 @@ const FAQSection = () => {
             <div className="w-full md:w-1/2 p-8 md:p-[2.5rem] bg-gradient-to-b from-[#FFFFFF] to-[#F9F9F9] flex flex-col">
                 <div className="hidden md:block">
                     <h2 className="text-[2.5rem] font-normal pb-[1.5rem] text-[#000000] border-b border-[#0000001A] mb-[1.5rem]">
-                        Answer
+                        Answers
                     </h2>
                     <AnimatePresence mode="wait">
                         <motion.div

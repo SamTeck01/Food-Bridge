@@ -9,7 +9,6 @@ const ContactHero = () => {
     phone: '',
     message: ''
   });
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -24,27 +23,10 @@ const ContactHero = () => {
       return;
     }
 
-    setIsSubmitting(true);
-
-    try {
-      // Simulating API backend submission delay
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      toast.success('Message sent successfully! We will get back to you shortly.', {
-        style: { 
-          background: 'var(--brand-secondary)', 
-          color: 'var(--brand-primary)', 
-          borderRadius: '5rem' 
-        },
-      });
-
-      // Clear Form data on success
-      setFormData({ name: '', email: '', phone: '', message: '' });
-    } catch {
-      toast.error('Something went wrong. Please try again.');
-    } finally {
-      setIsSubmitting(false);
-    }
+    // No mail backend yet: hand the message to the visitor's email app
+    const body = `${formData.message}\n\n— ${formData.name}\n${formData.email}${formData.phone ? `\n${formData.phone}` : ''}`;
+    window.location.href = `mailto:support@foodbridge.com?subject=${encodeURIComponent(`Message from ${formData.name}`)}&body=${encodeURIComponent(body)}`;
+    toast.success('Opening your email app to send the message.');
   };
 
   return (
@@ -142,20 +124,9 @@ const ContactHero = () => {
             <div className="pt-4">
               <button
                 type="submit"
-                disabled={isSubmitting}
                 className="w-full md:w-auto px-8 h-[54px] bg-[var(--brand-primary)] text-[var(--text-primary)] font-medium rounded-full hover:bg-white hover:text-[var(--brand-secondary)] transition-all duration-300 transform active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none flex items-center justify-center min-w-[160px]"
               >
-                {isSubmitting ? (
-                  <span className="flex items-center gap-2">
-                    <svg className="animate-spin h-5 w-5 text-current" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                    </svg>
-                    Sending...
-                  </span>
-                ) : (
-                  'Send Message'
-                )}
+                Send Message
               </button>
             </div>
           </form>
