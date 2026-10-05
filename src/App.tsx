@@ -37,6 +37,7 @@ const CartPage = lazy(() => import('./pages/app/CartPage'));
 const ListingDetailPage = lazy(() => import('./pages/app/ListingDetailPage'));
 const ProfilePage = lazy(() => import('./pages/app/ProfilePage'));
 const VerifyBusinessPage = lazy(() => import('./pages/auth/VerifyBusinessPage'));
+const OrderDetailPage = lazy(() => import('./pages/app/OrderDetailPage'));
 const ClaimSuccessPage = lazy(() => import('./pages/app/ClaimSuccessPage'));
 const SavedPage = lazy(() => import('./pages/app/SavedPage'));
 
@@ -112,6 +113,7 @@ function App() {
             <Route path="/listings/:id" element={<ProtectedRoute requiredRole="buyer"><ListingDetailPage /></ProtectedRoute>} />
             <Route path="/cart" element={<ProtectedRoute requiredRole="buyer"><CartPage /></ProtectedRoute>} />
             <Route path="/orders" element={<ProtectedRoute requiredRole="buyer"><OrdersPage /></ProtectedRoute>} />
+            <Route path="/orders/:id" element={<ProtectedRoute requiredRole="buyer"><OrderDetailPage /></ProtectedRoute>} />
             <Route path="/orders/:id/claim-success" element={<ProtectedRoute requiredRole="buyer"><ClaimSuccessPage /></ProtectedRoute>} />
             <Route path="/profile" element={<ProtectedRoute requiredRole="buyer"><ProfilePage /></ProtectedRoute>} />
             <Route path="/saved" element={<ProtectedRoute requiredRole="buyer"><SavedPage /></ProtectedRoute>} />

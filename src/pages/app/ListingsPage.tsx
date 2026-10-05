@@ -207,7 +207,7 @@ const ListingsPage = () => {
                     return (
                       <div 
                         key={order.$id} 
-                        onClick={() => { closeDrawer(); navigate('/orders'); }}
+                        onClick={() => { closeDrawer(); navigate(`/orders/${order.$id}`); }}
                         className="flex flex-col gap-4 group cursor-pointer hover:bg-black/5 p-2.5 rounded-2xl transition-all"
                       >
                         {i > 0 && <div className="h-[1px] bg-black/10 w-full mb-2 group-hover:bg-transparent" />}
