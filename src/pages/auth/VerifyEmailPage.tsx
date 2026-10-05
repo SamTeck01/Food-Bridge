@@ -74,7 +74,7 @@ const VerifyEmailPage = () => {
 
   return (
     <div className="min-h-screen bg-bg flex flex-col">
-      <header className="flex items-center justify-between px-8 md:px-[100px] py-8">
+      <header className="flex items-center justify-between px-5 md:px-[100px] py-8">
         <Link to="/"><Logo /></Link>
         <Link to="/login"
           className="flex items-center justify-center h-10 px-6 rounded-pill border border-border font-questrial text-base text-text-primary hover:border-brand-primary transition-colors">
@@ -82,7 +82,7 @@ const VerifyEmailPage = () => {
         </Link>
       </header>
 
-      <main className="flex-1 flex justify-center px-6 pt-[3.25rem] pb-10">
+      <main className="flex-1 flex justify-center px-5 pt-[3.25rem] pb-10">
         <div className="w-full max-w-[450px] flex flex-col items-center gap-8">
           {/* Icon */}
           <div className="w-24 h-24 flex items-center justify-center rounded-full bg-brand-primary/10 border-2 border-brand-primary/20">

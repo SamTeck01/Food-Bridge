@@ -44,7 +44,7 @@ const GetStartedPage = () => {
 
   return (
     <div className="min-h-screen bg-bg flex flex-col">
-      <header className="flex items-center justify-between px-8 md:px-[100px] py-8">
+      <header className="flex items-center justify-between px-5 md:px-[100px] py-8">
         <Link to="/"><Logo /></Link>
         <Link to="/login"
           className="flex items-center justify-center h-10 px-6 rounded-pill border border-border font-questrial text-base text-text-primary hover:border-brand-primary transition-colors">
@@ -52,7 +52,7 @@ const GetStartedPage = () => {
         </Link>
       </header>
 
-      <main className="flex-1 flex justify-center px-6 pt-[3.25rem] pb-10">
+      <main className="flex-1 flex justify-center px-5 pt-[3.25rem] pb-10">
         <div className="w-full max-w-[450px] flex flex-col gap-8">
           {/* User Type Toggle */}
           <div className="flex gap-4 p-1 bg-white rounded-pill border border-border">

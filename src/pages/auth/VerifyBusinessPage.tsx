@@ -140,7 +140,7 @@ const VerifyBusinessPage = () => {
   return (
     <div className="min-h-screen flex flex-col bg-[#F9F9F9] pb-12">
       {/* Header */}
-      <header className="flex items-center justify-between px-8 md:px-[100px] py-8">
+      <header className="flex items-center justify-between px-5 md:px-[100px] py-8">
         <Link to="/vendor/dashboard"><Logo /></Link>
         <Link to="/vendor/dashboard" className="h-10 px-6 rounded-full border border-border flex items-center hover:border-brand-primary transition-colors font-questrial">
           Dashboard

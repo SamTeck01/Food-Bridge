@@ -54,14 +54,14 @@ const ResetPasswordPage = () => {
   return (
     <div className="min-h-screen bg-bg flex flex-col">
       {/* Top Nav */}
-      <header className="flex items-center justify-between px-8 md:px-[100px] py-8">
+      <header className="flex items-center justify-between px-5 md:px-[100px] py-8">
         <Link to="/">
           <Logo />
         </Link>
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 flex justify-center px-6 pt-[3.25rem] pb-10">
+      <main className="flex-1 flex justify-center px-5 pt-[3.25rem] pb-10">
         <div className="w-full max-w-[450px] flex flex-col gap-8">
           <div>
             <h1 className="font-questrial text-4xl text-text-primary mb-2">Set new password</h1>

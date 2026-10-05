@@ -33,7 +33,7 @@ const LoginPage = () => {
   return (
     <div className="h-dvh bg-bg flex flex-col overflow-hidden">
       {/* Header */}
-      <header className="flex items-center justify-between px-8 md:px-[100px] py-8">
+      <header className="flex items-center justify-between px-5 md:px-[100px] py-8">
         <Link to="/"><Logo /></Link>
         <Link to="/get-started" className="h-10 px-6 rounded-full border border-border flex items-center hover:border-brand-primary transition-colors">
           Create Account
@@ -41,7 +41,7 @@ const LoginPage = () => {
       </header>
 
       {/* Centered Main Content */}
-      <main className="flex-1 flex justify-center px-6 pt-[3.25rem] overflow-y-auto">
+      <main className="flex-1 flex justify-center px-5 pt-[3.25rem] overflow-y-auto">
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
