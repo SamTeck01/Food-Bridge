@@ -1,6 +1,7 @@
-import { CheckCheck, Upload, X, ArrowLeft, Shield } from 'lucide-react';
+import { CheckCheck, Upload, X, Shield } from 'lucide-react';
 import { useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import Logo from '../../components/Logo';
 import toast from 'react-hot-toast';
 import { account, storage, BUCKETS, ID } from '../../lib/appwrite';
 
@@ -78,7 +79,7 @@ const VerifyBusinessPage = () => {
         {/* Header */}
         <header className="flex justify-between items-center px-8 py-6 h-20 max-w-[1040px] mx-auto w-full">
           <div className="flex items-center gap-1.5">
-            <span className="font-questrial text-[20px] font-bold text-[#0F3934]">Food Bridge</span>
+            <Logo />
           </div>
           <button
             onClick={() => navigate('/vendor/dashboard')}
@@ -88,7 +89,7 @@ const VerifyBusinessPage = () => {
           </button>
         </header>
 
-        <main className="flex-1 flex flex-col items-center justify-center px-4 py-8">
+        <main className="flex-1 flex flex-col items-center px-4 pt-[3.25rem] pb-8">
           <div className="w-full max-w-[400px] flex flex-col items-center gap-8 text-center">
             {/* Checked badge */}
             <div className="flex flex-col items-center gap-6">
@@ -139,19 +140,14 @@ const VerifyBusinessPage = () => {
   return (
     <div className="min-h-screen flex flex-col bg-[#F9F9F9] pb-12">
       {/* Header */}
-      <header className="flex justify-between items-center px-8 py-6 h-20 max-w-[1240px] mx-auto w-full">
-        <div className="flex items-center gap-4">
-          <button
-            onClick={() => navigate('/vendor/dashboard')}
-            className="w-10 h-10 flex items-center justify-center rounded-full border border-black/10 bg-white hover:bg-neutral-50 cursor-pointer transition-all"
-          >
-            <ArrowLeft size={18} className="text-[#0A2623]" />
-          </button>
-          <span className="font-questrial text-[20px] font-bold text-[#0F3934]">Food Bridge</span>
-        </div>
+      <header className="flex items-center justify-between px-8 md:px-[100px] py-8">
+        <Link to="/vendor/dashboard"><Logo /></Link>
+        <Link to="/vendor/dashboard" className="h-10 px-6 rounded-full border border-border flex items-center hover:border-brand-primary transition-colors font-questrial">
+          Dashboard
+        </Link>
       </header>
 
-      <main className="flex-1 flex flex-col items-center justify-center px-4 py-8">
+      <main className="flex-1 flex flex-col items-center px-4 pt-[3.25rem] pb-8">
         <div className="w-full max-w-[450px] flex flex-col gap-8">
           <div>
             <h1 className="font-questrial text-[40px] text-[#0A2623] leading-tight font-normal">

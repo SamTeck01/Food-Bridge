@@ -126,10 +126,10 @@ function App() {
             <Route path="/vendor/listings/:id" element={<ProtectedRoute requiredRole="vendor"><VendorListingDetailPage /></ProtectedRoute>} />
             <Route path="/vendor/impact" element={<ProtectedRoute requiredRole="vendor"><ImpactPage /></ProtectedRoute>} />
             <Route path="/vendor/profile" element={<ProtectedRoute requiredRole="vendor"><ProfilePage /></ProtectedRoute>} />
-            <Route path="/vendor/verify-business" element={<ProtectedRoute requiredRole="vendor"><VerifyBusinessPage /></ProtectedRoute>} />
           </Route>
 
           {/* Full-screen vendor flow (no sidebar, per Figma) */}
+          <Route path="/vendor/verify-business" element={<ProtectedRoute requiredRole="vendor"><VerifyBusinessPage /></ProtectedRoute>} />
           <Route path="/vendor/post-listing" element={<ProtectedRoute requiredRole="vendor"><PostListingPage /></ProtectedRoute>} />
 
           {/* Individual App Pages (Temporarily without a specific layout) */}
