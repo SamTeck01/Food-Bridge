@@ -6,13 +6,14 @@ interface Goal {
   id: number;
   title: string;
   imageSrc: string;
+  fullWidth?: boolean;
 }
 
 const goals: Goal[] = [
   { id: 1, title: 'Lower environmental impact', imageSrc: '/images/About/goal-shape-1.svg' },
   { id: 2, title: 'Make food more affordable', imageSrc: '/images/About/goal-shape-2.svg' },
   { id: 3, title: 'Enable community support', imageSrc: '/images/About/goal-shape-3.svg' },
-  { id: 4, title: 'Reduce food waste across cities', imageSrc: '/images/About/goal-shape-4.svg' },
+  { id: 4, title: 'Reduce food waste across cities', imageSrc: '/images/About/goal-shape-4.png', fullWidth: true },
 ];
 
 const containerVariants = {
@@ -56,7 +57,7 @@ const AboutImpactGoals: React.FC = () => {
             <img 
               src={goal.imageSrc} 
               alt="" 
-              className="absolute bottom-0 right-0 w-[80%] object-contain"
+              className={`absolute bottom-0 right-0 object-contain ${goal.fullWidth ? 'w-full' : 'w-[80%]'}`}
             />
           </motion.div>
         ))}
