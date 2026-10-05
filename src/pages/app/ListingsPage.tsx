@@ -391,7 +391,7 @@ const ListingsPage = () => {
 
           {/* ── LOADING STATE ──────────────────────────────────── */}
           {loading ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
               {[...Array(8)].map((_, i) => (
                 <div key={i} className="rounded-[20px] bg-white border border-black/10 p-[5px] overflow-hidden">
                   <div className="h-[120px] skeleton rounded-[16px]" />
@@ -447,7 +447,7 @@ const ListingsPage = () => {
                   {/* Horizontal Scroll wrapper */}
                   <div className="flex gap-5 overflow-x-auto pb-4 scrollbar-none select-none" style={{ scrollbarWidth: 'none' }}>
                     {almostGone.map((listing) => (
-                      <div key={listing.$id} className="w-[300px] flex-shrink-0">
+                      <div key={listing.$id} className="w-[340px] flex-shrink-0">
                         <FoodCard
                           id={listing.$id}
                           name={listing.name}
@@ -474,7 +474,7 @@ const ListingsPage = () => {
                   <h2 className="font-questrial text-[24px] font-normal leading-[130%] text-[#0A2623]">
                     Available Near You
                   </h2>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6 w-full">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 w-full">
                     {availableNearYou.map((listing) => (
                       <FoodCard
                         key={listing.$id}

@@ -4,7 +4,6 @@ import {
   ChevronRight,
   Clock,
   Flame,
-  Heart,
   Leaf,
   MapPin,
   ShieldCheck,
@@ -212,7 +211,7 @@ const ListingDetailPage = () => {
               </button>
 
               {/* Left Meta Widget Card */}
-              <div className="flex flex-col gap-4 p-4 bg-white rounded-2xl border border-black/10">
+              <div className="flex flex-col gap-4">
                 <div className="flex items-center gap-3 text-[#0A2623]">
                   <Clock size={18} strokeWidth={1.5} className="flex-shrink-0" />
                   <span className="font-questrial text-[16px] leading-[130%]">{listing.pickupTime}</span>
@@ -301,8 +300,7 @@ const ListingDetailPage = () => {
                       : 'bg-[#7AD371] border-black/10 text-[#0A2623] hover:bg-[#7AD371]/90'
                   }`}
                 >
-                  <Heart size={16} className={listing && isSaved(listing.$id) ? 'fill-red-500 text-red-500' : ''} />
-                  <span>{listing && isSaved(listing.$id) ? 'Saved' : 'Save'}</span>
+                  <span>{listing && isSaved(listing.$id) ? 'Added to Favorites' : 'Add to Favorites'}</span>
                 </button>
                 
                 <button
