@@ -14,6 +14,8 @@ const AboutPage = lazy(() => import('./pages/marketing/AboutPage'));
 const ContactPage = lazy(() => import('./pages/marketing/Contact'));
 const IndividualsPage = lazy(() => import('./pages/marketing/Individuals'));
 const VendorPage = lazy(() => import('./pages/marketing/VendorPage'));
+const TermsPage = lazy(() => import('./pages/marketing/TermsPage'));
+const PrivacyPage = lazy(() => import('./pages/marketing/PrivacyPage'));
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
 
 // Auth Pages
@@ -90,6 +92,8 @@ function App() {
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/individuals" element={<IndividualsPage />} />
             <Route path="/vendors" element={<VendorPage />} />
+            <Route path="/terms" element={<TermsPage />} />
+            <Route path="/privacy" element={<PrivacyPage />} />
           </Route>
 
           {/* Combined guest/buyer route for /impact */}

@@ -33,8 +33,8 @@ const FAQSection = () => {
   const [activeIndex, setActiveIndex] = useState(0);
 
   return (
-    <section className="bg-[#FFFDF2] py-20 px-6">
-      <div className="max-w-[1440px] mx-auto relative">
+    <section id="faqs" className="bg-[#FFFDF2] py-20 px-6">
+      <div className="max-w-[77.5rem] mx-auto relative">
         
         {/* The Notebook Container */}
         <div className="bg-gradient-to-b from-[#FFFFFF] to-[#F9F9F9] border-[6px] border-[#7AD371] rounded-[1.5rem] shadow-sm relative overflow-hidden min-h-[658px] flex flex-col md:flex-row">
@@ -64,7 +64,7 @@ const FAQSection = () => {
                         key={i}
                         onClick={() => setActiveIndex(i)}
                         className={`w-full text-left py-[1.375rem] px-2 border-b border-[#0000001A] transition-all flex justify-between items-center group ${
-                            activeIndex === i ? "text-[#7AD371]" : "text-[#0A2623]"
+                            activeIndex === i ? "text-[#0A2623] border-l-2 border-l-[#7AD371] bg-[#7AD371]/5" : "text-[#0A2623]"
                         }`}
                         >
                             <span className="text-lg md:text-base font-normal">{faq.question}</span>
@@ -86,7 +86,7 @@ const FAQSection = () => {
                         animate={{ opacity: 1, x: 0 }}
                         exit={{ opacity: 0, x: -20 }}
                         transition={{ duration: 0.3 }}
-                        className="leading-[8rem] text-lg md:text-base font-normal"
+                        className="leading-[2.5rem] text-lg md:text-base font-normal text-[#0A2623B2]"
                         >
                             {faqs[activeIndex].answer}
                         </motion.div>

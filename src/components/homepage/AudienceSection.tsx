@@ -66,8 +66,8 @@ const AudienceSection = () => {
                         transition={{ type: 'spring', stiffness: 300, damping: 30 }}
                     >
                         {/* Header Content */}
-                        <div className={`flex justify-between ${isExpanded ? 'flex-col items-start' : 'lg:flex-col items-center lg:justify-between h-full'}`}>
-                            <div className={`${!isExpanded && 'lg:rotate-180 lg:[writing-mode:vertical-lr]'} transition-all duration-500`}>
+                        <div className={`flex justify-between ${isExpanded ? 'flex-col items-start' : 'lg:flex-col-reverse items-center lg:justify-between h-full'}`}>
+                            <div className={!isExpanded ? 'lg:[writing-mode:vertical-rl] lg:rotate-180' : ''}>
                                 <h3 className={`text-[2.5rem] font-medium ${item.textColor} whitespace-nowrap`}>
                                     {item.title}
                                 </h3>
@@ -87,7 +87,7 @@ const AudienceSection = () => {
                                 <img 
                                 src={item.image} 
                                 alt={item.title}
-                                className="w-12 h-12 lg:size-[4.375rem] object-contain mt-4 lg:mt-0" 
+                                className="w-12 h-12 lg:size-[4.375rem] object-contain" 
                                 />
                             )}
                         </div>
