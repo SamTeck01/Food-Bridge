@@ -12,9 +12,6 @@ const VendorPage: React.FC = () => {
     <div className="min-h-screen bg-[#FFFDF2] font-[Questrial]">
         <div 
             className="relative flex flex-col bg-[#FFFDF2]"
-            style={{ 
-            minHeight: '80vh'
-            }}
         >
           <VendorHero />               
         </div>
