@@ -102,7 +102,7 @@ const ListingDetailPage = () => {
         totalPaid: claimQty * listing.discountedPrice,
         originalTotal: claimQty * listing.originalPrice,
         pickupTime: listing.pickupTime,
-        distance: listing.distance || '0.8 km away',
+        distance: listing.distance || 'Nearby',
         buyerName: user.name || 'Anonymous Buyer',
         quantity: claimQty,
       });
@@ -137,8 +137,7 @@ const ListingDetailPage = () => {
   const claimsTotal = listing ? listing.quantity + listing.claimsUsed : 0;
   const soldOut = listing ? listing.claimsUsed >= claimsTotal : false;
 
-  // Stable pseudo-random distance for mockups
-  const distance = listing ? (listing.distance || '0.8 km away') : '0.8 km away';
+  const distance = listing?.distance || 'Nearby';
 
   if (loading) return (
     <div className="min-h-screen flex flex-col bg-[#F9F9F9] py-10 px-6">

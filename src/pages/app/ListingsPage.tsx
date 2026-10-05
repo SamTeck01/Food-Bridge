@@ -27,13 +27,6 @@ import { getListings } from '../../services/listings.service';
 import { getUserOrders, type Order } from '../../services/orders.service';
 import { useApp } from '../../context/AppContext';
 
-// Pseudo-random distance generator to align visual cards with Figma specs
-const getListingDistance = (id: string) => {
-  const hash = id.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-  const distances = ['0.5 km away', '0.8 km away', '1.2 km away', '1.5 km away', '2.0 km away'];
-  return distances[hash % distances.length];
-};
-
 const CATEGORIES = [
   { name: 'Browse All', icon: Utensils },
   { name: 'Restaurant', icon: Leaf },
@@ -456,7 +449,7 @@ const ListingsPage = () => {
                           timeLeft={listing.pickupTime}
                           claimsUsed={listing.claimsUsed}
                           claimsTotal={listing.quantity + listing.claimsUsed}
-                          distance={getListingDistance(listing.$id)}
+                          distance={listing.distance || 'Nearby'}
                           vendorName={listing.vendorName}
                           imageUrl={listing.imageUrl}
                           isSaved={isSaved(listing.$id)}
@@ -485,7 +478,7 @@ const ListingsPage = () => {
                         timeLeft={listing.pickupTime}
                         claimsUsed={listing.claimsUsed}
                         claimsTotal={listing.quantity + listing.claimsUsed}
-                        distance={getListingDistance(listing.$id)}
+                        distance={listing.distance || 'Nearby'}
                         vendorName={listing.vendorName}
                         imageUrl={listing.imageUrl}
                         isSaved={isSaved(listing.$id)}

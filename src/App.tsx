@@ -75,7 +75,6 @@ const ImpactRouteWrapper = () => {
   );
 };
 
-const IndividualDashboardPage = lazy(() => import('./pages/app/individuals/IndividualDashboardPage'));
 
 function App() {
   return (
@@ -132,12 +131,6 @@ function App() {
           <Route path="/vendor/verify-business" element={<ProtectedRoute requiredRole="vendor"><VerifyBusinessPage /></ProtectedRoute>} />
           <Route path="/vendor/post-listing" element={<ProtectedRoute requiredRole="vendor"><PostListingPage /></ProtectedRoute>} />
 
-          {/* Individual App Pages (Temporarily without a specific layout) */}
-          <Route path="/individual/dashboard" element={
-            <ProtectedRoute requiredRole="buyer">
-              <IndividualDashboardPage />
-            </ProtectedRoute>
-          } />
 
           {/* Catch-all */}
           <Route path="*" element={<NotFoundPage />} />
