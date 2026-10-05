@@ -6,6 +6,7 @@ import type { Listing } from '../../services/listings.service';
 import { getListingById, getListingImage } from '../../services/listings.service';
 import type { Order } from '../../services/orders.service';
 import { getOrderById, rateOrder } from '../../services/orders.service';
+import { pickupCode } from '../../lib/pickupCode';
 
 type Phase = 'progress' | 'completed' | 'missed';
 
@@ -119,6 +120,12 @@ export default function OrderDetailPage() {
               )}
               {phase !== 'progress' && <span className="text-[#0A2623]">{fmtDate(order.$updatedAt)}</span>}
             </div>
+            {phase === 'progress' && (
+              <div className="flex items-center justify-between rounded-[10px] bg-[#F9F9F9] px-4 py-3">
+                <span className="text-sm text-[#0A2623]/70">Show this pickup code to the vendor</span>
+                <span className="text-[20px] tracking-[0.3em] text-[#0F3934]">{pickupCode(order.$id)}</span>
+              </div>
+            )}
           </div>
 
           <div className="p-6 flex flex-col gap-4">

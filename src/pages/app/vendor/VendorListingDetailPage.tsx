@@ -1,7 +1,10 @@
-import { ArrowLeft, MoreVertical, Star, Flame, Clock, CheckCheck, XCircle, Eye, Coins } from 'lucide-react';
+import { ArrowLeft, Check, MoreVertical, Star, Flame, Clock, CheckCheck, Trash2, X, XCircle, Eye, Coins, UserX } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { getListingById, getListingImage, deleteListing } from '../../../services/listings.service';
+import toast from 'react-hot-toast';
+import ActionModal, { BagIcon } from '../../../components/ActionModal';
+import { pickupCode } from '../../../lib/pickupCode';
+import { getListingById, getListingImage, deleteListing, updateListing } from '../../../services/listings.service';
 import type { Listing } from '../../../services/listings.service';
 import { getListingOrders, updateOrderStatus } from '../../../services/orders.service';
 import type { Order } from '../../../services/orders.service';
@@ -23,6 +26,10 @@ export default function VendorListingDetailPage() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [confirmingId, setConfirmingId] = useState<string | null>(null);
   const [deleting, setDeleting] = useState(false);
+  const [confirmOrder, setConfirmOrder] = useState<Order | null>(null);
+  const [removeOrder, setRemoveOrder] = useState<Order | null>(null);
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [code, setCode] = useState('');
 
   useEffect(() => {
     if (!id) return;
@@ -32,28 +39,55 @@ export default function VendorListingDetailPage() {
       .finally(() => setLoading(false));
   }, [id]);
 
-  const handleConfirmPickup = async (orderId: string) => {
-    setConfirmingId(orderId);
+  const handleConfirmPickup = async () => {
+    if (!confirmOrder) return;
+    if (code.toUpperCase() !== pickupCode(confirmOrder.$id)) {
+      toast.error('That code does not match this claim.');
+      return;
+    }
+    setConfirmingId(confirmOrder.$id);
     try {
-      await updateOrderStatus(orderId, 'completed');
-      setOrders(prev => prev.map(o => o.$id === orderId ? { ...o, status: 'completed' } : o));
+      await updateOrderStatus(confirmOrder.$id, 'completed');
+      setOrders(prev => prev.map(o => o.$id === confirmOrder.$id ? { ...o, status: 'completed' } : o));
+      setConfirmOrder(null);
+      toast.success('Pickup confirmed');
     } catch (err) {
       console.error('Failed to confirm pickup:', err);
+      toast.error('Could not confirm pickup. Please try again.');
     } finally {
       setConfirmingId(null);
     }
   };
 
+  // Cancel a claim and return its portions to the listing
+  const handleRemoveClaimer = async () => {
+    if (!removeOrder || !listing) return;
+    const qty = removeOrder.quantity ?? 1;
+    try {
+      await updateOrderStatus(removeOrder.$id, 'cancelled');
+      const updated = await updateListing(listing.$id, {
+        quantity: listing.quantity + qty,
+        claimsUsed: Math.max(0, listing.claimsUsed - qty),
+        status: listing.status === 'sold_out' ? 'active' : listing.status,
+      });
+      setListing(updated);
+      setOrders(prev => prev.map(o => o.$id === removeOrder.$id ? { ...o, status: 'cancelled' } : o));
+      setRemoveOrder(null);
+    } catch (err) {
+      console.error('Failed to remove claimer:', err);
+      toast.error('Could not remove this claimer. Please try again.');
+    }
+  };
+
   const handleDelete = async () => {
     if (!listing) return;
-    if (!window.confirm('Are you sure you want to delete this listing? This action cannot be undone.')) return;
     setDeleting(true);
     try {
       await deleteListing(listing.$id);
       navigate('/vendor/listings');
     } catch (err) {
       console.error('Failed to delete listing:', err);
-      alert('Failed to delete listing. Please try again.');
+      toast.error('Failed to delete listing. Please try again.');
     } finally {
       setDeleting(false);
     }
@@ -108,15 +142,14 @@ export default function VendorListingDetailPage() {
                   onClick={() => { setMenuOpen(false); navigate(`/vendor/post-listing?edit=${id}`); }}
                   className="flex items-center gap-3 px-5 py-3.5 w-full hover:bg-[#F9F9F9] font-questrial text-[16px] text-[#0A2623] text-left transition-colors"
                 >
-                  ✏️ Edit
+                  Edit
                 </button>
                 <div className="h-[1px] bg-black/10" />
                 <button
-                  onClick={handleDelete}
-                  disabled={deleting}
+                  onClick={() => { setMenuOpen(false); setDeleteOpen(true); }}
                   className="flex items-center gap-3 px-5 py-3.5 w-full hover:bg-[#F9F9F9] font-questrial text-[16px] text-[#EF4444] text-left disabled:opacity-50 transition-colors"
                 >
-                  🗑️ {deleting ? 'Deleting...' : 'Delete'}
+                  <Trash2 size={16} /> Delete
                 </button>
               </div>
             </>
@@ -190,7 +223,7 @@ export default function VendorListingDetailPage() {
               <Eye size={20} className="text-[#0A2623]/70" />
               <span className="font-questrial">Total Views</span>
             </div>
-            <span className="font-questrial text-[#0A2623] font-semibold">{listing.claimsUsed * 4 + 12}</span>
+            <span className="font-questrial text-[#0A2623] font-semibold">—</span>
           </div>
           <div className="flex items-center justify-between text-[rgba(10,38,35,0.7)] text-[16px]">
             <div className="flex items-center gap-3">
@@ -274,21 +307,22 @@ export default function VendorListingDetailPage() {
                         {new Date(order.claimedAt).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
                       </span>
                       
-                      {order.status === 'pending' && (
-                        <button
-                          onClick={() => handleConfirmPickup(order.$id)}
-                          disabled={confirmingId === order.$id}
-                          className="px-4 py-1.5 rounded-full bg-[#0F3934] hover:bg-[#0A2623] text-white font-questrial text-xs font-semibold transition-all shadow-sm flex items-center gap-2 cursor-pointer disabled:opacity-50"
-                        >
-                          {confirmingId === order.$id ? (
-                            <>
-                              <div className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                              <span>Confirming...</span>
-                            </>
-                          ) : (
-                            <span>Confirm Pickup</span>
-                          )}
-                        </button>
+                      {(order.status === 'pending' || order.status === 'confirmed') && (
+                        <div className="flex items-center gap-3">
+                          <button
+                            onClick={() => setRemoveOrder(order)}
+                            aria-label="Remove claimer"
+                            className="text-[#EF4444] hover:opacity-70"
+                          >
+                            <X size={18} />
+                          </button>
+                          <button
+                            onClick={() => { setCode(''); setConfirmOrder(order); }}
+                            className="px-4 py-1.5 rounded-full border border-black/10 bg-white hover:border-[#0F3934] font-questrial text-xs text-[#0A2623] transition-all"
+                          >
+                            Confirm pickup
+                          </button>
+                        </div>
                       )}
                     </div>
                   </div>
@@ -298,6 +332,58 @@ export default function VendorListingDetailPage() {
           </div>
         )}
       </div>
+
+      {confirmOrder && (
+        <ActionModal
+          icon={<BagIcon tone="green"><Check size={26} strokeWidth={3} /></BagIcon>}
+          title="Confirm Pickup"
+          subtitle="Enter recipient code to confirm pickup"
+          onClose={() => setConfirmOrder(null)}
+        >
+          <input
+            value={code}
+            onChange={(e) => setCode(e.target.value.replace(/[^a-zA-Z0-9]/g, '').slice(0, 6).toUpperCase())}
+            placeholder="– – – – – –"
+            inputMode="text"
+            autoFocus
+            aria-label="Pickup code"
+            className="h-[50px] rounded-[10px] border border-black/10 text-center tracking-[0.6em] text-[20px] text-[#0A2623] outline-none focus:border-[#7AD371] mb-7"
+          />
+          <button
+            onClick={handleConfirmPickup}
+            disabled={code.length !== 6 || confirmingId !== null}
+            className="h-10 rounded-full bg-[#0F3934] text-white disabled:opacity-50"
+          >
+            {confirmingId ? 'Confirming…' : 'Confirm'}
+          </button>
+        </ActionModal>
+      )}
+
+      {removeOrder && (
+        <ActionModal
+          icon={<BagIcon tone="red"><UserX size={22} /></BagIcon>}
+          title="Remove Claimer"
+          subtitle={`Remove ${removeOrder.buyerName ?? 'this customer'} from this listing? Their portions go back on sale.`}
+          onClose={() => setRemoveOrder(null)}
+        >
+          <button onClick={handleRemoveClaimer} className="h-10 rounded-full bg-[#EF4444] text-white">Yes, remove</button>
+          <button onClick={() => setRemoveOrder(null)} className="h-10 rounded-full border border-black/10 text-[#0A2623]">No, cancel</button>
+        </ActionModal>
+      )}
+
+      {deleteOpen && (
+        <ActionModal
+          icon={<BagIcon tone="red"><Trash2 size={22} /></BagIcon>}
+          title="Delete Listing"
+          subtitle="Are you sure you want to delete this listing?"
+          onClose={() => setDeleteOpen(false)}
+        >
+          <button onClick={handleDelete} disabled={deleting} className="h-10 rounded-full bg-[#EF4444] text-white disabled:opacity-50">
+            {deleting ? 'Deleting…' : 'Yes, delete'}
+          </button>
+          <button onClick={() => setDeleteOpen(false)} className="h-10 rounded-full border border-black/10 text-[#0A2623]">No, cancel</button>
+        </ActionModal>
+      )}
     </div>
   );
 }
