@@ -32,14 +32,14 @@ const OrdersPage = () => {
   const [rating, setRating]               = useState(3);
   const [remark, setRemark]               = useState('');
   const [isRatingSubmit, setIsRatingSubmit] = useState(false);
-  const [listingDetails, setListingDetails] = useState<Listing | null>(null);
+  const [fetchedListing, setListingDetails] = useState<Listing | null>(null);
   const [ratingSuccess, setRatingSuccess]   = useState(false);
 
+  // Ignore a listing fetched for a previously selected order
+  const listingDetails = fetchedListing && selectedOrder && fetchedListing.$id === selectedOrder.listingId ? fetchedListing : null;
+
   useEffect(() => {
-    if (!selectedOrder) {
-      setListingDetails(null);
-      return;
-    }
+    if (!selectedOrder) return;
     getListingById(selectedOrder.listingId)
       .then(setListingDetails)
       .catch(() => setListingDetails(null));

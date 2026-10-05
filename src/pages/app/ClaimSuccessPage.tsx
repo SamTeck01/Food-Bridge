@@ -13,7 +13,6 @@ export default function ClaimSuccessPage() {
 
   useEffect(() => {
     if (!id) return;
-    setLoading(true);
     getOrderById(id)
       .then((data) => setOrder(data))
       .catch((err) => {

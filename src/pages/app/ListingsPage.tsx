@@ -64,7 +64,7 @@ const ListingsPage = () => {
 
   // Drawer Claim states
   const [userOrders, setUserOrders] = useState<Order[]>([]);
-  const [ordersLoading, setOrdersLoading] = useState(false);
+  const [ordersFetched, setOrdersFetched] = useState(false);
 
   const isDrawerOpen = searchParams.get('drawer') === 'orders';
   const searchQuery = searchParams.get('q') ?? '';
@@ -83,17 +83,19 @@ const ListingsPage = () => {
   }, []);
 
   useEffect(() => {
-    fetchListings();
-  }, [fetchListings]);
+    getListings(50)
+      .then(setListings)
+      .catch(() => setError('Could not load listings. Please check your connection.'))
+      .finally(() => setLoading(false));
+  }, []);
 
   // Fetch claimed user orders for the right-side drawer
   useEffect(() => {
     if (isDrawerOpen && isLoggedIn && user) {
-      setOrdersLoading(true);
       getUserOrders(user.id)
         .then((data) => setUserOrders(data))
         .catch((e) => console.error('Error fetching user claims:', e))
-        .finally(() => setOrdersLoading(false));
+        .finally(() => setOrdersFetched(true));
     }
   }, [isDrawerOpen, isLoggedIn, user]);
 
@@ -170,7 +172,7 @@ const ListingsPage = () => {
               </div>
 
               {/* Drawer Content */}
-              {ordersLoading ? (
+              {!ordersFetched ? (
                 <div className="flex flex-col gap-6 py-12 items-center justify-center flex-1">
                   <div className="w-10 h-10 border-4 border-[#7AD371] border-t-transparent rounded-full animate-spin" />
                   <p className="font-questrial text-sm text-[#0A2623]/70">Loading orders...</p>

@@ -21,7 +21,7 @@ const VerifyEmailPage = () => {
   const [resending, setResending] = useState(false);
   const [resent, setResent] = useState(false);
   const [error, setError] = useState('');
-  const [verifying, setVerifying] = useState(false);
+  const [linkFailed, setLinkFailed] = useState(false);
   const [verified, setVerified] = useState(false);
 
   const userId = searchParams.get('userId') || '';
@@ -29,8 +29,7 @@ const VerifyEmailPage = () => {
 
   useEffect(() => {
     // If magic link params are present, verify the email
-    if (userId && secret && !verifying && !verified) {
-      setVerifying(true);
+    if (userId && secret && !verified && !linkFailed) {
       confirmEmailVerification(userId, secret)
         .then(() => {
           setVerified(true);
@@ -45,7 +44,7 @@ const VerifyEmailPage = () => {
         })
         .catch(() => {
           setError('Invalid or expired verification link. Please request a new one.');
-          setVerifying(false);
+          setLinkFailed(true);
         });
       return;
     }
@@ -58,7 +57,7 @@ const VerifyEmailPage = () => {
         navigate('/listings', { replace: true });
       }
     }
-  }, [user, userId, secret, verifying, verified, navigate]);
+  }, [user, userId, secret, verified, linkFailed, navigate]);
 
   const handleResend = async () => {
     setResending(true);

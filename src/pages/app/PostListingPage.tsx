@@ -56,7 +56,6 @@ const PostListingPage = () => {
   // Prefill form when in edit mode
   useEffect(() => {
     if (!editId) return;
-    setLoadingEdit(true);
     getListingById(editId)
       .then((listing) => {
         setForm({

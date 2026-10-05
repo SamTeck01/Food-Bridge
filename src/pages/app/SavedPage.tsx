@@ -10,14 +10,12 @@ const SavedPage = () => {
   const { savedIds, toggleSave, isSaved } = useApp();
   const [listings, setListings] = useState<Listing[]>([]);
   const [loading, setLoading] = useState(true);
+  const [now] = useState(() => Date.now());
+  // Drop listings that were un-saved since the last fetch
+  const visible = listings.filter((l) => savedIds.includes(l.$id));
 
   useEffect(() => {
-    if (savedIds.length === 0) {
-      setListings([]);
-      setLoading(false);
-      return;
-    }
-    setLoading(true);
+    if (savedIds.length === 0) return;
     Promise.all(savedIds.map((id) => getListingById(id).catch(() => null)))
       .then((results) => setListings(results.filter(Boolean) as Listing[]))
       .finally(() => setLoading(false));
@@ -25,7 +23,7 @@ const SavedPage = () => {
 
   // compute timeLeft helper
   const getTimeLeft = (expiresAt: string) => {
-    const diff = new Date(expiresAt).getTime() - Date.now();
+    const diff = new Date(expiresAt).getTime() - now;
     if (diff <= 0) return 'Expired';
     const h = Math.floor(diff / 3600000);
     const m = Math.floor((diff % 3600000) / 60000);
@@ -42,17 +40,17 @@ const SavedPage = () => {
           </div>
           <div>
             <h1 className="font-questrial text-2xl text-[#0A2623]">Saved Listings</h1>
-            <p className="font-questrial text-sm text-[#0A2623]/60">{listings.length} saved item{listings.length !== 1 ? 's' : ''}</p>
+            <p className="font-questrial text-sm text-[#0A2623]/60">{visible.length} saved item{visible.length !== 1 ? 's' : ''}</p>
           </div>
         </div>
 
-        {loading ? (
+        {savedIds.length > 0 && loading ? (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {[...Array(4)].map((_, i) => (
               <div key={i} className="bg-white rounded-[20px] h-[260px] animate-pulse" />
             ))}
           </div>
-        ) : listings.length === 0 ? (
+        ) : visible.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-24 gap-6 text-center">
             <div className="w-20 h-20 flex items-center justify-center rounded-full bg-[#F0F4F1] border border-black/10">
               <Heart size={32} className="text-[#0A2623]/30" />
@@ -67,7 +65,7 @@ const SavedPage = () => {
           </div>
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {listings.map((listing) => (
+            {visible.map((listing) => (
               <FoodCard
                 key={listing.$id}
                 id={listing.$id}

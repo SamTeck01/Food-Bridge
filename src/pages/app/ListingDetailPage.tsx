@@ -56,7 +56,6 @@ const ListingDetailPage = () => {
 
   useEffect(() => {
     if (!id) return;
-    setLoading(true);
     getListingById(id)
       .then((data) => {
         setListing(data);
