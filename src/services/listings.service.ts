@@ -1,4 +1,4 @@
-import { ID, Query } from 'appwrite';
+import { ID, Permission, Query, Role } from 'appwrite';
 import { databases, storage, DB_ID, COLLECTIONS, BUCKETS } from '../lib/appwrite';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -76,7 +76,8 @@ export const createListing = async (data: CreateListingData): Promise<Listing> =
       const file = await storage.createFile(
         BUCKETS.FOOD_IMAGES,
         ID.unique(),
-        data.imageFile
+        data.imageFile,
+        [Permission.read(Role.any())]
       );
       imageUrl = storage.getFileView(BUCKETS.FOOD_IMAGES, file.$id).toString();
     } catch (uploadErr) {
@@ -116,7 +117,7 @@ export const deleteListing = async (id: string): Promise<void> => {
 
 /** Upload a food image to storage */
 export const uploadFoodImage = async (file: File): Promise<string> => {
-  const uploaded = await storage.createFile(BUCKETS.FOOD_IMAGES, ID.unique(), file);
+  const uploaded = await storage.createFile(BUCKETS.FOOD_IMAGES, ID.unique(), file, [Permission.read(Role.any())]);
   return storage.getFileView(BUCKETS.FOOD_IMAGES, uploaded.$id).toString();
 };
 

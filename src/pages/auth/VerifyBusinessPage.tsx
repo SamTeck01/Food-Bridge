@@ -3,6 +3,7 @@ import { useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Logo from '../../components/Logo';
 import toast from 'react-hot-toast';
+import { Permission, Role } from 'appwrite';
 import { account, storage, BUCKETS, ID } from '../../lib/appwrite';
 
 const REGISTRATION_TYPES = [
@@ -48,7 +49,12 @@ const VerifyBusinessPage = () => {
     try {
       let documentId: string | null = null;
       if (cacFile) {
-        const uploaded = await storage.createFile(BUCKETS.BUSINESS_DOCS, ID.unique(), cacFile.file);
+        const me = await account.get();
+        // Private to the vendor; reviewers read it with a server key
+        const uploaded = await storage.createFile(BUCKETS.BUSINESS_DOCS, ID.unique(), cacFile.file, [
+          Permission.read(Role.user(me.$id)),
+          Permission.delete(Role.user(me.$id)),
+        ]);
         documentId = uploaded.$id;
       }
       // Stored on the account prefs until a vendor-profiles review flow exists
