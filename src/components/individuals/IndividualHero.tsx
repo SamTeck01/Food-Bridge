@@ -44,7 +44,7 @@ const VendorHero: React.FC = () => {
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
-        className="relative z-20 w-full max-w-[500px] mx-auto -mb-24 md:-mb-32"
+        className="relative z-20 w-full max-w-[300px] md:max-w-[360px] mx-auto mt-10 -mb-10 md:-mb-14"
       >
         <img 
           src="/images/Vendor/food-bowl.svg" 

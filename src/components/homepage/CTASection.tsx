@@ -22,7 +22,7 @@ const CTASection = () => {
             <div className="h-1/2 w-full bg-[#000000]" />
         </div>
 
-        <div className="max-w-[1440px] mx-auto px-6 relative z-10">
+        <div className="max-w-[77.5rem] mx-auto px-6 relative z-10">
             {/* Main Green Card */}
             <div className="relative bg-[#0F3934] rounded-[1.5rem] p-12 md:p-[6.5rem] overflow-hidden shadow-2xl">
                 <motion.div 

@@ -1,21 +1,12 @@
 import { motion, useInView } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
+import FeatureTicker from './FeatureTicker';
 
 // Stats data
 const stats = [
   { label: 'Cities', value: 8, suffix: '' },
   { label: 'Restaurants', value: 340, suffix: '+' },
   { label: 'Meals Rescued', value: 12500, suffix: '+' },
-];
-
-// Ticker features
-const features = [
-  { label: "Freshly Prepared Meals", icon: "star.svg" },
-  { label: "Surplus Food Available Daily", icon: "sparkle.svg" },
-  { label: "Easy Online Claim Process", icon: "plus.svg" },
-  { label: "Eco-Friendly Packaging", icon: "leaf.svg" },
-  { label: "Trusted by Local Communities", icon: "heart.svg" },
-  { label: "Real-Time Availability Updates", icon: "bolt.svg" }
 ];
 
 const Counter = ({ value, suffix }: { value: number; suffix: string }) => {
@@ -67,7 +58,7 @@ const ImpactSection = () => {
                             <div className="text-[2.5rem] md:text-[3.75rem] text-white font-normal leading-none mb-1">
                                 <Counter value={stat.value} suffix={stat.suffix} />
                             </div>
-                            <span className="text-white/60 text-[0.875rem] md:text-[1rem] uppercase tracking-wide">
+                            <span className="text-white/60 text-[0.875rem] md:text-[1rem]">
                                 {stat.label}
                             </span>
                         </div>
@@ -76,23 +67,7 @@ const ImpactSection = () => {
             </div>
 
             {/* Horizontal Auto-Scrolling Ticker */}
-            <div className="relative md:mb-[5.6rem] mb-[3.75rem] -mx-20">
-                <div className="flex space-x-[0.75rem] animate-scroll whitespace-nowrap">
-                    {[...features, ...features].map((feature, i) => (
-                    <div 
-                        key={i} 
-                        className="px-8 py-[0.59rem] rounded-[5px] border border-[#FFFFFF1A] bg-[#FFFFFF1A] text-[#FFFFFF] text-sm md:text-base flex items-center gap-[0.625rem]"
-                    >
-                        <img 
-                            src={`/images/homepage/${feature.icon}`} 
-                            alt="" 
-                            className="w-5 h-5 object-contain" 
-                        />
-                        <span className="font-light">{feature.label}</span>
-                    </div>
-                    ))}
-                </div>
-            </div>
+            <FeatureTicker className="md:mb-[5.6rem] mb-[3.75rem] -mx-20" />
 
             {/*Impact Images */}
             <div className="flex md:grid md:grid-cols-12 gap-5 overflow-x-auto md:overflow-visible snap-x snap-mandatory pb-6 md:pb-0 scrollbar-hide">

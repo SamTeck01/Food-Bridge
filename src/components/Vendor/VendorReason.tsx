@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { StarIcon, FavouriteIcon, Shield01Icon, ZapIcon } from 'hugeicons-react';
 
-interface Benefit {
+export interface Benefit {
   id: number;
   title: string;
   description: string;
@@ -10,7 +10,7 @@ interface Benefit {
   bgShape: string;
 }
 
-const benefits: Benefit[] = [
+const VENDOR_BENEFITS: Benefit[] = [
   {
     id: 1,
     title: 'Recover Costs',
@@ -41,7 +41,12 @@ const benefits: Benefit[] = [
   }
 ];
 
-const VendorWhyUse: React.FC = () => {
+interface Props {
+  audience?: string;
+  benefits?: Benefit[];
+}
+
+const VendorWhyUse: React.FC<Props> = ({ audience = 'vendors', benefits = VENDOR_BENEFITS }) => {
   return (
     // Notice there is no horizontal padding (px) here so the scroll bleeds to the edges
     <section className="py-24 bg-[#FDFCF7] overflow-hidden flex flex-col items-center">
@@ -55,7 +60,7 @@ const VendorWhyUse: React.FC = () => {
           transition={{ duration: 0.4, ease: "easeOut" }}
           className="text-4xl md:text-5xl font-medium text-[#0A2521] tracking-tight"
         >
-          Why vendors use <br className="hidden md:block" /> FoodBridge
+          Why {audience} use <br className="hidden md:block" /> FoodBridge
         </motion.h2>
       </div>
 

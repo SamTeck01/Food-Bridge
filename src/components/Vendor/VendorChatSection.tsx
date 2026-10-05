@@ -11,7 +11,7 @@ const features = [
 
 const VendorChatSection = () => {
   return (
-    <section className="w-full relative z-30">
+    <section className="w-full relative z-10">
       {/* Main Dark Green Container */}
       <div className="w-full bg-brand-secondary rounded-t-[50px] md:rounded-t-[80px] pt-16 md:pt-24 pb-12 md:pb-16 px-6 md:px-16 overflow-hidden relative shadow-[var(--shadow-xl)]">
         
@@ -26,7 +26,7 @@ const VendorChatSection = () => {
             transition={{ duration: 0.5 }}
             className="self-start bg-[#FFFFFF1A] backdrop-blur-sm border-2 border-[#FFFFFF1A] rounded-[2rem] rounded-tl-[0.4rem] p-6 md:p-[1.88rem] text-white w-[90%] md:w-[60%]"
           >
-            <ul className="text-sm md:text-[1.2rem] font-normal">
+            <ul className="text-base md:text-[1.375rem] font-normal">
               <li className="flex items-center">
                 <span className="text-xl">🍛 </span>
                 <p>Unsold food at closing time  </p>
@@ -50,7 +50,7 @@ const VendorChatSection = () => {
             transition={{ duration: 0.5, delay: 0.4 }}
             className="self-end bg-[#FFFFFF1A] backdrop-blur-sm border-2 border-[#FFFFFF1A] rounded-[4.06rem] rounded-tr-[0.4rem] py-[1.38rem] px-[3.56rem] text-white w-fit"
           >
-            <p className="text-sm md:text-[1.2rem] font-normal">Sound familiar?</p>
+            <p className="text-base md:text-[1.375rem] font-normal">Sound familiar?</p>
           </motion.div>
 
           {/* Right Bubble 2 (System) */}
@@ -61,7 +61,7 @@ const VendorChatSection = () => {
             transition={{ duration: 0.5, delay: 0.8 }}
             className="self-end bg-[#FFFFFF1A] backdrop-blur-sm border-2 border-[#FFFFFF1A] rounded-[4.06rem] rounded-tr-[0.4rem] py-[1.38rem] px-[3.56rem] text-white w-fit"
           >
-            <p className="text-sm md:text-[1.2rem] font-normal">It doesn’t have to be this way.</p>
+            <p className="text-base md:text-[1.375rem] font-normal">It doesn’t have to be this way.</p>
           </motion.div>
 
         </div>

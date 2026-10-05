@@ -1,4 +1,4 @@
-import { AlertCircle, Clock, Minus, Plus, Upload, X, CheckCheck, Flame, CheckSquare, ArrowLeft } from 'lucide-react';
+import { AlertCircle, Clock, Minus, Plus, Upload, X, CheckCheck, Flame, CheckSquare } from 'lucide-react';
 import { useRef, useState, useEffect } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useApp } from '../../context/AppContext';
@@ -56,7 +56,6 @@ const PostListingPage = () => {
   // Prefill form when in edit mode
   useEffect(() => {
     if (!editId) return;
-    setLoadingEdit(true);
     getListingById(editId)
       .then((listing) => {
         setForm({
@@ -195,7 +194,7 @@ const PostListingPage = () => {
         {/* Header */}
         <header className="flex justify-between items-center px-8 py-6 h-20 max-w-[1040px] mx-auto w-full">
           <div className="flex items-center gap-1.5">
-            <span className="font-questrial text-[20px] font-bold text-[#0F3934]">Food Bridge</span>
+            <img src="/images/homepage/logo.svg" alt="FoodBridge" className="h-10 w-auto" />
           </div>
           <button
             onClick={() => navigate('/vendor/dashboard')}
@@ -300,33 +299,22 @@ const PostListingPage = () => {
         </div>
       )}
 
+      <header className="max-w-[1040px] w-full mx-auto px-4 md:px-6 h-[100px] flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <Link to="/vendor/dashboard"><img src="/images/homepage/logo.svg" alt="FoodBridge" className="h-10 w-auto" /></Link>
+          <span className="w-px h-8 bg-black/10" />
+          <h1 className="font-questrial text-[24px] text-[#0A2623]">{isEditing ? 'Edit Listing' : 'Post Listing'}</h1>
+        </div>
+        <Link
+          to="/vendor/listings"
+          className="flex items-center gap-2 h-10 px-5 rounded-full border border-black/10 bg-white font-questrial text-sm text-[rgba(10,38,35,0.7)] hover:border-red-500 hover:text-red-500 transition-all"
+        >
+          Cancel <X size={14} />
+        </Link>
+      </header>
+
       <main className="flex-1 py-8 px-4 md:px-6">
         <div className="max-w-[1040px] mx-auto">
-          {/* Page header */}
-          <div className="flex items-center justify-between mb-8">
-            <div className="flex items-center gap-4">
-              <button
-                onClick={() => navigate('/vendor/listings')}
-                className="w-10 h-10 flex items-center justify-center rounded-full border border-black/10 bg-white hover:bg-neutral-50 cursor-pointer transition-all"
-              >
-                <ArrowLeft size={18} className="text-[#0A2623]" />
-              </button>
-              <div>
-                <h1 className="font-questrial text-[24px] text-[#0A2623]">
-                  {isEditing ? 'Edit Listing' : 'Post Listing'}
-                </h1>
-                <p className="font-questrial text-sm text-[rgba(10,38,35,0.6)] mt-1">
-                  {isEditing ? 'Update your listing details' : 'Share surplus food with your community'}
-                </p>
-              </div>
-            </div>
-            <Link
-              to="/vendor/listings"
-              className="flex items-center gap-2 h-10 px-5 rounded-full border border-black/10 bg-white font-questrial text-sm font-semibold text-[rgba(10,38,35,0.7)] hover:border-red-500 hover:text-red-500 transition-all"
-            >
-              Cancel <X size={14} />
-            </Link>
-          </div>
 
           <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-[1fr_333px] gap-8">
             {/* Left column */}

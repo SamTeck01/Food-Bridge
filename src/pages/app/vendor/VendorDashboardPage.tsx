@@ -1,4 +1,4 @@
-import { Package, Plus, BadgeCheck, Clock, Flame, ChevronRight, Utensils, Coins, Star } from 'lucide-react';
+import { ArrowUpRight, CheckCheck, CircleX, Clock, Flame, Plus, Utensils, Coins, Star } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useApp } from '../../../context/AppContext';
@@ -6,16 +6,6 @@ import type { Listing } from '../../../services/listings.service';
 import { getVendorListings, getListingImage } from '../../../services/listings.service';
 import type { Order } from '../../../services/orders.service';
 import { getVendorOrders } from '../../../services/orders.service';
-
-const timeAgo = (dateStr: string) => {
-  const diff = Date.now() - new Date(dateStr).getTime();
-  const m = Math.floor(diff / 60000);
-  if (m < 1) return 'just now';
-  if (m < 60) return `${m}m ago`;
-  const h = Math.floor(m / 60);
-  if (h < 24) return `${h}h ago`;
-  return `${Math.floor(h / 24)}d ago`;
-};
 
 const getTimeLeft = (expiresAt: string) => {
   const diff = new Date(expiresAt).getTime() - Date.now();
@@ -30,11 +20,21 @@ export default function VendorDashboardPage() {
   const [listings, setListings] = useState<Listing[]>([]);
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
+  const [weeklyKg, setWeeklyKg] = useState(0);
 
   useEffect(() => {
     if (!user?.id) return;
     Promise.all([getVendorListings(user.id), getVendorOrders(user.id)])
-      .then(([ls, os]) => { setListings(ls); setOrders(os); })
+      .then(([ls, os]) => {
+        setListings(ls);
+        setOrders(os);
+        // Rough estimate: ~0.5kg of food per portion claimed in the last 7 days
+        const weekAgo = Date.now() - 7 * 24 * 3600 * 1000;
+        const portions = os
+          .filter(o => o.status !== 'cancelled' && new Date(o.claimedAt).getTime() >= weekAgo)
+          .reduce((n, o) => n + (o.quantity ?? 1), 0);
+        setWeeklyKg(Math.round(portions * 0.5 * 10) / 10);
+      })
       .catch(console.error)
       .finally(() => setLoading(false));
   }, [user?.id]);
@@ -48,28 +48,7 @@ export default function VendorDashboardPage() {
     : '—';
 
   return (
-    <div className="p-8 max-w-[1200px] mx-auto flex flex-col gap-8">
-      {/* Page header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="font-questrial text-[32px] text-[#0A2623]">Home</h1>
-          <p className="font-questrial text-[16px] text-[rgba(10,38,35,0.6)] mt-1">
-            Welcome back, <span className="text-[#0F3934] font-semibold">{user?.name?.split(' ')[0]}</span> 👋
-          </p>
-        </div>
-        <div className="flex items-center gap-3">
-          <Link
-            to="/vendor/verify-business"
-            className="flex items-center gap-2 h-10 px-5 rounded-full border border-black/10 bg-white font-questrial text-sm font-semibold text-[rgba(10,38,35,0.7)] hover:border-[#7AD371] hover:text-[#0F3934] transition-all"
-          >
-            <BadgeCheck size={15} className="text-[#0F3934]" /> Verify Business
-          </Link>
-          <Link to="/vendor/post-listing" className="flex items-center gap-2 h-10 px-5 rounded-full bg-[#0F3934] text-white font-questrial text-sm font-semibold hover:bg-[#0A2623] transition-all">
-            <Plus size={15} /> Post Listing
-          </Link>
-        </div>
-      </div>
-
+    <div className="p-8 max-w-[1104px] mx-auto flex flex-col gap-8">
       {/* Stats (Figma home2.html matching styling) */}
       {loading ? (
         <div className="grid grid-cols-3 gap-5">
@@ -132,6 +111,23 @@ export default function VendorDashboardPage() {
         </div>
       )}
 
+
+      {/* Weekly impact */}
+      <div className="relative bg-white rounded-[20px] border border-black/[0.06] px-8 md:px-16 py-9 overflow-hidden min-h-[240px] flex items-center shadow-[0_1px_4px_rgba(10,38,35,0.06)]">
+        <div className="relative z-10 flex flex-col gap-6 max-w-[331px]">
+          <div className="flex flex-col gap-2">
+            <p className="font-questrial text-[16px] text-[rgba(10,38,35,0.7)]">Your Impact 🌱</p>
+            <p className="font-questrial text-[24px] text-[#0A2623] leading-snug">
+              You've prevented <span className="text-[#7AD371]">{weeklyKg}kg</span> of food waste this week
+            </p>
+          </div>
+          <Link to="/vendor/impact" className="self-start flex items-center gap-2 h-10 px-6 rounded-full bg-[#0F3934] text-white font-questrial text-[16px] hover:bg-[#0A2623] transition-all">
+            View Full <ArrowUpRight size={16} />
+          </Link>
+        </div>
+        <img src="/images/vendor/impact-veg.png" alt="" className="hidden md:block absolute right-10 bottom-0 w-[396px] max-w-[45%]" />
+      </div>
+
       {/* Active Listings (Figma home2.html matching styling) */}
       <div className="flex flex-col gap-4">
         <div className="flex items-center justify-between">
@@ -142,7 +138,7 @@ export default function VendorDashboardPage() {
             </span>
           </div>
           <Link to="/vendor/listings" className="font-questrial text-[16px] text-[#7AD371] font-semibold hover:underline flex items-center gap-1">
-            View All <ChevronRight size={16} />
+            View All
           </Link>
         </div>
 
@@ -150,7 +146,7 @@ export default function VendorDashboardPage() {
           <div className="flex gap-4 overflow-x-auto pb-2">
             {[0, 1, 2, 3].map(i => <div key={i} className="bg-white rounded-[20px] w-[320px] h-[280px] flex-shrink-0 animate-pulse" />)}
           </div>
-        ) : activeListings.length === 0 ? (
+        ) : listings.length === 0 ? (
           <div className="bg-white rounded-[20px] border border-black/10 p-12 text-center">
             <p className="font-questrial text-[16px] text-[rgba(10,38,35,0.5)]">No active listings yet.</p>
             <Link to="/vendor/post-listing" className="mt-4 inline-flex items-center gap-2 h-10 px-5 rounded-full bg-[#0F3934] text-white font-questrial text-sm">
@@ -158,15 +154,15 @@ export default function VendorDashboardPage() {
             </Link>
           </div>
         ) : (
-          <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-none" style={{ scrollbarWidth: 'none' }}>
-            {activeListings.slice(0, 8).map(listing => {
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {listings.slice(0, 6).map(listing => {
               const claimsTotal = listing.quantity + listing.claimsUsed;
               const timeLeft = listing.expiresAt ? getTimeLeft(listing.expiresAt) : listing.pickupTime;
               return (
                 <Link
                   key={listing.$id}
                   to={`/vendor/listings/${listing.$id}`}
-                  className="flex-shrink-0 w-[320px] bg-white rounded-[20px] border border-black/10 overflow-hidden hover:-translate-y-0.5 transition-all p-1.5 flex flex-col"
+                  className="bg-white rounded-[20px] border border-black/10 overflow-hidden hover:-translate-y-0.5 transition-all p-1.5 flex flex-col"
                   style={{ boxShadow: '0 1px 3px rgba(10,38,35,0.06)' }}
                 >
                   {/* Image */}
@@ -188,10 +184,7 @@ export default function VendorDashboardPage() {
                     </div>
                     <div className="h-[1px] bg-black/10" />
                     <div className="flex items-center justify-between text-[rgba(10,38,35,0.7)] mt-auto">
-                      <div className="flex items-center gap-1.5">
-                        <Clock size={16} className="text-[rgba(10,38,35,0.7)]" />
-                        <span className="font-questrial text-[14px]">{timeLeft}</span>
-                      </div>
+                      <ListingStatus status={listing.status} timeLeft={timeLeft} />
                       <div className="flex items-center gap-1.5">
                         <Flame size={16} className="text-[#28A745]" />
                         <span className="font-questrial text-[16px] font-semibold text-[#0A2623]">
@@ -207,39 +200,31 @@ export default function VendorDashboardPage() {
         )}
       </div>
 
-      {/* Recent Claims */}
-      <div className="bg-white rounded-[20px] border border-black/[0.06] p-6 flex flex-col gap-4 shadow-[0_1px_4px_rgba(10,38,35,0.06)]">
-        <h2 className="font-questrial text-[20px] text-[#0A2623] font-semibold">Recent Claims</h2>
-        {loading ? (
-          <div className="space-y-3">
-            {[0, 1, 2].map(i => <div key={i} className="h-12 bg-[#F9F9F9] rounded-xl animate-pulse" />)}
-          </div>
-        ) : orders.length === 0 ? (
-          <div className="py-8 text-center">
-            <Package className="mx-auto text-[rgba(10,38,35,0.3)] mb-2" size={32} />
-            <p className="font-questrial text-[14px] text-[rgba(10,38,35,0.5)]">No claims yet</p>
-          </div>
-        ) : (
-          <div className="divide-y divide-black/[0.06]">
-            {orders.slice(0, 5).map(order => (
-              <div key={order.$id} className="flex items-center gap-3 py-3 hover:bg-neutral-50/50 px-2 rounded-xl transition-colors">
-                <div className="w-9 h-9 rounded-full bg-[#7AD371]/15 flex items-center justify-center text-[#0F3934] font-questrial text-sm font-semibold flex-shrink-0">
-                  {(order.buyerName ?? 'U').charAt(0).toUpperCase()}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="font-questrial text-[14px] text-[#0A2623] truncate">
-                    <span className="font-semibold">{order.buyerName ?? 'Customer'}</span> claimed {order.listingName}
-                  </p>
-                  <p className="font-questrial text-[12px] text-[rgba(10,38,35,0.5)]">{timeAgo(order.claimedAt)}</p>
-                </div>
-                <span className="font-questrial text-[14px] text-[#28A745] font-semibold flex-shrink-0">
-                  +₦{order.totalPaid.toLocaleString()}
-                </span>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
     </div>
   );
 }
+
+const ListingStatus = ({ status, timeLeft }: { status: Listing['status']; timeLeft: string }) => {
+  if (status === 'sold_out') {
+    return (
+      <div className="flex items-center gap-1.5 text-[#28A745]">
+        <CheckCheck size={16} />
+        <span className="font-questrial text-[14px]">Claimed</span>
+      </div>
+    );
+  }
+  if (status === 'expired' || timeLeft === 'Expired') {
+    return (
+      <div className="flex items-center gap-1.5 text-[#EF4444]">
+        <CircleX size={16} />
+        <span className="font-questrial text-[14px]">Expired</span>
+      </div>
+    );
+  }
+  return (
+    <div className="flex items-center gap-1.5">
+      <Clock size={16} className="text-[rgba(10,38,35,0.7)]" />
+      <span className="font-questrial text-[14px]">{timeLeft}</span>
+    </div>
+  );
+};

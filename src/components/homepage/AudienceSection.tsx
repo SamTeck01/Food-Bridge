@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const audiences = [
   {
@@ -38,6 +38,15 @@ const audiences = [
 
 const AudienceSection = () => {
   const [expandedId, setExpandedId] = useState<string | null>('vendors');
+  // Below lg every card is shown open, as in the mobile design
+  const [isDesktop, setIsDesktop] = useState(() => window.matchMedia('(min-width: 1024px)').matches);
+
+  useEffect(() => {
+    const mq = window.matchMedia('(min-width: 1024px)');
+    const onChange = (e: MediaQueryListEvent) => setIsDesktop(e.matches);
+    mq.addEventListener('change', onChange);
+    return () => mq.removeEventListener('change', onChange);
+  }, []);
 
   return (
     <section className="md:py-24 py-[4.3rem] md:px-14 px-[1.25rem] bg-[#FFFDF2]">
@@ -52,7 +61,7 @@ const AudienceSection = () => {
             {/* The Dynamic Grid Container */}
             <div className="flex flex-col lg:flex-row md:gap-4 gap-[1.25rem] h-auto lg:h-[600px]">
                 {audiences.map((item) => {
-                    const isExpanded = expandedId === item.id;
+                    const isExpanded = !isDesktop || expandedId === item.id;
                     return (
                     <motion.div
                         key={item.id}
@@ -66,8 +75,8 @@ const AudienceSection = () => {
                         transition={{ type: 'spring', stiffness: 300, damping: 30 }}
                     >
                         {/* Header Content */}
-                        <div className={`flex justify-between ${isExpanded ? 'flex-col items-start' : 'lg:flex-col items-center lg:justify-between h-full'}`}>
-                            <div className={`${!isExpanded && 'lg:rotate-180 lg:[writing-mode:vertical-lr]'} transition-all duration-500`}>
+                        <div className={`flex justify-between ${isExpanded ? 'flex-col items-start' : 'lg:flex-col-reverse items-center lg:justify-between h-full'}`}>
+                            <div className={!isExpanded ? 'lg:[writing-mode:vertical-rl] lg:rotate-180' : ''}>
                                 <h3 className={`text-[2.5rem] font-medium ${item.textColor} whitespace-nowrap`}>
                                     {item.title}
                                 </h3>
@@ -87,7 +96,7 @@ const AudienceSection = () => {
                                 <img 
                                 src={item.image} 
                                 alt={item.title}
-                                className="w-12 h-12 lg:size-[4.375rem] object-contain mt-4 lg:mt-0" 
+                                className="w-12 h-12 lg:size-[4.375rem] object-contain" 
                                 />
                             )}
                         </div>

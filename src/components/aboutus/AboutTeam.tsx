@@ -15,17 +15,17 @@ interface TeamMember {
 }
 
 const team: TeamMember[] = [
-  { id: 1, name: 'Abdulbassit Abdullahi Alagbe', role: 'Designer', imageSrc: '/assets/team-1.svg', xLink: '#', linkedInLink: '#' },
+  { id: 1, name: 'Abdulbassit Abdullahi Alagbe', role: 'Designer', imageSrc: '/images/About/team-avatar.png', xLink: '#', linkedInLink: '#' },
   { id: 2, name: 'Baskey Koer', role: 'Designer', xLink: '#', linkedInLink: '#' },
-  { id: 3, name: 'Abdulbassit Abdullahi Alagbe', role: 'Designer', imageSrc: '/assets/team-1.svg', xLink: '#', linkedInLink: '#' },
-  { id: 4, name: 'Abdulbassit Abdullahi Alagbe', role: 'Designer', xLink: '#', linkedInLink: '#' },
-  { id: 5, name: 'Abdulbassit Abdullahi Alagbe', role: 'Designer', imageSrc: '/assets/team-1.svg', xLink: '#', linkedInLink: '#' },
-  { id: 6, name: 'Abdulbassit Abdullahi Alagbe', role: 'Designer', xLink: '#', linkedInLink: '#' },
+  { id: 3, name: 'Sultanat Bashir', role: 'Frontend', xLink: '#', linkedInLink: '#' },
+  { id: 4, name: 'Akinnibi Adesewa', role: 'Frontend', xLink: '#', linkedInLink: '#' },
+  { id: 5, name: 'Najib Sholadoye', role: 'Backend', xLink: '#', linkedInLink: '#' },
+  { id: 6, name: 'Oyewole AbdulSamad', role: 'Backend', xLink: '#', linkedInLink: '#' },
 ];
 
 const AboutTeam: React.FC = () => {
   return (
-    <section className="py-20 px-6 max-w-7xl mx-auto text-[#0A2521]">
+    <section className="py-20 px-6 max-w-[77.5rem] mx-auto text-[#0A2521]">
       <div className="text-center max-w-2xl mx-auto mb-16">
         <h2 className="text-3xl md:text-[60px] font-normal mb-4">Meet the Builders</h2>
         <p className="text-[#0A2623] text-sm md:text-base max-w-[465px] mx-auto">

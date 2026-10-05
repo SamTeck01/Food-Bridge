@@ -58,17 +58,12 @@ export default function VendorListingsPage() {
   };
 
   return (
-    <div className="p-8 max-w-[1200px] mx-auto flex flex-col gap-8">
+    <div className="p-8 max-w-[1104px] mx-auto flex flex-col gap-8">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="font-questrial text-[32px] text-[#0A2623]">Your Listings</h1>
           <p className="font-questrial text-[16px] text-[rgba(10,38,35,0.6)] mt-1">Manage and track all your surplus posts</p>
-        </div>
-        <div className="flex items-center gap-3">
-          <Link to="/vendor/post-listing" className="flex items-center gap-2 h-10 px-5 rounded-full bg-[#0F3934] text-white font-questrial text-sm font-semibold hover:bg-[#0A2623] transition-all">
-            <Plus size={15} /> Post Listing
-          </Link>
         </div>
       </div>
 

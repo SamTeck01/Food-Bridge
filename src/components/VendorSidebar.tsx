@@ -13,7 +13,7 @@ export default function VendorSidebar() {
   const navigate = useNavigate();
 
   return (
-    <div className="fixed left-0 top-0 h-full w-[250px] bg-white border-r border-black/[0.06] flex flex-col gap-10 px-8 py-9 z-40">
+    <div className="fixed left-0 top-0 h-full w-[250px] bg-white border-r border-black/[0.06] flex flex-col gap-6 px-8 py-9 z-40">
       {/* Logo */}
       <div className="flex items-center justify-between">
         <Link to="/">
@@ -22,7 +22,7 @@ export default function VendorSidebar() {
       </div>
 
       {/* Nav Items */}
-      <nav className="flex flex-col gap-2 flex-1">
+      <nav className="flex flex-col gap-2">
         {NAV.map(item => {
           const active = pathname === item.path || pathname.startsWith(item.path + '/');
           const IconComponent = item.Icon;
@@ -46,9 +46,9 @@ export default function VendorSidebar() {
       {/* Post Button */}
       <button
         onClick={() => navigate('/vendor/post-listing')}
-        className="flex items-center justify-between px-5 py-3 rounded-full border border-black/10 bg-[#F9F9F9] hover:bg-[#0F3934] hover:text-white hover:border-transparent text-[#0A2623] font-questrial text-[16px] transition-all group w-full"
+        className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-full border border-black/10 bg-[#F9F9F9] hover:bg-[#0F3934] hover:text-white hover:border-transparent text-[#0A2623] font-questrial text-[16px] transition-all group w-full"
       >
-        <span className="font-semibold">Post</span>
+        <span>Post</span>
         <Plus size={18} className="text-[rgba(10,38,35,0.7)] group-hover:text-white transition-colors" />
       </button>
     </div>

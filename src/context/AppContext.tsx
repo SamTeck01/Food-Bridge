@@ -103,7 +103,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
       setUser(mappedUser);
       return mappedUser;
     } catch (err) {
-      throw new Error(getAuthErrorMessage(err));
+      throw new Error(getAuthErrorMessage(err), { cause: err });
     }
   }, []);
 
@@ -114,7 +114,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
       const appwriteUser = await signUp(email, password, name, role);
       setUser(mapAppwriteUser(appwriteUser));
     } catch (err) {
-      throw new Error(getAuthErrorMessage(err));
+      throw new Error(getAuthErrorMessage(err), { cause: err });
     }
   }, []);
 
@@ -199,6 +199,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
 
 // ─── Hook ─────────────────────────────────────────────────────────────────────
 
+// eslint-disable-next-line react-refresh/only-export-components -- hook lives beside its provider
 export const useApp = (): AppContextType => {
   const ctx = useContext(AppContext);
   if (!ctx) throw new Error('useApp must be used inside AppProvider');

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import { pickupCode } from '../../lib/pickupCode';
 import { Clock, Package, MapPin, ShieldCheck } from 'lucide-react';
 import { getOrderById } from '../../services/orders.service';
 import type { Order } from '../../services/orders.service';
@@ -12,7 +13,6 @@ export default function ClaimSuccessPage() {
 
   useEffect(() => {
     if (!id) return;
-    setLoading(true);
     getOrderById(id)
       .then((data) => setOrder(data))
       .catch((err) => {
@@ -66,6 +66,11 @@ export default function ClaimSuccessPage() {
         <p className="font-questrial text-[16px] text-[#0A2623]/70 leading-[130%] mb-[32px]">
           Please arrive before the pickup window ends.
         </p>
+
+        <div className="w-full flex items-center justify-between rounded-[16px] bg-white border border-black/10 px-5 py-4 mb-[16px]">
+          <span className="font-questrial text-sm text-[#0A2623]/70">Pickup code</span>
+          <span className="font-questrial text-[22px] tracking-[0.3em] text-[#0F3934]">{pickupCode(order.$id)}</span>
+        </div>
 
         {/* Claim Info Card */}
         <div className="w-full bg-white border border-black/10 rounded-[20px] p-[5px] flex items-center gap-[16px] mb-[32px]">

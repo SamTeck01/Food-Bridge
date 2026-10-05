@@ -1,6 +1,12 @@
 import { motion } from 'framer-motion';
 
-const Mission = () => {
+const DEFAULT_LINES = [
+  'Every day...',
+  'Restaurants throw away good food. Families struggle to afford meals.',
+  'FoodBridge connects both worlds.',
+];
+
+const Mission = ({ lines = DEFAULT_LINES }: { lines?: string[] }) => {
   return (
     <section 
       className="relative py-32 px-6 overflow-hidden bg-[#FFFDF2] flex flex-col items-center justify-center text-center md:max-h-[90vh] max-h-[60vh]"
@@ -31,16 +37,9 @@ const Mission = () => {
           transition={{ delay: 0.5 }}         
           className="flex flex-col md:gap-5 gap-4 md:text-[1.5rem] text-[1rem] text-[#FFFFFF] max-w-[30rem] text-start leading-normal relative z-10 p-[2rem] md:mt-[2rem] mt-[1rem] -rotate-2"
         >
-          <span>Every day...</span>
-
-          <span>
-            Restaurants throw away good food. <br className="md:hidden" /> 
-            Families struggle to afford meals.
-          </span>
-
-          <span className="font-medium">
-            FoodBridge connects both worlds.
-          </span>
+          {lines.map((line, i) => (
+            <span key={line} className={i === lines.length - 1 ? 'font-medium' : ''}>{line}</span>
+          ))}
         </motion.p>
       </motion.div>
     </section>

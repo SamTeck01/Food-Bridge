@@ -3,7 +3,7 @@ import CTASection from '../../components/homepage/CTASection';
 import FAQSection from '../../components/homepage/FAQSection';
 import VendorChatSection from '../../components/Vendor/VendorChatSection';
 import VendorHero from '../../components/Vendor/VendorHero';
-import VendorMission from '../../components/Vendor/VendorMisssion';
+import VendorMission from '../../components/Vendor/VendorMission';
 import VendorReason from '../../components/Vendor/VendorReason';
 import VendorWorks from '../../components/Vendor/VendorWorks';
 
@@ -12,9 +12,6 @@ const VendorPage: React.FC = () => {
     <div className="min-h-screen bg-[#FFFDF2] font-[Questrial]">
         <div 
             className="relative flex flex-col bg-[#FFFDF2]"
-            style={{ 
-            minHeight: '80vh'
-            }}
         >
           <VendorHero />               
         </div>

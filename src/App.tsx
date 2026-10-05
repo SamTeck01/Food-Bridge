@@ -14,6 +14,8 @@ const AboutPage = lazy(() => import('./pages/marketing/AboutPage'));
 const ContactPage = lazy(() => import('./pages/marketing/Contact'));
 const IndividualsPage = lazy(() => import('./pages/marketing/Individuals'));
 const VendorPage = lazy(() => import('./pages/marketing/VendorPage'));
+const TermsPage = lazy(() => import('./pages/marketing/TermsPage'));
+const PrivacyPage = lazy(() => import('./pages/marketing/PrivacyPage'));
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
 
 // Auth Pages
@@ -21,6 +23,7 @@ const LoginPage = lazy(() => import('./pages/auth/LoginPage'));
 const GetStartedPage = lazy(() => import('./pages/auth/GetStartedPage'));
 const ForgotPasswordPage = lazy(() => import('./pages/auth/ForgotPasswordPage'));
 const VerifyEmailPage = lazy(() => import('./pages/auth/VerifyEmailPage'));
+const ResetPasswordPage = lazy(() => import('./pages/auth/ResetPasswordPage'));
 
 // App/Dashboard Pages
 const VendorDashboardPage = lazy(() => import('./pages/app/vendor/VendorDashboardPage'));
@@ -34,6 +37,7 @@ const CartPage = lazy(() => import('./pages/app/CartPage'));
 const ListingDetailPage = lazy(() => import('./pages/app/ListingDetailPage'));
 const ProfilePage = lazy(() => import('./pages/app/ProfilePage'));
 const VerifyBusinessPage = lazy(() => import('./pages/auth/VerifyBusinessPage'));
+const OrderDetailPage = lazy(() => import('./pages/app/OrderDetailPage'));
 const ClaimSuccessPage = lazy(() => import('./pages/app/ClaimSuccessPage'));
 const SavedPage = lazy(() => import('./pages/app/SavedPage'));
 
@@ -71,7 +75,6 @@ const ImpactRouteWrapper = () => {
   );
 };
 
-const IndividualDashboardPage = lazy(() => import('./pages/app/individuals/IndividualDashboardPage'));
 
 function App() {
   return (
@@ -89,6 +92,8 @@ function App() {
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/individuals" element={<IndividualsPage />} />
             <Route path="/vendors" element={<VendorPage />} />
+            <Route path="/terms" element={<TermsPage />} />
+            <Route path="/privacy" element={<PrivacyPage />} />
           </Route>
 
           {/* Combined guest/buyer route for /impact */}
@@ -98,6 +103,7 @@ function App() {
           <Route path="/login" element={<ProtectedRoute guestOnly><LoginPage /></ProtectedRoute>} />
           <Route path="/get-started" element={<ProtectedRoute guestOnly><GetStartedPage /></ProtectedRoute>} />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
           <Route path="/verify-email" element={<ProtectedRoute requireVerification={false}><VerifyEmailPage /></ProtectedRoute>} />
 
           {/* App/Dashboard (Wrapped in BuyerLayout) */}
@@ -106,6 +112,7 @@ function App() {
             <Route path="/listings/:id" element={<ProtectedRoute requiredRole="buyer"><ListingDetailPage /></ProtectedRoute>} />
             <Route path="/cart" element={<ProtectedRoute requiredRole="buyer"><CartPage /></ProtectedRoute>} />
             <Route path="/orders" element={<ProtectedRoute requiredRole="buyer"><OrdersPage /></ProtectedRoute>} />
+            <Route path="/orders/:id" element={<ProtectedRoute requiredRole="buyer"><OrderDetailPage /></ProtectedRoute>} />
             <Route path="/orders/:id/claim-success" element={<ProtectedRoute requiredRole="buyer"><ClaimSuccessPage /></ProtectedRoute>} />
             <Route path="/profile" element={<ProtectedRoute requiredRole="buyer"><ProfilePage /></ProtectedRoute>} />
             <Route path="/saved" element={<ProtectedRoute requiredRole="buyer"><SavedPage /></ProtectedRoute>} />
@@ -116,18 +123,14 @@ function App() {
             <Route path="/vendor/dashboard" element={<ProtectedRoute requiredRole="vendor"><VendorDashboardPage /></ProtectedRoute>} />
             <Route path="/vendor/listings" element={<ProtectedRoute requiredRole="vendor"><VendorListingsPage /></ProtectedRoute>} />
             <Route path="/vendor/listings/:id" element={<ProtectedRoute requiredRole="vendor"><VendorListingDetailPage /></ProtectedRoute>} />
-            <Route path="/vendor/post-listing" element={<ProtectedRoute requiredRole="vendor"><PostListingPage /></ProtectedRoute>} />
             <Route path="/vendor/impact" element={<ProtectedRoute requiredRole="vendor"><ImpactPage /></ProtectedRoute>} />
             <Route path="/vendor/profile" element={<ProtectedRoute requiredRole="vendor"><ProfilePage /></ProtectedRoute>} />
-            <Route path="/vendor/verify-business" element={<ProtectedRoute requiredRole="vendor"><VerifyBusinessPage /></ProtectedRoute>} />
           </Route>
 
-          {/* Individual App Pages (Temporarily without a specific layout) */}
-          <Route path="/individual/dashboard" element={
-            <ProtectedRoute requiredRole="buyer">
-              <IndividualDashboardPage />
-            </ProtectedRoute>
-          } />
+          {/* Full-screen vendor flow (no sidebar, per Figma) */}
+          <Route path="/vendor/verify-business" element={<ProtectedRoute requiredRole="vendor"><VerifyBusinessPage /></ProtectedRoute>} />
+          <Route path="/vendor/post-listing" element={<ProtectedRoute requiredRole="vendor"><PostListingPage /></ProtectedRoute>} />
+
 
           {/* Catch-all */}
           <Route path="*" element={<NotFoundPage />} />

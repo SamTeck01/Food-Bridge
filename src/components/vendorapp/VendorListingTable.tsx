@@ -2,6 +2,13 @@ import { BarChart2, CheckCircle2, Clock, Edit2, MoreVertical, ShoppingBag, Trash
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { deleteListing } from '../../services/listings.service';
+import type { Listing } from '../../services/listings.service';
+
+interface Props {
+  listings: Listing[];
+  setListings: React.Dispatch<React.SetStateAction<Listing[]>>;
+  loading: boolean;
+}
 
 const STATUS_CONFIG: Record<string, { label: string; icon: React.ReactNode; textColor: string; bg: string }> = {
   active:   { label: 'Active',   icon: <CheckCircle2 size={12} />, textColor: 'text-[#22C55E]', bg: 'bg-[#22C55E12]' },
@@ -12,21 +19,21 @@ const STATUS_CONFIG: Record<string, { label: string; icon: React.ReactNode; text
 
 const FILTER_OPTS = ['All', 'active', 'pending', 'sold_out', 'expired'] as const;
 
-export default function VendorListingTable({ listings, setListings, loading }: any) {
+export default function VendorListingTable({ listings, setListings, loading }: Props) {
   const navigate = useNavigate();
   const [activeFilter, setFilter] = useState('All');
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  const filtered = activeFilter === 'All' ? listings : listings.filter((l: any) => l.status === activeFilter);
+  const filtered = activeFilter === 'All' ? listings : listings.filter((l) => l.status === activeFilter);
 
   const handleConfirmDelete = async () => {
     if (!deleteConfirmId) return;
     setIsDeleting(true);
     try {
       await deleteListing(deleteConfirmId);
-      setListings((prev: any[]) => prev.filter((l) => l.$id !== deleteConfirmId));
+      setListings((prev) => prev.filter((l) => l.$id !== deleteConfirmId));
     } catch (err) {
       console.error(err);
     } finally {
@@ -64,7 +71,7 @@ export default function VendorListingTable({ listings, setListings, loading }: a
         ) : (
           <table className="w-full">
             <tbody className="divide-y divide-border">
-              {filtered.map((listing: any) => {
+              {filtered.map((listing) => {
                 const cfg = STATUS_CONFIG[listing.status] ?? STATUS_CONFIG['active'];
                 return (
                   <tr key={listing.$id} className="hover:bg-bg transition-colors">

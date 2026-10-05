@@ -79,14 +79,16 @@ const ProfilePage = () => {
 
   const initial = user?.name?.charAt(0)?.toUpperCase() ?? '?';
 
-  const vendorMenu = [
+  type MenuItem = { icon: typeof Package; label: string; path: string; badge?: string };
+
+  const vendorMenu: MenuItem[] = [
     { icon: LayoutDashboard, label: 'Vendor Dashboard', path: '/vendor/dashboard' },
     { icon: PlusSquare,      label: 'Post a Listing',  path: '/vendor/post-listing' },
     { icon: Package,         label: 'Your Listings',   path: '/vendor/listings' },
     { icon: ShieldCheck,     label: 'Verify Business', path: '/vendor/verify-business', badge: 'New' },
   ];
 
-  const buyerMenu = [
+  const buyerMenu: MenuItem[] = [
     { icon: Package, label: 'My Orders', path: '/orders' },
     { icon: Heart,   label: 'Saved',     path: '/saved' },
   ];
@@ -173,7 +175,7 @@ const ProfilePage = () => {
             <p className="font-questrial text-xs text-text-muted uppercase tracking-wide px-5 pt-4 pb-2">
               {isVendor ? 'Vendor Tools' : 'My Activity'}
             </p>
-            {primaryMenu.map(({ icon: Icon, label, path, badge }: any) => (
+            {primaryMenu.map(({ icon: Icon, label, path, badge }) => (
               <Link
                 key={label}
                 to={path}

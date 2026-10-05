@@ -72,7 +72,7 @@ body {
 
   /* ─── Inputs ──────────────────────────────────────────── */
   .input-field {
-    @apply flex h-11 px-4 items-center w-full rounded-xl bg-white border border-[#D8E6D8] font-questrial text-base text-[#0A2623] placeholder:text-[#8FA3A1] focus:outline-none focus:border-[#7AD371] focus:ring-2 focus:ring-[#7AD37130] transition-all duration-200;
+    @apply flex h-10 px-4 items-center w-full rounded-lg bg-white border border-[#0000000F] font-questrial text-base text-[#0A2623] placeholder:text-[#8FA3A1] focus:outline-none focus:border-[#7AD371] focus:ring-2 focus:ring-[#7AD37130] transition-all duration-200;
   }
   .input-group {
     @apply flex flex-col gap-1.5;

@@ -27,13 +27,6 @@ import { getListings } from '../../services/listings.service';
 import { getUserOrders, type Order } from '../../services/orders.service';
 import { useApp } from '../../context/AppContext';
 
-// Pseudo-random distance generator to align visual cards with Figma specs
-const getListingDistance = (id: string) => {
-  const hash = id.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-  const distances = ['0.5 km away', '0.8 km away', '1.2 km away', '1.5 km away', '2.0 km away'];
-  return distances[hash % distances.length];
-};
-
 const CATEGORIES = [
   { name: 'Browse All', icon: Utensils },
   { name: 'Restaurant', icon: Leaf },
@@ -71,7 +64,7 @@ const ListingsPage = () => {
 
   // Drawer Claim states
   const [userOrders, setUserOrders] = useState<Order[]>([]);
-  const [ordersLoading, setOrdersLoading] = useState(false);
+  const [ordersFetched, setOrdersFetched] = useState(false);
 
   const isDrawerOpen = searchParams.get('drawer') === 'orders';
   const searchQuery = searchParams.get('q') ?? '';
@@ -82,7 +75,7 @@ const ListingsPage = () => {
     try {
       const data = await getListings(50);
       setListings(data);
-    } catch (e) {
+    } catch {
       setError('Could not load listings. Please check your connection.');
     } finally {
       setLoading(false);
@@ -90,17 +83,19 @@ const ListingsPage = () => {
   }, []);
 
   useEffect(() => {
-    fetchListings();
-  }, [fetchListings]);
+    getListings(50)
+      .then(setListings)
+      .catch(() => setError('Could not load listings. Please check your connection.'))
+      .finally(() => setLoading(false));
+  }, []);
 
   // Fetch claimed user orders for the right-side drawer
   useEffect(() => {
     if (isDrawerOpen && isLoggedIn && user) {
-      setOrdersLoading(true);
       getUserOrders(user.id)
         .then((data) => setUserOrders(data))
         .catch((e) => console.error('Error fetching user claims:', e))
-        .finally(() => setOrdersLoading(false));
+        .finally(() => setOrdersFetched(true));
     }
   }, [isDrawerOpen, isLoggedIn, user]);
 
@@ -177,7 +172,7 @@ const ListingsPage = () => {
               </div>
 
               {/* Drawer Content */}
-              {ordersLoading ? (
+              {!ordersFetched ? (
                 <div className="flex flex-col gap-6 py-12 items-center justify-center flex-1">
                   <div className="w-10 h-10 border-4 border-[#7AD371] border-t-transparent rounded-full animate-spin" />
                   <p className="font-questrial text-sm text-[#0A2623]/70">Loading orders...</p>
@@ -207,7 +202,7 @@ const ListingsPage = () => {
                     return (
                       <div 
                         key={order.$id} 
-                        onClick={() => { closeDrawer(); navigate('/orders'); }}
+                        onClick={() => { closeDrawer(); navigate(`/orders/${order.$id}`); }}
                         className="flex flex-col gap-4 group cursor-pointer hover:bg-black/5 p-2.5 rounded-2xl transition-all"
                       >
                         {i > 0 && <div className="h-[1px] bg-black/10 w-full mb-2 group-hover:bg-transparent" />}
@@ -391,7 +386,7 @@ const ListingsPage = () => {
 
           {/* ── LOADING STATE ──────────────────────────────────── */}
           {loading ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
               {[...Array(8)].map((_, i) => (
                 <div key={i} className="rounded-[20px] bg-white border border-black/10 p-[5px] overflow-hidden">
                   <div className="h-[120px] skeleton rounded-[16px]" />
@@ -447,7 +442,7 @@ const ListingsPage = () => {
                   {/* Horizontal Scroll wrapper */}
                   <div className="flex gap-5 overflow-x-auto pb-4 scrollbar-none select-none" style={{ scrollbarWidth: 'none' }}>
                     {almostGone.map((listing) => (
-                      <div key={listing.$id} className="w-[300px] flex-shrink-0">
+                      <div key={listing.$id} className="w-[340px] flex-shrink-0">
                         <FoodCard
                           id={listing.$id}
                           name={listing.name}
@@ -456,7 +451,7 @@ const ListingsPage = () => {
                           timeLeft={listing.pickupTime}
                           claimsUsed={listing.claimsUsed}
                           claimsTotal={listing.quantity + listing.claimsUsed}
-                          distance={getListingDistance(listing.$id)}
+                          distance={listing.distance || 'Nearby'}
                           vendorName={listing.vendorName}
                           imageUrl={listing.imageUrl}
                           isSaved={isSaved(listing.$id)}
@@ -474,7 +469,7 @@ const ListingsPage = () => {
                   <h2 className="font-questrial text-[24px] font-normal leading-[130%] text-[#0A2623]">
                     Available Near You
                   </h2>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6 w-full">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 w-full">
                     {availableNearYou.map((listing) => (
                       <FoodCard
                         key={listing.$id}
@@ -485,7 +480,7 @@ const ListingsPage = () => {
                         timeLeft={listing.pickupTime}
                         claimsUsed={listing.claimsUsed}
                         claimsTotal={listing.quantity + listing.claimsUsed}
-                        distance={getListingDistance(listing.$id)}
+                        distance={listing.distance || 'Nearby'}
                         vendorName={listing.vendorName}
                         imageUrl={listing.imageUrl}
                         isSaved={isSaved(listing.$id)}

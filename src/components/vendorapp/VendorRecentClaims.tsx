@@ -1,4 +1,5 @@
 import { Package } from 'lucide-react';
+import type { Order } from '../../services/orders.service';
 const timeAgo = (dateStr: string) => {
   if (!dateStr) return 'just now';
   try {
@@ -12,12 +13,12 @@ const timeAgo = (dateStr: string) => {
     if (diffHours < 24) return `${diffHours}h ago`;
     const diffDays = Math.floor(diffHours / 24);
     return `${diffDays}d ago`;
-  } catch (e) {
+  } catch {
     return 'recently';
   }
 };
 
-export default function VendorRecentClaims({ orders, loading }: any) {
+export default function VendorRecentClaims({ orders, loading }: { orders: Order[]; loading: boolean }) {
   if (loading) return <div className="section-card h-64 skeleton" />;
   
   return (
@@ -26,7 +27,7 @@ export default function VendorRecentClaims({ orders, loading }: any) {
       {orders.length === 0 ? (
         <div className="text-center py-8"><Package className="mx-auto text-text-muted" /> <p className="text-sm">No claims yet.</p></div>
       ) : (
-        orders.slice(0, 5).map((order: any) => (
+        orders.slice(0, 5).map((order) => (
           <div key={order.$id} className="flex items-center gap-3 py-2">
             <div className="w-9 h-9 rounded-full bg-brand-primary/10 flex items-center justify-center text-xs text-brand-secondary">
               {(order.buyerId ?? 'U').slice(0, 1)}

@@ -1,6 +1,6 @@
 import { motion, type Variants } from 'framer-motion';
 import { useState } from 'react';
-import { toast, Toaster } from 'react-hot-toast';
+import { toast } from 'react-hot-toast';
 
 const Footer = () => {
   const [email, setEmail] = useState('');
@@ -25,7 +25,6 @@ const Footer = () => {
 
   return (
     <footer className="bg-[#0F0F0F] text-white border-t border-[#FFFFFF4D]">
-      <Toaster position="top-right" />
       
       {/* Newsletter Section */}
       <div className="max-w-[1440px] mx-auto grid grid-cols-1 md:grid-cols-4 border-b border-[#FFFFFF4D]">
@@ -52,7 +51,7 @@ const Footer = () => {
         <div className="p-6 md:p-8 flex items-center justify-center">
           <button 
             onClick={handleSubscribe}
-            className="w-full sm:w-auto px-10 py-4 bg-[#7AD371] text-[#0A2623] hover:text-white rounded-full text-[1rem] font-medium hover:bg-[#1A4A3F] hover:scale-105 transition-all duration-300 flex items-center justify-center gap-3 group"
+            className="w-full sm:w-auto px-6 py-2.5 bg-white text-[#0A2623] hover:text-white rounded-full text-[1rem] font-medium hover:bg-[#1A4A3F] hover:scale-105 transition-all duration-300 flex items-center justify-center gap-3 group"
           >
             Subscribe 
             <span className="group-hover:translate-x-1 transition-transform">→</span>
@@ -78,7 +77,7 @@ const Footer = () => {
       </div>
 
       {/* Main Footer Content */}
-      <div className="max-w-[1440px] mx-auto grid grid-cols-1 lg:grid-cols-3">
+      <div className="max-w-[1440px] mx-auto grid grid-cols-1 lg:grid-cols-[39%_1fr]">
         
         {/* Brand Column */}
         <div className="p-6 md:p-8 border-b lg:border-b-0 lg:border-r border-[#FFFFFF4D]">
@@ -91,7 +90,7 @@ const Footer = () => {
 
         {/* Links Container Layout (Socials, Company, Support) */}
         {/* On mobile and tablet, this splits into 2 columns side-by-side instead of stacking tall */}
-        <div className="col-span-1 lg:col-span-2 grid grid-cols-2 md:grid-cols-3">
+        <div className="col-span-1 grid grid-cols-2 md:grid-cols-3">
           <FooterColumn title="Social" links={[
             { label: 'Twitter', icon: '/images/icons/twitter.svg', href: '#' },
             { label: 'Facebook', icon: '/images/icons/facebook.svg', href: '#' },
@@ -109,9 +108,9 @@ const Footer = () => {
           {/* Span full row width only on small dynamic breakpoints if needed, or clean 3rd column */}
           <div className="col-span-2 md:col-span-1 border-t border-[#FFFFFF4D] md:border-t-0">
             <FooterColumn title="Support" links={[
-              { label: 'FAQs', href: '/faqs' },
+              { label: 'FAQs', href: '/#faqs' },
               { label: 'Contact', href: '/contact' },
-              { label: 'Cookie policy', href: '/cookies' },
+              { label: 'Terms of Service', href: '/terms' },
               { label: 'Privacy Policy', href: '/privacy' },
             ]} />
           </div>
@@ -131,7 +130,7 @@ interface FooterColumnProps {
 
 const FooterColumn = ({ title, links, showIcons, border }: FooterColumnProps) => (
   <div className={`p-6 md:p-8 h-full ${border ? 'border-r border-[#FFFFFF4D]' : ''}`}>
-    <h3 className="text-[#FFFFFF4D] text-xs uppercase tracking-wider mb-6 font-semibold">{title}</h3>
+    <h3 className="text-[#FFFFFFB2] text-sm mb-6">{title}</h3>
     <ul className="space-y-3.5">
       {links.map((link) => (
         <li key={link.label}>
