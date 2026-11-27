@@ -16,7 +16,7 @@ interface TeamMember {
 
 const team: TeamMember[] = [
   { id: 1, name: 'Abdulbassit Abdullahi Alagbe', role: 'Designer', imageSrc: '/images/About/team-avatar.png', xLink: '#', linkedInLink: '#' },
-  { id: 2, name: 'Baskey Koer', role: 'Designer', xLink: '#', linkedInLink: '#' },
+  { id: 2, name: 'Halimah', role: 'Designer', xLink: '#', linkedInLink: '#' },
   { id: 3, name: 'Sultanat Bashir', role: 'Frontend', xLink: '#', linkedInLink: '#' },
   { id: 4, name: 'Akinnibi Adesewa', role: 'Frontend', xLink: '#', linkedInLink: '#' },
   { id: 5, name: 'Najib Sholadoye', role: 'Backend', xLink: '#', linkedInLink: '#' },
