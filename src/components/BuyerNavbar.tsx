@@ -126,8 +126,8 @@ export default function BuyerNavbar() {
                         </div>
                         {/* Frame 1618869794 */}
                         <div className="flex flex-col items-start gap-1 self-stretch min-w-0">
-                          <span className="text-[#0A2623] font-questrial text-[16px] font-normal leading-[130%] truncate w-full" title={user?.name || 'Baskey Koer'}>
-                            {user?.name || 'Baskey Koer'}
+                          <span className="text-[#0A2623] font-questrial text-[16px] font-normal leading-[130%] truncate w-full" title={user?.name || 'Halimah'}>
+                            {user?.name || 'Halimah'}
                           </span>
                           <span className="text-[#0A2623]/70 font-questrial text-[12px] font-normal leading-[130%] truncate w-full" title={user?.email || '+234 913 892 7486'}>
                             {user?.email || '+234 913 892 7486'}
