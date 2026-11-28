@@ -94,7 +94,7 @@ export default function VendorListingDetailPage() {
   };
 
   if (loading) return (
-    <div className="p-8 max-w-[600px] mx-auto">
+    <div className="p-4 md:p-8 max-w-[600px] mx-auto">
       <div className="animate-pulse space-y-5">
         <div className="h-10 w-48 bg-white rounded-full" />
         <div className="h-[200px] bg-white rounded-[20px]" />
@@ -104,7 +104,7 @@ export default function VendorListingDetailPage() {
   );
 
   if (!listing) return (
-    <div className="p-8 text-center max-w-[600px] mx-auto">
+    <div className="p-4 md:p-8 text-center max-w-[600px] mx-auto">
       <p className="font-questrial text-[#0A2623]">Listing not found.</p>
       <Link to="/vendor/listings" className="mt-4 inline-block text-[#0F3934] underline font-questrial">Back to listings</Link>
     </div>
@@ -117,7 +117,7 @@ export default function VendorListingDetailPage() {
   const revenue = orders.filter(o => o.status === 'completed').reduce((s, o) => s + (o.totalPaid ?? 0), 0);
 
   return (
-    <div className="p-8 max-w-[600px] mx-auto flex flex-col gap-6 bg-[#F9F9F9] min-h-screen">
+    <div className="p-4 md:p-8 max-w-[600px] mx-auto flex flex-col gap-6 bg-[#F9F9F9] min-h-screen">
       {/* Header row */}
       <div className="flex items-center justify-between">
         <button

@@ -65,7 +65,7 @@ const VendorWhyUse: React.FC<Props> = ({ audience = 'vendors', benefits = VENDOR
       </div>
 
       {/* The Autoscroll Container */}
-      <div className="relative w-full flex group">
+      <div className="relative w-full flex group [mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)]">
         <motion.div 
           className="flex gap-6 whitespace-nowrap pl-6"
           // We scroll to -50% because we are duplicating the array below to create a seamless infinite loop

@@ -43,7 +43,7 @@ const Hero = () => {
         </motion.div>
         
       </div>
-      <img src="/images/homepage/hero-bottom.svg" alt="" />
+      <img src="/images/homepage/hero-bottom.svg" alt="" className="block mt-12 sm:mt-0 w-[140%] max-w-none -ml-[20%] sm:w-full sm:ml-0" />
     </section>
   );
 };

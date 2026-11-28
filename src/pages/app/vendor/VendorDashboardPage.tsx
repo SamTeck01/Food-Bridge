@@ -48,7 +48,7 @@ export default function VendorDashboardPage() {
     : '—';
 
   return (
-    <div className="p-8 max-w-[1104px] mx-auto flex flex-col gap-8">
+    <div className="p-4 md:p-8 max-w-[1104px] mx-auto flex flex-col gap-8">
       {/* Stats (Figma home2.html matching styling) */}
       {loading ? (
         <div className="grid grid-cols-3 gap-5">
