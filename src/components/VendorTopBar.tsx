@@ -40,7 +40,7 @@ export default function VendorTopBar() {
   const pendingCount = orders.filter((o) => o.status === 'confirmed').length;
 
   return (
-    <header className="sticky top-0 z-30 bg-[#F9F9F9] px-8 h-[80px] flex items-center justify-between">
+    <header className="sticky top-0 z-30 bg-[#F9F9F9] px-4 md:px-8 h-[72px] md:h-[80px] flex items-center justify-between">
       <div className="flex items-center gap-2">
         <MapPin size={16} className="text-[#0F3934]" />
         <span className="font-questrial text-[16px] text-[#0F3934]">Ilorin, Kwara</span>

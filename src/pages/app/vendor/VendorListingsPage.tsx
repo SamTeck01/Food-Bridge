@@ -58,7 +58,7 @@ export default function VendorListingsPage() {
   };
 
   return (
-    <div className="p-8 max-w-[1104px] mx-auto flex flex-col gap-8">
+    <div className="p-4 md:p-8 max-w-[1104px] mx-auto flex flex-col gap-8">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
