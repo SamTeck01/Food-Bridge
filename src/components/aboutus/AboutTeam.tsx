@@ -44,7 +44,7 @@ const AboutTeam: React.FC = () => {
             className="border border-gray-200 rounded-2xl overflow-hidden bg-white group hover:shadow-lg transition-all duration-300"
           >
             {/* Image/Avatar Container */}
-            <div className="bg-[#EAF3EC] h-[300px] flex items-end justify-center overflow-hidden">
+            <div className="bg-[#EAF3EC] h-[240px] md:h-[300px] flex items-end justify-center overflow-hidden">
               {member.imageSrc ? (
                 <motion.img 
                   whileHover={{ scale: 1.05 }}
@@ -54,19 +54,19 @@ const AboutTeam: React.FC = () => {
                   className="w-full h-full object-cover origin-bottom"
                 />
               ) : (
-                <div className="w-full h-full bg-[#EAF3EC]"></div> // Fallback background
+                <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#EAF3EC] to-[#CDEBC6]"><span className="w-32 h-32 rounded-full bg-[#0F3934] text-[#7AD371] flex items-center justify-center text-5xl font-medium">{member.name.split(' ').map((p) => p[0]).slice(0, 2).join('')}</span></div>
               )}
             </div>
 
             {/* Content Container */}
             <div className="p-5 flex items-center justify-between h-[150px] ">
               <div>
-                <h3 className="font-normal text-[24px]  w-[323.33px]">{member.name}</h3>
+                <h3 className="font-normal text-[20px] md:text-[24px]">{member.name}</h3>
                 <span className="text-[#7AD371] text-[14px] font-normal bg-[#7AD3711A] px-2 py-[10px] rounded-md mt-1 inline-block">
                   {member.role}
                 </span>
               </div>
-              <div className="flex gap-3 text-gray-400 w-[96px] h-[40px]">
+              <div className="flex gap-3 text-gray-400 shrink-0">
                 <a href={member.xLink} className="hover:text-gray-900 transition-colors">
                   <XIcon />
                 </a>

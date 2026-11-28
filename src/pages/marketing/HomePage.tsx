@@ -11,10 +11,9 @@ const HomePage = () => {
   return (
     <div className="min-h-screen bg-[#FFFDF2] font-[Questrial]">
       <div 
-        className="relative flex flex-col bg-bottom bg-no-repeat bg-contain lg:bg-cover"
+        className="relative flex flex-col bg-bottom bg-no-repeat bg-contain lg:bg-cover sm:min-h-[80vh]"
         style={{ 
           backgroundImage: 'url("/images/homepage/hero-main.svg")',
-          minHeight: '80vh'
         }}
       >
         <div className="h-12 lg:h-[4.9rem]" /> 

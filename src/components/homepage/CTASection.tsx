@@ -24,11 +24,11 @@ const CTASection = () => {
 
         <div className="max-w-[77.5rem] mx-auto px-6 relative z-10">
             {/* Main Green Card */}
-            <div className="relative bg-[#0F3934] rounded-[1.5rem] p-12 md:p-[6.5rem] overflow-hidden shadow-2xl">
+            <div className="relative bg-[#0F3934] rounded-[1.5rem] px-6 py-14 md:p-[6.5rem] overflow-hidden shadow-2xl">
                 <motion.div 
                     variants={floatingVariants}
                     animate="floating"
-                    className="absolute inset-0 z-0 pointer-events-none"
+                    className="absolute inset-0 z-0 pointer-events-none opacity-40 md:opacity-100"
                     style={{
                     backgroundImage: "url('/images/homepage/cta-background-with-foods.svg')",
                     backgroundSize: 'cover',
@@ -41,7 +41,7 @@ const CTASection = () => {
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    className="text-white text-[3rem] md:text-[4.69rem] leading-[1.1] font-normal md:mb-10 mb-5 tracking-tight"
+                    className="text-white text-[2.5rem] md:text-[4.69rem] leading-[1.1] font-normal md:mb-10 mb-5 tracking-tight"
                     >
                         Start using FoodBridge today
                     </motion.h2>

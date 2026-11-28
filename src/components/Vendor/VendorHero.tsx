@@ -10,7 +10,7 @@ const VendorHero: React.FC = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="text-[72px] md:text-7xl font-normal text-[#0A2521] leading-tight tracking-tight mb-6"
+          className="text-[48px] md:text-7xl font-normal text-[#0A2521] leading-tight tracking-tight mb-6"
         >
           Turn Surplus <br className="hidden md:block" /> Food Into Value
         </motion.h1>
